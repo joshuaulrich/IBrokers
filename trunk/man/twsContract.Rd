@@ -15,6 +15,8 @@ twsContract(symbol,
             right,
             local,
             multiplier,
+            combo_legs_desc,
+            comboleg,
             include_expired)
 }
 \arguments{
@@ -28,6 +30,8 @@ twsContract(symbol,
   \item{right}{ the requested right }
   \item{local}{ the local security name }
   \item{multiplier}{ the contract multiplier }
+  \item{combo_legs_desc}{ not implemented yet }
+  \item{comboleg}{ not implemented yet }
   \item{include_expired}{ should expired contracts be included }
 }
 \details{
@@ -46,6 +50,6 @@ A \code{twsContract} object.
 \seealso{ \code{\link{reqHistoricalData}} }
 \examples{
 contract <- twsContract("AAPL","STK","SMART","ISLAND",
-                        "","0.0","USD","","","","0")
+                        "","0.0","USD","","","",NULL,NULL,"0")
 }
 \keyword{ utilities }

@@ -5,10 +5,10 @@
 Create a twsFuture contract for use in API calls.
 }
 \usage{
-twsEquity(symbol,
+twsFuture(symbol,
           exch,
           expiry,
-          primary,
+          primary='',
           currency='USD',
           right='',
           local='',
