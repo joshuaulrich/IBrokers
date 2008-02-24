@@ -2,6 +2,7 @@ export(twsConnect,
        twsDisconnect,
        twsContract,
        twsEquity,
+       twsFuture,
        reqCurrentTime,
        reqHistoricalData)
 
