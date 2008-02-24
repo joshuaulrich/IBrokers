@@ -1,0 +1,10 @@
+export(twsConnect,
+       twsDisconnect,
+       twsContract,
+       twsEquity,
+       reqCurrentTime,
+       reqHistoricalData)
+
+export(.twsMSG)
+
+S3method(print,twsConnection)
