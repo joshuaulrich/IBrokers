@@ -1,5 +1,6 @@
 `print.twsConnection` <-
 function(x,...) {
-  cat('<tws connection object>\n')
+  cat('<twsConnection at',
+      as.character(x$connected.at),'>\n')
 }
 
