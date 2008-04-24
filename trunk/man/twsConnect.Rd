@@ -6,12 +6,12 @@
 Connect or disconnect to the Trader Workstation (TWS).
 }
 \usage{
-twsConnect(port=7496,clientID=1)
+twsConnect(clientId = 1, port = 7496)
 twsDisconnect(con)
 }
 \arguments{
+  \item{clientId}{ the unique client id to associate with }
   \item{port}{ the port that the TWS is listening on }
-  \item{clientID}{ the unique client id to associate with }
   \item{con}{ a valid \code{twsConnection} object }
 }
 \details{

@@ -16,19 +16,11 @@ function(conn,Contract,endDateTime,
 
   if(missing(endDateTime)) 
     endDateTime <- strftime(
-                     as.POSIXlt(as.POSIXct('1970-01-01')+reqCurrentTime(con)),
+                     as.POSIXlt(as.POSIXct('1970-01-01')+
+                     as.numeric(reqCurrentTime(con))),
                      format='%Y%m%d %H:%M:%S',use=TRUE)
-  # signals server version = 37
-  #
-  # REQ_HISTORICAL_DATA, VERSION, TICKER_ID,
-  # C$symbol, C$sectype, C$expiry, C$strike,
-  # C$right, C$multiplier, C$exch, C$primary,
-  # C$currency, C$local, C$include_expired,
-  #
-  # end_date_time, bar_size, duration,
-  # use_rth, what_to_show, format_date
 
-  signals <- c(.twsMSG$REQ_HISTORICAL_DATA, # '20'
+  signals <- c(.twsOutgoingMSG$REQ_HISTORICAL_DATA, # '20'
                '4', # version
                '1', # tick id
                Contract$symbol, Contract$sectype,
@@ -46,48 +38,47 @@ function(conn,Contract,endDateTime,
 #               '','0','20080219 21:11:41 GMT',
 #               '1 day','1 M','1',
 #               'TRADES','1')
-  readChar(con,10000)
+  readBin(con,character(),100) # flush the input stream
 
   for(i in 1:length(signals)) {
-    writeChar(signals[i],con)
+    writeBin(signals[i],con)
   }
 
   waiting <- TRUE           # waiting for valid response?
   response <- character(0)  # currently read response
-  datafarmmsg <- FALSE      # data farm msg(s)?
 
-  while(1) {
-    curChar <- readChar(con,1)
-    # loop until first character is had
-    if(waiting & identical(curChar,character(0))) next
-    waiting <- FALSE        # if here - a valid char has been read
+  while(waiting) {
+    curMsg <- readBin(con,character(),1)
+    if(waiting & identical(curMsg,character(0))) next
 
-    if(!is.na(response[1]) & response[1]=='4')
-      datafarmmsg <- TRUE   # if first char is 4 - ignore this response
 
-    if(identical(curChar,character(0))) {  # end of message
-      if(datafarmmsg) {     # if data message - reset loop
-        response <- character(0)
-        datafarmmsg <- FALSE
-        waiting <- TRUE
-        next
-      } else break          # end of valid message
+    if(curMsg == .twsIncomingMSG$ERR_MSG) {
+      verbose <- TRUE
+      if(!errorHandler(con,verbose)) stop()
     }
 
-    if(charToRaw(curChar)=='00') {
-      # replace \0 in reply with `|` bars
-      response[length(response)+1] <- '|'
-    } else response[length(response)+1] <- curChar
+    if(curMsg == .twsIncomingMSG$HISTORICAL_DATA) {
+      header <- readBin(con,character(),5)
+      header <- list(from=header[3],
+                     to=header[4])
+      ret <- character()
+      while(1) {
+        # retrieve all data
+        response <- readBin(con,character(),1000)
+        ret <- c(ret,response)
+        if(identical(response,character(0))) 
+          break
+      }
+      waiting <- FALSE
+    }
   }
-#  rawToChar(charToRaw(readChar(con,10000))[-c(1:5,16)])
-  cv <- strsplit(paste(response,collapse=''),'\\|')[[1]]
-  cm <- matrix(cv[-(1:6)],nc=9,byrow=TRUE)
+  cm <- matrix(ret,nc=9,byrow=TRUE)
   cm[,8] <- ifelse(cm[,8]=='false',0,1)
   dts <- gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE)
   x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
   colnames(x) <- c('Open','High','Low','Close','Volume',
                    'WAP','hasGaps','Count')
-  xtsAttributes(x) <- list(start=cv[4],end=cv[5],misc=cv[1:3])
+  xtsAttributes(x) <- list(from=header$from,to=header$to)
   x
 }
 

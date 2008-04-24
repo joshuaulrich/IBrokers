@@ -1,3 +1,33 @@
+`twsConnect` <-
+function (clientId=1, port = 7496)
+ {
+     s <- socketConnection(port = port, open='ab')
+
+     if(!isOpen(s)) { 
+       close(s)
+       stop(paste("couldn't connect to TWS on port",port))
+     }
+
+     writeBin("37", s)
+     waiting <- TRUE
+     while(waiting) {
+       response <- readBin(s,character(),2)
+       if(!identical(response,character(0))) {
+         SERVER_VERSION <- as.numeric(response[1])
+         CONNECTION_TIME <- response[2]
+       } else next
+       waiting <- FALSE 
+     }
+
+     writeBin(as.character(clientId), s)
+
+     structure(list(s,
+                    clientId=clientId,port=port,
+                    server.version=SERVER_VERSION,
+                    connected.at=CONNECTION_TIME), 
+                    class = "twsConnection")
+ }
+
 `twsConnect2` <-
 function (port = 7496, clientID = 1)
  {
@@ -28,7 +58,7 @@ function (port = 7496, clientID = 1)
      structure(list(s,SERVER_VERSION,CONNECTION_TIME), class = "twsConnection")
  }
 
-`twsConnect` <-
+`twsConnect0` <-
 function(port=7496,clientID=1) {
   s <- socketConnection(port=port)
   writeChar('37',s)
