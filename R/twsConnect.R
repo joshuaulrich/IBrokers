@@ -1,7 +1,7 @@
 `twsConnect` <-
-function (clientId=1, port = 7496)
+function (clientId=1, host='localhost', port = 7496)
  {
-     s <- socketConnection(port = port, open='ab')
+     s <- socketConnection(host = host, port = port, open='ab')
 
      if(!isOpen(s)) { 
        close(s)
@@ -11,12 +11,17 @@ function (clientId=1, port = 7496)
      writeBin("37", s)
      waiting <- TRUE
      while(waiting) {
-       response <- readBin(s,character(),2)
-       if(!identical(response,character(0))) {
-         SERVER_VERSION <- as.numeric(response[1])
-         CONNECTION_TIME <- response[2]
-       } else next
-       waiting <- FALSE 
+       response <- readBin(s,character(),1)
+       if(length(response) > 0 && response %in% c('39','40')) {
+         SERVER_VERSION <- response
+         while(waiting) {
+           response <- readBin(s,character(),1)
+           if(length(response) > 0) {
+             CONNECTION_TIME <- response
+             waiting <- FALSE
+           }
+         }
+       }
      }
 
      writeBin(as.character(clientId), s)
