@@ -12,12 +12,10 @@ function(con) {
 
   while(waiting) {
     curChar <- readBin(con,character(),1)
-    if(waiting & identical(curChar,character(0))) next
-    waiting <- FALSE
     
-    if(curChar==.twsIncomingMSG$CURRENT_TIME) {
+    if(length(curChar) > 0 && curChar==.twsIncomingMSG$CURRENT_TIME) {
       currentTime <- readBin(con,character(),2)[2]
-      break
+      waiting <- FALSE
     }
 
   }
