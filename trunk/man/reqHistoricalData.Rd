@@ -1,5 +1,6 @@
 \name{reqHistoricalData}
 \alias{reqHistoricalData}
+\alias{cancelHistoricalData}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ Request Historical Data From TWS }
 \description{
@@ -15,7 +16,12 @@ reqHistoricalData(conn,
                   duration = "1 M",
                   useRTH = "1",
                   whatToShow = "TRADES", 
-                  time.format = "1")
+                  time.format = "1",
+                  verbose = TRUE,
+                  tickerId = "1",
+                  timeout = 10)
+
+cancelHistoricalData(con,tickerId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +33,10 @@ reqHistoricalData(conn,
   \item{useRTH}{ limited to regular trading hours }
   \item{whatToShow}{ type of data to be extracted }
   \item{time.format}{ POSIX style or seconds from 1970-01-01 }
+  \item{verbose}{ should progress be documented }
+  \item{tickerId}{ a unique id to associte with the request }
+  \item{timeout}{ length of time before cancelling request }
+  \item{con}{ an \R connection object to the TWS API }
 }
 \details{
 All arguments should be character strings.  Attempts will

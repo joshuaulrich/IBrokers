@@ -1,3 +1,5 @@
+`.lastRequest` <- 10
+
 `.twsOutgoingMSG` <-
 structure(list(REQ_MKT_DATA = "1", CANCEL_MKT_DATA = "2", PLACE_ORDER = "3", 
     CANCEL_ORDER = "4", REQ_OPEN_ORDERS = "5", REQ_ACCOUNT_DATA = "6", 

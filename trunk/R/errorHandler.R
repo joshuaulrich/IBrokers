@@ -1,10 +1,14 @@
 `errorHandler` <-
-function(con, verbose) {
+function(con, verbose, OK=NULL) {
   err <- readBin(con,character(),4)
-  if(verbose) {
-    warning(paste(err[4]))
+
+  if(as.numeric(err[3]) %in% OK) {
+    if(verbose > 1) {
+      message(paste(err[4]))
+      return(TRUE)
+    }
+  } else {
+    if(verbose > 0) warning(paste(err[4]))
+    return(FALSE)
   }
-  if(as.numeric(err[3]) %in% c(165,2106)) {
-    return(TRUE)
-  } else return(FALSE)
 }
