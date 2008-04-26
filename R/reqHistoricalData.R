@@ -2,8 +2,15 @@
 function(conn,Contract,endDateTime,
          barSize='1 day',duration='1 M',
          useRTH='1',whatToShow='TRADES',time.format='1',
-         verbose=TRUE)
+         verbose=TRUE, tickerId='1', timeout=10)
 {
+#  pacingCheck <- Sys.time()-.lastRequest
+#  if(pacingCheck < 6) {
+#    if(verbose) message("Waiting to avoid TWS pacing violation")
+#    Sys.sleep(6-pacingCheck)
+#  }  
+  start.time <- Sys.time()
+
   if(class(conn) != 'twsConnection') stop('tws connection object required')
   if(class(Contract) != 'twsContract') stop('twsContract required')
 
@@ -15,6 +22,10 @@ function(conn,Contract,endDateTime,
 
   con <- conn[[1]]
 
+  if(!isOpen(con)) stop("connection to TWS has been closed")
+
+  on.exit(cancelHistoricalData(con,as.character(tickerId)))
+
   if(missing(endDateTime)) 
     endDateTime <- strftime(
                      as.POSIXlt(as.POSIXct('1970-01-01')+
@@ -23,7 +34,7 @@ function(conn,Contract,endDateTime,
 
   signals <- c(.twsOutgoingMSG$REQ_HISTORICAL_DATA, # '20'
                '4', # version
-               '1', # tick id
+               as.character(tickerId),
                Contract$symbol, Contract$sectype,
                Contract$expiry, Contract$strike,
                Contract$right,  Contract$multiplier,
@@ -48,45 +59,58 @@ function(conn,Contract,endDateTime,
   waiting <- TRUE           # waiting for valid response?
   response <- character(0)  # currently read response
 
-  if(verbose) cat('waiting for TWS reply ...')
+  if(verbose) {
+    cat('waiting for TWS reply ...')
+    iter <- 1
+    flush.console()
+  }
 
   while(waiting) {
     curMsg <- readBin(con,character(),1)
-    #if(waiting & identical(curMsg,character(0))) next
-    if(verbose) cat('.')
-    Sys.sleep(.25)
+    if(verbose) {
+      cat('.')
+      if(iter %% 30 == 0) cat('\n')
+      flush.console()
+      iter <- iter + 1
+    }
 
     if(length(curMsg) > 0) {
       if(curMsg == .twsIncomingMSG$ERR_MSG) {
-        if(!errorHandler(con,verbose)) invisible()
+        if(!errorHandler(con,verbose,OK=c(165,2106))) {
+          cat('\n')
+          stop('Unable to complete historical data request')
+        }
       }
-  
       if(curMsg == .twsIncomingMSG$HISTORICAL_DATA) {
         header <- readBin(con,character(),5)
-        header <- list(from=header[3],
-                       to=header[4])
-        ret <- character()
-        while(1) {
-          # retrieve all data
-          response <- readBin(con,character(),10000)
-          ret <- c(ret,response)
-          if(identical(response,character(0))) 
-            break
-        }
+        nbin <- as.numeric(header[5])*9
+        req.from <- header[3]
+        req.to   <- header[4]
+        response <- readBin(con,character(),nbin)
         waiting <- FALSE
-        if(verbose) cat(' done.\n')
+        if(verbose) {
+          cat(' done.\n')
+          flush.console()
+        }
       }
     }
+    if(Sys.time() - start.time > timeout) {
+      cancelHistoricalData(con,as.character(tickerId))
+      cat('\n')
+      stop("historical data request timed-out")
+    }
+
+    Sys.sleep(.5)
   }
 
   
-  cm <- matrix(ret,nc=9,byrow=TRUE)
+  cm <- matrix(response,nc=9,byrow=TRUE)
   cm[,8] <- ifelse(cm[,8]=='false',0,1)
   dts <- gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE)
   x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
   colnames(x) <- c('Open','High','Low','Close','Volume',
                    'WAP','hasGaps','Count')
-  xtsAttributes(x) <- list(from=header$from,to=header$to)
+  xtsAttributes(x) <- list(from=req.from,to=req.to)
   x
 }
 

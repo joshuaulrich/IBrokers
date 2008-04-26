@@ -6,8 +6,9 @@ export(twsConnect,
        twsEquity,
        twsFuture,
        reqCurrentTime,
-       reqHistoricalData)
+       reqHistoricalData,
+       cancelHistoricalData)
 
-export(.twsIncomingMSG,.twsOutgoingMSG,.twsERR)
+export(.twsIncomingMSG,.twsOutgoingMSG,.twsERR,.lastRequest)
 
 S3method(print,twsConnection)
