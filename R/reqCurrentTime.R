@@ -6,16 +6,18 @@ function(con) {
   writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
   writeBin('1',con)
 
-  # removes the need to Sys.sleep
   waiting <- TRUE
   response <- character(0)
+  Sys.sleep(.1)
 
   while(waiting) {
     curChar <- readBin(con,character(),1)
     
-    if(length(curChar) > 0 && curChar==.twsIncomingMSG$CURRENT_TIME) {
-      currentTime <- readBin(con,character(),2)[2]
-      waiting <- FALSE
+    if(length(curChar) > 0) {
+      if(curChar==.twsIncomingMSG$CURRENT_TIME) {
+        currentTime <- readBin(con,character(),2)[2]
+        waiting <- FALSE
+      }
     }
 
   }
