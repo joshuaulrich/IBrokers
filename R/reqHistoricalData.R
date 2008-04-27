@@ -2,7 +2,7 @@
 function(conn,Contract,endDateTime,
          barSize='1 day',duration='1 M',
          useRTH='1',whatToShow='TRADES',time.format='1',
-         verbose=TRUE, tickerId='2', timeout=10, callback, file)
+         verbose=TRUE, tickerId='1', timeout=10, callback, file)
 {
   start.time <- Sys.time()
 
