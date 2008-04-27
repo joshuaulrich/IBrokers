@@ -4,11 +4,6 @@ function(conn,Contract,endDateTime,
          useRTH='1',whatToShow='TRADES',time.format='1',
          verbose=TRUE, tickerId='1', timeout=10)
 {
-#  pacingCheck <- Sys.time()-.lastRequest
-#  if(pacingCheck < 6) {
-#    if(verbose) message("Waiting to avoid TWS pacing violation")
-#    Sys.sleep(6-pacingCheck)
-#  }  
   start.time <- Sys.time()
 
   if(class(conn) != 'twsConnection') stop('tws connection object required')
@@ -94,6 +89,7 @@ function(conn,Contract,endDateTime,
         }
       }
     }
+    # need to add waiting test condition
     if(Sys.time() - start.time > timeout) {
       cancelHistoricalData(con,as.character(tickerId))
       cat('\n')
