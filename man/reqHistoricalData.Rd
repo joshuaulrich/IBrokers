@@ -19,7 +19,9 @@ reqHistoricalData(conn,
                   time.format = "1",
                   verbose = TRUE,
                   tickerId = "1",
-                  timeout = 10)
+                  timeout = 10,
+                  callback,
+                  file)
 
 cancelHistoricalData(con,tickerId)
 }
@@ -36,6 +38,8 @@ cancelHistoricalData(con,tickerId)
   \item{verbose}{ should progress be documented }
   \item{tickerId}{ a unique id to associte with the request }
   \item{timeout}{ length of time before cancelling request }
+  \item{callback}{ callback function to process data }
+  \item{file}{ file to write data to }
   \item{con}{ an \R connection object to the TWS API }
 }
 \details{
@@ -77,16 +81,36 @@ though depending on the overall request it may not succeed.
 
 \code{time.format} should simply be left alone. :D
 
+\code{callback} accepts a user function to process the raw
+data returned by the TWS.  This consists of a character
+vector that includes the first five elements of header
+information, with the fifth element specifying the number
+of rows in the results set.  Passing \code{NULL} to 
+\code{callback} will return the raw character vector.
+If nothing is specified, an xts object is returned.
+
+The \code{callback} function, if any, is called after all
+data has been received by the client.
+
+The \code{file} argument calls \code{write.table} to produce
+output suitable to reading in by \code{read.csv}. The \code{file}
+argument is passed to the write.table call, and if an empty
+string will return the output to the console.
+
+The \emph{hasGaps} column is converted automatically from
+(true,false) to 1 or 0, respectively. 
 }
 \value{
 Returns an \code{xts} object containing the requested data, along
-with additional information stored in the objects \code{xtsAttributes}.
+with additional information stored in the objects \code{xtsAttributes},
+unless \code{callback} or \code{file} is specified.
 }
 \references{ Interactive Brokers \url{www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
 \note{
 There is a strictly enforced 6 seconds between request pacing rule
 implemented by the TWS. Keep this in mind.
+IBrokers currently does \emph{not} manage this for the user.
 
 The TWS workstation must be running on the same machine
 as \R.
