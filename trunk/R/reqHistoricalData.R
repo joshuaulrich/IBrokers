@@ -2,7 +2,7 @@
 function(conn,Contract,endDateTime,
          barSize='1 day',duration='1 M',
          useRTH='1',whatToShow='TRADES',time.format='1',
-         verbose=TRUE, tickerId='1', timeout=10)
+         verbose=TRUE, tickerId='2', timeout=10, callback, file)
 {
   start.time <- Sys.time()
 
@@ -100,13 +100,33 @@ function(conn,Contract,endDateTime,
   }
 
   
-  cm <- matrix(response,nc=9,byrow=TRUE)
-  cm[,8] <- ifelse(cm[,8]=='false',0,1)
-  dts <- gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE)
-  x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
-  colnames(x) <- c('Open','High','Low','Close','Volume',
-                   'WAP','hasGaps','Count')
-  xtsAttributes(x) <- list(from=req.from,to=req.to)
-  x
+  if(missing(callback)) {
+    cm <- matrix(response,nc=9,byrow=TRUE)
+    cm[,8] <- ifelse(cm[,8]=='false',0,1)
+    dts <- gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE)
+    if(!missing(file)) {
+      cm[,1] <- dts
+      write.table(cm,
+                  file=file,
+                  quote=FALSE,
+                  row.names=FALSE,
+                  col.names=FALSE,
+                  sep=',')
+      invisible(return())
+    }
+    x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
+    colnames(x) <- c('Open','High','Low','Close','Volume',
+                     'WAP','hasGaps','Count')
+    xtsAttributes(x) <- list(from=req.from,to=req.to,
+                             src='IB',updated=Sys.time())
+    return(x)
+  } else
+  if(is.null(callback)) {
+    return(c(header,response))
+  } else {
+    FUN <- match.fun(callback)
+    return(FUN(c(header,response)))
+  }
+  
 }
 
