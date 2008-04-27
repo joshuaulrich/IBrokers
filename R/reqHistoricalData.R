@@ -101,9 +101,12 @@ function(conn,Contract,endDateTime,
 
   
   if(missing(callback)) {
+    # the default: return an xts object
     cm <- matrix(response,nc=9,byrow=TRUE)
     cm[,8] <- ifelse(cm[,8]=='false',0,1)
     dts <- gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE)
+
+    # if file is specified - dump to file instead
     if(!missing(file)) {
       cm[,1] <- dts
       write.table(cm,
@@ -114,6 +117,7 @@ function(conn,Contract,endDateTime,
                   sep=',')
       invisible(return())
     }
+
     x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
     colnames(x) <- c('Open','High','Low','Close','Volume',
                      'WAP','hasGaps','Count')
@@ -122,8 +126,10 @@ function(conn,Contract,endDateTime,
     return(x)
   } else
   if(is.null(callback)) {
+    # return raw TWS data including header
     return(c(header,response))
   } else {
+    # pass to callback function
     FUN <- match.fun(callback)
     return(FUN(c(header,response)))
   }
