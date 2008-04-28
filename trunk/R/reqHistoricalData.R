@@ -45,7 +45,6 @@ function(conn,Contract,endDateTime,
 #               '','0','20080219 21:11:41 GMT',
 #               '1 day','1 M','1',
 #               'TRADES','1')
-  readBin(con,character(),100) # flush the input stream
 
   for(i in 1:length(signals)) {
     writeBin(signals[i],con)
@@ -60,8 +59,10 @@ function(conn,Contract,endDateTime,
     flush.console()
   }
 
+  if(.Platform$OS=='windows') Sys.sleep(.1)
+
   while(waiting) {
-    curMsg <- readBin(con,character(),1)
+    curMsg <- suppressWarnings(readBin(con,character(),1))
     if(verbose) {
       cat('.')
       if(iter %% 30 == 0) cat('\n')
@@ -70,12 +71,14 @@ function(conn,Contract,endDateTime,
     }
 
     if(length(curMsg) > 0) {
+      # watch for error messages
       if(curMsg == .twsIncomingMSG$ERR_MSG) {
         if(!errorHandler(con,verbose,OK=c(165,2106))) {
           cat('\n')
           stop('Unable to complete historical data request')
         }
       }
+      # watch for historical data start
       if(curMsg == .twsIncomingMSG$HISTORICAL_DATA) {
         header <- readBin(con,character(),5)
         nbin <- as.numeric(header[5])*9
@@ -96,7 +99,7 @@ function(conn,Contract,endDateTime,
       stop("historical data request timed-out")
     }
 
-    Sys.sleep(.5)
+    Sys.sleep(.1)
   }
 
   

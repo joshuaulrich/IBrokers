@@ -1,7 +1,6 @@
 `reqCurrentTime` <-
 function(con) {
   con <- con[[1]]
-  readBin(con,character(),100) # flush any residual TWS messages
 
   writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
   writeBin('1',con)
@@ -11,7 +10,9 @@ function(con) {
   Sys.sleep(.1)
 
   while(waiting) {
-    curChar <- readBin(con,character(),1)
+    # suppressWarnings to handle readBin issues in Windows
+    # not returning character(0) when it should
+    curChar <- suppressWarnings(readBin(con,character(),1))
     
     if(length(curChar) > 0) {
       if(curChar==.twsIncomingMSG$CURRENT_TIME) {
@@ -20,6 +21,7 @@ function(con) {
       }
     }
 
+    if(waiting) Sys.sleep(.1)
   }
   tz <- Sys.getenv("TZ")
   on.exit(Sys.setenv(TZ=tz))
