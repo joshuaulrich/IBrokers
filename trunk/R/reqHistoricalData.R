@@ -9,11 +9,12 @@ function(conn,Contract,endDateTime,
   if(class(conn) != 'twsConnection') stop('tws connection object required')
   if(class(Contract) != 'twsContract') stop('twsContract required')
 
-  if(!barSize %in% c('1 secs','5 secs','15 secs','30 secs',
-                     '1 min', '2 mins','3 mins','5 mins','15 mins',
-                     '30 mins','1 hour','1 day','1 week','1 month',
-                     '3 months','1 year'))
-    stop('unknown barSize')
+  validBarSize <- c('1 secs','5 secs','15 secs','30 secs',
+                    '1 min', '2 mins','3 mins','5 mins','15 mins',
+                    '30 mins','1 hour','1 day','1 week','1 month',
+                    '3 months','1 year')
+  if(!barSize %in% validBarSize)
+    stop(paste('unknown barSize try',paste(validBarSize)))
 
   con <- conn[[1]]
 
