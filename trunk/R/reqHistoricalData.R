@@ -28,8 +28,10 @@ function(conn,Contract,endDateTime,
                      as.numeric(reqCurrentTime(con))),
                      format='%Y%m%d %H:%M:%S',use=FALSE)
 
+  VERSION <- "4"
+
   signals <- c(.twsOutgoingMSG$REQ_HISTORICAL_DATA, # '20'
-               '4', # version
+               VERSION,
                as.character(tickerId),
                Contract$symbol, Contract$sectype,
                Contract$expiry, Contract$strike,
@@ -94,13 +96,13 @@ function(conn,Contract,endDateTime,
       }
     }
     # need to add waiting test condition
-    if(Sys.time() - start.time > timeout) {
-      cancelHistoricalData(con,as.character(tickerId))
-      cat('\n')
-      stop("historical data request timed-out")
-    }
+#    if(Sys.time() - start.time > timeout) {
+#      cancelHistoricalData(con,as.character(tickerId))
+#      cat('\n')
+#      stop("historical data request timed-out")
+#    }
 
-    Sys.sleep(.1)
+    #Sys.sleep(.1)
   }
 
   

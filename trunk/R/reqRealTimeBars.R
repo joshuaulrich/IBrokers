@@ -1,8 +1,7 @@
-`reqMktData` <-
-function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
-          snapshot = FALSE, tickerId = "1", timeStamp=TRUE, callback, file, verbose=TRUE,
-          eventTickPrice,eventTickSize,eventTickOption,eventTickGeneric,
-          eventTickString,eventTickEFP) 
+`reqRealTimeBars` <-
+function (conn, Contract, tickerId = "1", 
+          whatToShow="TRADES",
+          barSize="5",useRTH="1", callback, file, verbose=TRUE)
 {
     if (class(conn) != "twsConnection") 
         stop("tws connection object required")
@@ -13,24 +12,20 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
     if (!isOpen(con)) 
         stop("connection to TWS has been closed")
 
-    cancelMktData <- function(con,tickerId) {
-      writeBin('2',con)
+    cancelRealTimeBars <- function(con,tickerId) {
+      writeBin(.twsOutgoingMSG$CANCEL_REAL_TIME_BARS,con)
       writeBin('1',con)
       writeBin(tickerId,con)
     }
 
-    on.exit(cancelMktData(con, as.character(tickerId)))
+    on.exit(cancelRealTimeBars(con, as.character(tickerId)))
 
-    snapshot <- ifelse(snapshot,"1","0")
-
-    if(snapshot == '1' && missing(tickGenerics)) tickGenerics <- ''
-  
-    VERSION <- "7"
+    VERSION <- "1"
  
-    signals <- c(.twsOutgoingMSG$REQ_MKT_DATA, VERSION, as.character(tickerId), 
+    signals <- c(.twsOutgoingMSG$REQ_REAL_TIME_BARS, VERSION, as.character(tickerId), 
         Contract$symbol, Contract$sectype, Contract$expiry, Contract$strike, 
         Contract$right, Contract$multiplier, Contract$exch, Contract$primary, 
-        Contract$currency, Contract$local,tickGenerics,snapshot)
+        Contract$currency, Contract$local,barSize,whatToShow,useRTH)
 
     for (i in 1:length(signals)) {
         writeBin(signals[i], con)
@@ -50,37 +45,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
                   stop("Unable to complete market data request")
                 }
             }
-            if (curMsg == .twsIncomingMSG$TICK_PRICE) {
-                header <- readBin(con, character(), 6)
-                cat('<price> ')
-                cat(curMsg,paste(header),'\n')
-            }
-            if (curMsg == .twsIncomingMSG$TICK_SIZE) {
-                header <- readBin(con, character(), 4)
-                cat('<size> ')
-                cat(curMsg,paste(header),'\n')
-            }
-            if (curMsg == .twsIncomingMSG$TICK_OPTION) {
-                header <- readBin(con, character(), 5)
-                cat('<option> ')
-                cat(curMsg,paste(header),'\n')
-            }
-            if (curMsg == .twsIncomingMSG$TICK_GENERIC) {
-                header <- readBin(con, character(), 4)
-                cat('<generic> ')
-                cat(curMsg,paste(header),'\n')
-            }
-            if (curMsg == .twsIncomingMSG$TICK_STRING) {
-                header <- readBin(con, character(), 4)
-                cat('<string> ')
-                cat(curMsg,paste(header),'\n')
-                if(snapshot == '1') 
-                  waiting <- FALSE
-            }
-            if (curMsg == .twsIncomingMSG$TICK_EFP) {
-                header <- readBin(con, character(), 13)
-                cat('<efp> ')
-                cat(curMsg,paste(header),'\n')
+            if( curMsg == .twsIncomingMSG$REAL_TIME_BARS) {
+              msg <- readBin(con,character(),10)
+              columns <- c('Id','time','open','high','low','close','volume','wap','count')
+              cat(paste(columns,'=',msg[-1],sep=''),'\n')
             }
         }
     }
