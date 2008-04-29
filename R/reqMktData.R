@@ -13,12 +13,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
     if (!isOpen(con)) 
         stop("connection to TWS has been closed")
 
-    cancelMktData <- function(con,tickerId,snapshot) {
-      if(snapshot == "0") {
-        writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA,con)
-        writeBin('1',con)
-        writeBin(tickerId,con)
-      }
+    cancelMktData <- function(con,tickerId) {
+      writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA,con)
+      writeBin('1',con)
+      writeBin(tickerId,con)
     }
 
     # set up default event handlers
@@ -46,7 +44,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
         Contract$right, Contract$multiplier, Contract$exch, Contract$primary, 
         Contract$currency, Contract$local,tickGenerics,snapshot)
 
-    on.exit(cancelMktData(con, as.character(tickerId),snapshot))
+    on.exit(cancelMktData(con, as.character(tickerId)))
 
     for (i in 1:length(signals)) {
         writeBin(signals[i], con)
