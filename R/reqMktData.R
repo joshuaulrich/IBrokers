@@ -1,6 +1,5 @@
 `reqMktData` <-
-function (conn, Contract, endDateTime, barSize = "1 day", duration = "1 M", 
-    useRTH = "1", whatToShow = "TRADES", time.format = "1", verbose = FALSE, 
+function (conn, Contract, tickGenerics='', snapshot = TRUE, verbose = FALSE, 
     tickerId = "1", timeout = 10, callback, file) 
 {
     start.time <- Sys.time()
@@ -8,10 +7,7 @@ function (conn, Contract, endDateTime, barSize = "1 day", duration = "1 M",
         stop("tws connection object required")
     if (class(Contract) != "twsContract") 
         stop("twsContract required")
-    if (!barSize %in% c("1 secs", "5 secs", "15 secs", "30 secs", 
-        "1 min", "2 mins", "3 mins", "5 mins", "15 mins", "30 mins", 
-        "1 hour", "1 day", "1 week", "1 month", "3 months", "1 year")) 
-        stop("unknown barSize")
+
     con <- conn[[1]]
     if (!isOpen(con)) 
         stop("connection to TWS has been closed")
@@ -24,15 +20,17 @@ function (conn, Contract, endDateTime, barSize = "1 day", duration = "1 M",
 
     on.exit(cancelMktData(con, as.character(tickerId)))
 
-    if (missing(endDateTime)) 
-        endDateTime <- strftime(as.POSIXlt(as.POSIXct("1970-01-01") + 
-            as.numeric(reqCurrentTime(con))), format = "%Y%m%d %H:%M:%S", 
-            use = FALSE)
-    signals <- c(.twsOutgoingMSG$REQ_MKT_DATA, "6", as.character(tickerId), 
+    snapshot <- ifelse(snapshot,"1","0")
+  
+    VERSION <- "6"
+ 
+    signals <- c(.twsOutgoingMSG$REQ_MKT_DATA, VERSION, as.character(tickerId), 
         Contract$symbol, Contract$sectype, Contract$expiry, Contract$strike, 
         Contract$right, Contract$multiplier, Contract$exch, Contract$primary, 
-        Contract$currency, Contract$local,'100')
+        Contract$currency, Contract$local,tickGenerics,snapshot)
 
+    # if no snapshot - drop from request
+    if(snapshot == '0') signals <- signals[-15] 
 
     for (i in 1:length(signals)) {
         writeBin(signals[i], con)
