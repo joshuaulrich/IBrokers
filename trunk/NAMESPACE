@@ -7,8 +7,10 @@ export(twsConnect,
        twsFuture,
        reqCurrentTime,
        reqHistoricalData,
+       reqMktData,
+       reqRealTimeBars,
        cancelHistoricalData)
 
-export(.twsIncomingMSG,.twsOutgoingMSG,.twsERR,.lastRequest)
+export(.twsIncomingMSG,.twsOutgoingMSG,.twsERR,.twsTickType)
 
 S3method(print,twsConnection)

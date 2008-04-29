@@ -13,13 +13,27 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
     if (!isOpen(con)) 
         stop("connection to TWS has been closed")
 
-    cancelMktData <- function(con,tickerId) {
-      writeBin('2',con)
-      writeBin('1',con)
-      writeBin(tickerId,con)
+    cancelMktData <- function(con,tickerId,snapshot) {
+      if(snapshot == "0") {
+        writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA,con)
+        writeBin('1',con)
+        writeBin(tickerId,con)
+      }
     }
 
-    on.exit(cancelMktData(con, as.character(tickerId)))
+    # set up default event handlers
+    if(missing(eventTickPrice))
+      eventTickPrice <- e_tick_price
+    if(missing(eventTickSize))
+      eventTickSize  <- e_tick_size
+    if(missing(eventTickOption)) 
+      eventTickOption <- e_tick_option
+    if(missing(eventTickGeneric)) 
+      eventTickGeneric <- e_tick_generic
+    if(missing(eventTickString)) 
+      eventTickString <- e_tick_string
+    if(missing(eventTickEFP))
+      eventTickEFP <- e_tick_EFP
 
     snapshot <- ifelse(snapshot,"1","0")
 
@@ -31,6 +45,8 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
         Contract$symbol, Contract$sectype, Contract$expiry, Contract$strike, 
         Contract$right, Contract$multiplier, Contract$exch, Contract$primary, 
         Contract$currency, Contract$local,tickGenerics,snapshot)
+
+    on.exit(cancelMktData(con, as.character(tickerId),snapshot))
 
     for (i in 1:length(signals)) {
         writeBin(signals[i], con)
@@ -52,8 +68,9 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
             }
             if (curMsg == .twsIncomingMSG$TICK_PRICE) {
                 header <- readBin(con, character(), 6)
-                cat('<price> ')
-                cat(curMsg,paste(header),'\n')
+                #cat('<price> ')
+                #cat(curMsg,paste(header),'\n')
+                eventTickPrice(curMsg,header)
             }
             if (curMsg == .twsIncomingMSG$TICK_SIZE) {
                 header <- readBin(con, character(), 4)
