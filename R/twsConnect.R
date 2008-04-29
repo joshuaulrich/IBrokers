@@ -11,7 +11,7 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
        stop(paste("couldn't connect to TWS on port",port))
      }
 
-     writeBin("37", s)
+     writeBin("33", s)
      writeBin(as.character(clientId), s)
 
      waiting <- TRUE
