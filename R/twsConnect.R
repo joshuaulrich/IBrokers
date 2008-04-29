@@ -3,7 +3,8 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
           timeout=10)
  {
      start.time <- Sys.time()
-     s <- socketConnection(host = host, port = port, open='ab')
+     s <- socketConnection(host = host, port = port,
+                           open='ab', blocking=TRUE)
 
      if(!isOpen(s)) { 
        close(s)
