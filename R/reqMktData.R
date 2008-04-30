@@ -72,8 +72,9 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
             }
             if (curMsg == .twsIncomingMSG$TICK_SIZE) {
                 header <- readBin(con, character(), 4)
-                cat('<size> ')
-                cat(curMsg,paste(header),'\n')
+                #cat('<size> ')
+                #cat(curMsg,paste(header),'\n')
+                eventTickSize(curMsg,header)
             }
             if (curMsg == .twsIncomingMSG$TICK_OPTION) {
                 header <- readBin(con, character(), 5)
@@ -97,6 +98,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
                 cat('<efp> ')
                 cat(curMsg,paste(header),'\n')
             }
+            flush.console()
         }
     }
 #    if (missing(callback)) {
