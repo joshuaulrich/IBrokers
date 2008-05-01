@@ -6,17 +6,24 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
 {
     if (class(conn) != "twsConnection") 
         stop("tws connection object required")
-    if (class(Contract) != "twsContract") 
-        stop("twsContract required")
+
+    if(class(Contract) == "twsContract") Contract <- list(Contract)
+
+    for(n in 1:length(Contract)) {
+      if (class(Contract[[n]]) != "twsContract") 
+          stop("twsContract required")
+    }
 
     con <- conn[[1]]
     if (!isOpen(con)) 
         stop("connection to TWS has been closed")
 
     cancelMktData <- function(con,tickerId) {
-      writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA,con)
-      writeBin('1',con)
-      writeBin(tickerId,con)
+      for(i in 1:length(tickerId)) {
+        writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA,con)
+        writeBin('1',con)
+        writeBin(tickerId[i],con)
+      }
     }
 
     # set up default event handlers
@@ -39,16 +46,22 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
   
     VERSION <- "7"
  
-    signals <- c(.twsOutgoingMSG$REQ_MKT_DATA, VERSION, as.character(tickerId), 
-        Contract$symbol, Contract$sectype, Contract$expiry, Contract$strike, 
-        Contract$right, Contract$multiplier, Contract$exch, Contract$primary, 
-        Contract$currency, Contract$local,tickGenerics,snapshot)
+    ticker_id <- as.character(tickerId)
 
-    on.exit(cancelMktData(con, as.character(tickerId)))
-
-    for (i in 1:length(signals)) {
-        writeBin(signals[i], con)
+    for(n in 1:length(Contract)) {
+      signals <- c(.twsOutgoingMSG$REQ_MKT_DATA, VERSION, ticker_id,
+          Contract[[n]]$symbol, Contract[[n]]$sectype, Contract[[n]]$expiry, Contract[[n]]$strike, 
+          Contract[[n]]$right, Contract[[n]]$multiplier, Contract[[n]]$exch, Contract[[n]]$primary, 
+          Contract[[n]]$currency, Contract[[n]]$local,tickGenerics,snapshot)
+  
+  
+      for (i in 1:length(signals)) {
+          writeBin(signals[i], con)
+      }
+      ticker_id <- as.character(as.numeric(tickerId)+n)
     }
+
+    on.exit(cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
     waiting <- TRUE
     response <- character(0)
 
@@ -65,38 +78,31 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
                 }
             }
             if (curMsg == .twsIncomingMSG$TICK_PRICE) {
-                header <- readBin(con, character(), 6)
-                #cat('<price> ')
-                #cat(curMsg,paste(header),'\n')
-                eventTickPrice(curMsg,header)
+                contents <- readBin(con, character(), 6)
+                eventTickPrice(curMsg,contents)
             }
             if (curMsg == .twsIncomingMSG$TICK_SIZE) {
-                header <- readBin(con, character(), 4)
-                #cat('<size> ')
-                #cat(curMsg,paste(header),'\n')
-                eventTickSize(curMsg,header)
+                contents <- readBin(con, character(), 4)
+                eventTickSize(curMsg,contents)
             }
             if (curMsg == .twsIncomingMSG$TICK_OPTION) {
-                header <- readBin(con, character(), 5)
-                cat('<option> ')
-                cat(curMsg,paste(header),'\n')
+                contents <- readBin(con, character(), 5)
+                eventTickOption(curMsg,contents)
             }
             if (curMsg == .twsIncomingMSG$TICK_GENERIC) {
-                header <- readBin(con, character(), 4)
-                cat('<generic> ')
-                cat(curMsg,paste(header),'\n')
+                contents <- readBin(con, character(), 4)
+                eventTickGeneric(curMsg,contents)
             }
             if (curMsg == .twsIncomingMSG$TICK_STRING) {
-                header <- readBin(con, character(), 4)
-                cat('<string> ')
-                cat(curMsg,paste(header),'\n')
+                contents <- readBin(con, character(), 4)
+                eventTickString(curMsg,contents)
                 if(snapshot == '1') 
                   waiting <- FALSE
             }
             if (curMsg == .twsIncomingMSG$TICK_EFP) {
-                header <- readBin(con, character(), 13)
+                contents <- readBin(con, character(), 13)
                 cat('<efp> ')
-                cat(curMsg,paste(header),'\n')
+                cat(curMsg,paste(contents),'\n')
             }
             flush.console()
         }
