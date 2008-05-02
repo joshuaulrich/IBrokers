@@ -149,3 +149,51 @@
     cat('<default EFP> ',file=file,append=TRUE)
     cat(paste(string),'\n',file=file,append=TRUE)
 }
+
+######################################################################
+#
+#  default event handlers for reqMktDepth
+#
+######################################################################
+
+`e_update_mkt_depth` <-  function(msg,contents,timeStamp,file,...) {
+  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>,',sep='',file=file,append=TRUE)
+  id <- contents[2]
+  position <- contents[3]
+  operation <- switch(contents[4],
+                      '0' = 'insert',
+                      '1' = 'update',
+                      '2' = 'delete')
+  side <- ifelse(contents[5]=='0','bid','ask')
+  price <- contents[6]
+  size <- contents[7]
+
+  cat(paste("id=",id,',',sep=''),file=file,append=TRUE)
+  cat(paste("pos=",position,',',sep=''),file=file,append=TRUE)
+  cat(paste("operation=",operation,',',sep=''),file=file,append=TRUE)
+  cat(paste("side=",side,',',sep=''),file=file,append=TRUE)
+  cat(paste("price=",price,',',sep=''),file=file,append=TRUE)
+  cat(paste("size=",size,sep=''),'\n',file=file,append=TRUE)
+}
+
+`e_update_mkt_depthL2` <-  function(msg,contents,timeStamp,file,...) {
+  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>,',sep='',file=file,append=TRUE)
+  id <- contents[2]
+  position <- contents[3]
+  marketMaker <- contents[4]
+  operation <- switch(contents[5],
+                      '0' = 'insert',
+                      '1' = 'update',
+                      '2' = 'delete')
+  side <- ifelse(contents[6]=='0','bid','ask')
+  price <- contents[7]
+  size <- contents[8]
+
+  cat(paste("id=",id,',',sep=''),file=file,append=TRUE)
+  cat(paste("pos=",position,',',sep=''),file=file,append=TRUE)
+  cat(paste("marketMaker=",marketMaker,',',sep=''),file=file,append=TRUE)
+  cat(paste("operation=",operation,',',sep=''),file=file,append=TRUE)
+  cat(paste("side=",side,',',sep=''),file=file,append=TRUE)
+  cat(paste("price=",price,',',sep=''),file=file,append=TRUE)
+  cat(paste("size=",size,sep=''),'\n',file=file,append=TRUE)
+}

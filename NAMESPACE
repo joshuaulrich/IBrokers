@@ -8,6 +8,7 @@ export(twsConnect,
        reqCurrentTime,
        reqHistoricalData,
        reqMktData,
+       reqMktDepth,
        reqRealTimeBars,
        cancelHistoricalData)
 
