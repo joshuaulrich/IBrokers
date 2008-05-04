@@ -1,6 +1,6 @@
 `reqMktDepth` <-
 function (conn, Contract, tickerId = "1", numRows="20",
-          timeStamp="%Y%m%d %H:%M:%OS",
+          timeStamp=TRUE,
           file='', verbose=TRUE,
           eventUpdateMktDepth, eventUpdateMktDepthL2,
           CALLBACK,...) 
@@ -27,7 +27,11 @@ function (conn, Contract, tickerId = "1", numRows="20",
       }
     }
 
-
+    if(!is.character(timeStamp) & timeStamp) {
+      timeStamp <- "%Y%m%d %H:%M:%OS"
+    } else {
+      timeStamp <- NULL
+    }
     # set up default event handlers, if
     # callback is not set
     if(missing(CALLBACK)) {

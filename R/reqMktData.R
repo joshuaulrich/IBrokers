@@ -1,6 +1,6 @@
 `reqMktData` <-
 function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
-          snapshot = FALSE, tickerId = "1", timeStamp="%Y%m%d %H:%M:%OS",
+          snapshot = FALSE, tickerId = "1", timeStamp=TRUE,
           file='', verbose=TRUE,
           eventTickPrice,eventTickSize,
           eventTickOption,eventTickGeneric,
@@ -28,7 +28,11 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
       }
     }
 
-
+    if(!is.character(timeStamp) & timeStamp) {
+      timeStamp <- "%Y%m%d %H:%M:%OS"
+    } else {
+      timeStamp <- NULL
+    }
     # set up default event handlers, if
     # callback is not set
     if(missing(CALLBACK)) {
@@ -115,10 +119,4 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
         }
       }
     } else CALLBACK(con,...)
-}
-
-
-`writeMktData` <- function(con,file='',timeStamp,...)
-{
-
 }

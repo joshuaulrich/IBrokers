@@ -127,27 +127,27 @@
   }
 }
 
-`e_tick_string`  <- function(msg,string,timeStamp,file,...) {
-  tickType <- string[3] 
+`e_tick_string`  <- function(msg,contents,timeStamp,file,...) {
+  tickType <- contents[3] 
   if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>',sep='',file=file,append=TRUE)
-  cat(" id=",string[2]," ",sep='',file=file,append=TRUE)
+  cat(" id=",contents[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_EXCH) { #32
-    cat('bidExchange:',string[4],'\n',file=file,append=TRUE)
+    cat('bidExchange:',contents[4],'\n',file=file,append=TRUE)
   } else
   if(tickType == .twsTickType$ASK_EXCH) { #33
-    cat('askExchange:',string[4],'\n',file=file,append=TRUE)
+    cat('askExchange:',contents[4],'\n',file=file,append=TRUE)
   } else
   if(tickType == .twsTickType$LAST_TIMESTAMP) { #45
-    cat('lastTimestamp:',string[4],'\n',file=file,append=TRUE)
+    cat('lastTimestamp:',contents[4],'\n',file=file,append=TRUE)
   } else {
     cat('<default string> ',file=file,append=TRUE)
-    cat(paste(string),'\n',file=file,append=TRUE)
+    cat(paste(contents),'\n',file=file,append=TRUE)
   }
 }
 
-`e_tick_EFP`     <- function(msg,contents,file,append=TRUE) {
+`e_tick_EFP`     <- function(msg,contents,timeStamp,file,...) {
     cat('<default EFP> ',file=file,append=TRUE)
-    cat(paste(string),'\n',file=file,append=TRUE)
+    cat(paste(contents),'\n',file=file,append=TRUE)
 }
 
 ######################################################################
