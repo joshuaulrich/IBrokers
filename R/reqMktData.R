@@ -37,18 +37,27 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
     # callback is not set
     if(missing(CALLBACK)) {
       if(missing(eventTickPrice))
-        eventTickPrice <- e_tick_price
+        eventTickPrice   <- e_tick_price
       if(missing(eventTickSize))
-        eventTickSize  <- e_tick_size
+        eventTickSize    <- e_tick_size
       if(missing(eventTickOption)) 
-        eventTickOption <- e_tick_option
+        eventTickOption  <- e_tick_option
       if(missing(eventTickGeneric)) 
         eventTickGeneric <- e_tick_generic
       if(missing(eventTickString)) 
-        eventTickString <- e_tick_string
+        eventTickString  <- e_tick_string
       if(missing(eventTickEFP))
-        eventTickEFP <- e_tick_EFP
+        eventTickEFP     <- e_tick_EFP
+    } 
+    else if(is.null(CALLBACK)) {
+        eventTickPrice   <- NULL
+        eventTickSize    <- NULL
+        eventTickOption  <- NULL
+        eventTickGeneric <- NULL
+        eventTickString  <- NULL
+        eventTickEFP     <- NULL
     }
+
 
     snapshot <- ifelse(snapshot,"1","0")
 
@@ -77,7 +86,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
 
     if (.Platform$OS == "windows") 
         Sys.sleep(0.1)
-    if(missing(CALLBACK)) {
+    if(missing(CALLBACK) || is.null(CALLBACK)) {
       while (waiting) {
         curMsg <- suppressWarnings(readBin(con, character(), 
             1))
@@ -90,30 +99,50 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
           }
           if (curMsg == .twsIncomingMSG$TICK_PRICE) {
               contents <- readBin(con, character(), 6)
-              eventTickPrice(curMsg,contents,timeStamp,file)
+              if(is.null(eventTickPrice)) {
+                if (!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else eventTickPrice(curMsg,contents,timeStamp,file)
           }
           if (curMsg == .twsIncomingMSG$TICK_SIZE) {
               contents <- readBin(con, character(), 4)
-              eventTickSize(curMsg,contents,timeStamp,file)
+              if(is.null(eventTickSize)) {
+                if (!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else eventTickSize(curMsg,contents,timeStamp,file)
           }
           if (curMsg == .twsIncomingMSG$TICK_OPTION) {
               contents <- readBin(con, character(), 5)
-              eventTickOption(curMsg,contents,timeStamp,file)
+              if(is.null(eventTickOption)) {
+                if (!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else eventTickOption(curMsg,contents,timeStamp,file)
           }
           if (curMsg == .twsIncomingMSG$TICK_GENERIC) {
               contents <- readBin(con, character(), 4)
-              eventTickGeneric(curMsg,contents,timeStamp,file)
+              if(is.null(eventTickGeneric)) {
+                if (!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else eventTickGeneric(curMsg,contents,timeStamp,file)
           }
           if (curMsg == .twsIncomingMSG$TICK_STRING) {
               contents <- readBin(con, character(), 4)
-              eventTickString(curMsg,contents,timeStamp,file)
+              if(is.null(eventTickString)) {
+                if (!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else eventTickString(curMsg,contents,timeStamp,file)
               if(snapshot == '1') 
                 waiting <- FALSE
           }
           if (curMsg == .twsIncomingMSG$TICK_EFP) {
               contents <- readBin(con, character(), 13)
-              cat('<efp> ')
-              cat(curMsg,paste(contents),'\n')
+              if(is.null(eventTickEFP)) {
+                if (!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else {
+                cat('<efp> ')
+                cat(curMsg,paste(contents),'\n')
+              }
           }
           flush.console()
         }

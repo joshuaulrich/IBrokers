@@ -39,6 +39,10 @@ function (conn, Contract, tickerId = "1", numRows="20",
         eventUpdateMktDepth <- e_update_mkt_depth
       if(missing(eventUpdateMktDepthL2))
         eventUpdateMktDepthL2 <- e_update_mkt_depthL2
+    } else if(is.null(CALLBACK)) {
+        # return raw data
+        eventUpdateMktDepth   <- NULL
+        eventUpdateMktDepthL2 <- NULL
     }
 
     VERSION <- "3"
@@ -64,7 +68,7 @@ function (conn, Contract, tickerId = "1", numRows="20",
 
     if (.Platform$OS == "windows") 
         Sys.sleep(0.1)
-    if(missing(CALLBACK)) {
+    if(missing(CALLBACK) || is.null(CALLBACK)) {
       while (waiting) {
         curMsg <- suppressWarnings(readBin(con, character(), 
             1))
@@ -78,12 +82,16 @@ function (conn, Contract, tickerId = "1", numRows="20",
           if (curMsg == .twsIncomingMSG$MARKET_DEPTH) {
               contents <- readBin(con, character(), 7)
               if(is.null(eventUpdateMktDepth)) {
-                cat(paste(contents),'\n',file=file)
+                if(!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file,append=TRUE)
               } else eventUpdateMktDepth(curMsg,contents,timeStamp,file)
           }
           if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) {
               contents <- readBin(con, character(), 8)
-              eventUpdateMktDepthL2(curMsg,contents,timeStamp,file)
+              if(is.null(eventUpdateMktDepthL2)) {
+                if(!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                cat(paste(contents),'\n',file=file, append=TRUE)
+              } else eventUpdateMktDepthL2(curMsg,contents,timeStamp,file)
           }
           flush.console()
         }
