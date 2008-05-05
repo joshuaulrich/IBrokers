@@ -49,7 +49,8 @@ be made to coerce, but should not be relied upon.
 The \code{endDateTime} argument must be of the form
 'CCYYMMDD HH:MM:SS TZ'. If not specified the current
 time as returned from the TWS server will be used. This
-is the preferred method.
+is the preferred method for backfilling data. The \sQuote{TZ}
+portion of the string is optional.
 
 Legal \code{barSize} settings are technically
 \sQuote{1 secs},\sQuote{5 secs},\sQuote{15 secs},
@@ -108,6 +109,12 @@ unless \code{callback} or \code{file} is specified.
 \references{ Interactive Brokers \url{www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
 \note{
+Historical data via the TWS API is at best unreliable. As historical
+data is not a priority of the IB API, outside of regular trading
+hours it may become unresponsive or unavailable.  The only current
+way to handle this is to generally to disconnect from the TWS
+via \code{twsDisconnect} and then reconnect with \code{twsConnect}.
+
 There is a strictly enforced 6 seconds between request pacing rule
 implemented by the TWS. Keep this in mind.
 IBrokers currently does \emph{not} manage this for the user.

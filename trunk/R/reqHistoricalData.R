@@ -76,7 +76,7 @@ function(conn,Contract,endDateTime,
     if(length(curMsg) > 0) {
       # watch for error messages
       if(curMsg == .twsIncomingMSG$ERR_MSG) {
-        if(!errorHandler(con,verbose,OK=c(165,2106))) {
+        if(!errorHandler(con,verbose,OK=c(165,300,366,2104,2106,2107))) {
           cat('\n')
           stop('Unable to complete historical data request')
         }
