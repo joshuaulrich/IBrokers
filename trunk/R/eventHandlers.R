@@ -197,3 +197,16 @@
   cat(paste("price=",price,',',sep=''),file=file,append=TRUE)
   cat(paste("size=",size,sep=''),'\n',file=file,append=TRUE)
 }
+
+
+######################################################################
+#
+#  default event handlers for reqRealTimeBars
+#
+######################################################################
+
+`event_real_time_bars` <- function(msg,contents,file=file,...) {
+  columns <- c("Id","time","open","high","low","close","volume",
+               "wap","count")
+  cat(paste(columns,"=",contents[-1],sep=""),'\n',file=file,append=TRUE)
+}

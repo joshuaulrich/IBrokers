@@ -7,100 +7,82 @@ Allows for streaming real-time bars to be handled in \R
 \usage{
 reqRealTimeBars(conn,
                 Contract,
-                tickerId = "1",
                 whatToShow = "TRADES", 
                 barSize = "5",
                 useRTH = "1",
-                callback,
-                file,
-                verbose = TRUE)
+                tickerId = "1",
+                file = "",
+                verbose = TRUE,
+                eventRealTimeBars,
+                CALLBACK,
+                ...) 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{ ~~Describe \code{conn} here~~ }
-  \item{Contract}{ ~~Describe \code{Contract} here~~ }
-  \item{tickerId}{ ~~Describe \code{tickerId} here~~ }
-  \item{whatToShow}{ ~~Describe \code{whatToShow} here~~ }
-  \item{barSize}{ ~~Describe \code{barSize} here~~ }
-  \item{useRTH}{ ~~Describe \code{useRTH} here~~ }
-  \item{callback}{ ~~Describe \code{callback} here~~ }
-  \item{file}{ ~~Describe \code{file} here~~ }
-  \item{verbose}{ ~~Describe \code{verbose} here~~ }
+  \item{conn}{ a valid \code{twsConnection} object }
+  \item{Contract}{ \code{twsContract} object(s) requested }
+  \item{tickerId}{ the ticker id to associate with the returned bars }
+  \item{whatToShow}{ what to show }
+  \item{barSize}{ bar size - currently on 5 secs is TWS supported }
+  \item{useRTH}{ regular trading hours }
+  \item{file}{ passed to internal \code{cat} calls. See associated help. }
+  \item{verbose}{ print diagnostics }
+  \item{eventRealTimeBars}{ callback function, if any. }
+  \item{CALLBACK}{ main reciever callback, if any. }
+  \item{\dots}{ additional args to callback }
 }
 \details{
-  ~~ If necessary, more details than the description above ~~
+This function provides R level access to real time (5 second) bars
+returned by the TWS API.  The Interactive Brokers documentation
+should be reference for the exact meaning of the returned data.
+
+Callbacks, via eventRealTimeBars and CALLBACK are
+designed to allow for R level processing of the real-time data
+stream.
+
+eventRealTimeBars allows for direct manipulation of the actual
+signal recieved.
+These may be user-defined functions taking the
+appropriate arguments.  Each message recieved (each new bar)
+will invoke one of this callback.
+By default when nothing is specified, the code will
+call the default method for printing the results to the screen via
+'cat'.
+
+Note that the use of the argument 'file' will be passed to these
+'cat' calls, and therefore it will be possible to use the
+functionality of 'cat' directly - e.g. piping output or writing to
+a connection.  The simplest use of file would be to specify the
+name of a file, or open connection to append the output of the stream to.
+
+The 'CALLBACK' argument is used for more control of the incoming
+results.  This requires user-level error checking as well as TWS
+API interaction.  It is here for advanced use and until documented
+should be left alone.
+
 }
 \value{
-  ~Describe the value returned
-  If it is a LIST, use
-  \item{comp1 }{Description of 'comp1'}
-  \item{comp2 }{Description of 'comp2'}
-  ...
+The real-time bar data requested.
 }
-\references{ ~put references to the literature/web site here ~ }
-\author{ ~~who you are~~ }
-\note{ ~~further notes~~ 
-
- ~Make other sections like Warning with \section{Warning }{....} ~
+\references{ Interactive Brokers TWS API
+\url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm}
 }
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+\author{ Jeffrey A. Ryan }
+\note{
+As R is single threaded - this request will run until interupted
+by an error or by user action. Both will clean up after themselves
+when appropriate.
+}
+\seealso{ \code{\link{twsConnect}},\code{\link{twsContract}} }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+tws <- twsConnect()
+contract <- twsEquity("QQQQ","SMART","ISLAND")
+reqRealTimeBars(tws, contract)
 
-## The function is currently defined as
-function (conn, Contract, tickerId = "1", whatToShow = "TRADES", 
-    barSize = "5", useRTH = "1", callback, file, verbose = TRUE) 
-{
-    if (class(conn) != "twsConnection") 
-        stop("tws connection object required")
-    if (class(Contract) != "twsContract") 
-        stop("twsContract required")
-    con <- conn[[1]]
-    if (!isOpen(con)) 
-        stop("connection to TWS has been closed")
-    cancelRealTimeBars <- function(con, tickerId) {
-        writeBin(.twsOutgoingMSG$CANCEL_REAL_TIME_BARS, con)
-        writeBin("1", con)
-        writeBin(tickerId, con)
-    }
-    on.exit(cancelRealTimeBars(con, as.character(tickerId)))
-    VERSION <- "1"
-    signals <- c(.twsOutgoingMSG$REQ_REAL_TIME_BARS, VERSION, 
-        as.character(tickerId), Contract$symbol, Contract$sectype, 
-        Contract$expiry, Contract$strike, Contract$right, Contract$multiplier, 
-        Contract$exch, Contract$primary, Contract$currency, Contract$local, 
-        barSize, whatToShow, useRTH)
-    for (i in 1:length(signals)) {
-        writeBin(signals[i], con)
-    }
-    waiting <- TRUE
-    response <- character(0)
-    if (.Platform$OS == "windows") 
-        Sys.sleep(0.1)
-    while (waiting) {
-        curMsg <- suppressWarnings(readBin(con, character(), 
-            1))
-        if (length(curMsg) > 0) {
-            if (curMsg == .twsIncomingMSG$ERR_MSG) {
-                if (!errorHandler(con, verbose, OK = c(165, 300, 
-                  2104, 2106, 2107))) {
-                  cat("\n")
-                  stop("Unable to complete market data request")
-                }
-            }
-            if (curMsg == .twsIncomingMSG$REAL_TIME_BARS) {
-                msg <- readBin(con, character(), 10)
-                columns <- c("Id", "time", "open", "high", "low", 
-                  "close", "volume", "wap", "count")
-                cat(paste(columns, "=", msg[-1], sep = ""), "\n")
-            }
-        }
-    }
-  }
+# write to an open file connection
+fh <- file('out.dat',open='a')
+reqRealTimeBars(tws, contract, file=fh)
+close(fh)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+}
+\keyword{ utilities }
