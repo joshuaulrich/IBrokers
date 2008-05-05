@@ -1,5 +1,5 @@
 `twsOption` <-
-function(local,expiry),
+function(local,expiry,
          strike,right="C",exch="SMART",primary="",
          currency="USD",symbol="",include_expired="0")
 {
