@@ -22,7 +22,7 @@ function(conn,Contract,endDateTime,
 
   on.exit(cancelHistoricalData(con,as.character(tickerId)))
 
-  if(missing(endDateTime)) 
+  if(missing(endDateTime) || is.null(endDateTime)) 
     endDateTime <- strftime(
                      as.POSIXlt(as.POSIXct('1970-01-01')+
                      as.numeric(reqCurrentTime(con))),
