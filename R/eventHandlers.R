@@ -164,7 +164,7 @@
                       '0' = 'insert',
                       '1' = 'update',
                       '2' = 'delete')
-  side <- ifelse(contents[5]=='0','bid','ask')
+  side <- ifelse(contents[5]=='1','bid','ask')
   price <- contents[6]
   size <- contents[7]
 
@@ -185,7 +185,7 @@
                       '0' = 'insert',
                       '1' = 'update',
                       '2' = 'delete')
-  side <- ifelse(contents[6]=='0','bid','ask')
+  side <- ifelse(contents[6]=='1','bid','ask')
   price <- contents[7]
   size <- contents[8]
 
