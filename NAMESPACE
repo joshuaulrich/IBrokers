@@ -1,18 +1,31 @@
 export(twsConnect,
        twsDisconnect,
+
        twsConnectionTime,
        serverVersion,
+       reqCurrentTime,
+
        twsContract,
+       twsCurrency,
        twsEquity,
        twsFuture,
        twsOption,
-       reqCurrentTime,
-       reqHistoricalData,
-       reqMktData,
-       reqMktDepth,
-       reqRealTimeBars,
-       cancelHistoricalData)
 
-export(.twsIncomingMSG,.twsOutgoingMSG,.twsERR,.twsTickType)
+       reqHistoricalData,
+       cancelHistoricalData,
+
+       reqMktData,
+       cancelMktData,
+
+       reqMktDepth,
+
+       reqRealTimeBars
+      )
+
+export(.twsIncomingMSG,
+       .twsOutgoingMSG,
+       .twsERR,
+       .twsTickType
+      )
 
 S3method(print,twsConnection)

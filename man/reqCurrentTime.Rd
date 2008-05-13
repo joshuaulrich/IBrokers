@@ -7,10 +7,10 @@ server, expressed as seconds since
 1970-01-01 GMT.
 }
 \usage{
-reqCurrentTime(con)
+reqCurrentTime(conn)
 }
 \arguments{
-  \item{con}{ a valid tws connection object }
+  \item{conn}{ a valid tws connection object }
 }
 \value{
 Seconds since 1970-01-01 GMT

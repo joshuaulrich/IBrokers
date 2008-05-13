@@ -1,5 +1,6 @@
 \name{reqMktData}
 \alias{reqMktData}
+\alias{cancelMktData}
 \title{ Request Market Data Feed from TWS }
 \description{
 Allows for streaming market data 
@@ -21,6 +22,8 @@ reqMktData(conn,
            eventTickString,
            eventTickEFP,
            CALLBACK, ...)
+
+cancelMktData(conn,tickerId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -7,7 +7,7 @@ Connect or disconnect to the Trader Workstation (TWS).
 }
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
-           port = 7496, verbose = TRUE, timeout = 10)
+           port = 7496, verbose = TRUE, timeout = 5)
 twsDisconnect(con)
 }
 \arguments{
@@ -33,9 +33,9 @@ A \code{twsConnection} object.
 While it is not strictly required to disconnect via \code{twsDisconnect}
 it is probably advisable.
 
-This may not work the first time on a Windows machine. The best
-course of action would be to upgrade your OS 
-to something more robust like *nix.
+If not set options(digits.secs=6) will be called
+internally to properly represent on screen the
+R based timestamps.
 }
 \examples{
 \dontrun{
