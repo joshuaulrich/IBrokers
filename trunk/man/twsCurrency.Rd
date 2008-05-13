@@ -7,7 +7,7 @@ Create a twsCurrency for use in API calls.
 \usage{
 twsCurrency(symbol,
             currency='USD',
-            exch='IDEAL',
+            exch='IDEALPRO',
             primary='',
             strike='0.0',
             right='',
