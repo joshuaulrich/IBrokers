@@ -62,6 +62,9 @@ function (conn, Contract, tickerId = "1", numRows="20",
       ticker_id <- as.character(as.numeric(tickerId)+n)
     }
 
+    if(!missing(CALLBACK) && is.na(CALLBACK))
+      return(as.character(as.numeric(tickerId):length(Contract)))
+
     on.exit(cancelMktDepth(con, as.character(as.numeric(tickerId):length(Contract))))
     waiting <- TRUE
     response <- character(0)
@@ -98,3 +101,17 @@ function (conn, Contract, tickerId = "1", numRows="20",
       }
     } else CALLBACK(con,...)
 }
+
+`cancelMktDepth` <- function(conn,tickerId) {
+  if(!inherits(conn, "twsConnection"))
+    stop("twsConnection object required")
+
+  con <- conn[[1]]
+
+  for(i in 1:length(tickerId)) {
+    writeBin(.twsOutgoingMSG$CANCEL_MKT_DEPTH,con)
+    writeBin('1',con)
+    writeBin(tickerId[i],con)
+  }
+}
+

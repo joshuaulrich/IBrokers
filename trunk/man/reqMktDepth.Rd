@@ -1,5 +1,6 @@
 \name{reqMktDepth}
 \alias{reqMktDepth}
+\alias{cancelMktDepth}
 \title{ Request Market Depth Feed from TWS }
 \description{
 Allows for streaming market depth (order book) data
@@ -16,6 +17,8 @@ reqMktDepth(conn,
             eventUpdateMktDepth,
             eventUpdateMktDepthL2,
             CALLBACK, ...)
+
+cancelMktDepth(conn,tickerId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

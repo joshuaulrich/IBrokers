@@ -1,5 +1,8 @@
 `reqCurrentTime` <-
-function(con) {
+function(conn) {
+  if(!inherits(conn,'twsConnection'))
+    stop('requires twsConnection object')
+
   con <- con[[1]]
 
   writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
@@ -7,7 +10,6 @@ function(con) {
 
   waiting <- TRUE
   response <- character(0)
-  Sys.sleep(.1)
 
   while(waiting) {
     # suppressWarnings to handle readBin issues in Windows
@@ -20,8 +22,6 @@ function(con) {
         waiting <- FALSE
       }
     }
-
-    if(waiting) Sys.sleep(.1)
   }
   tz <- Sys.getenv("TZ")
   on.exit(Sys.setenv(TZ=tz))

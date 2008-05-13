@@ -1,7 +1,9 @@
 `twsConnect` <-
 function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
-          timeout=10)
+          timeout=5)
  {
+     if(is.null(getOption('digits.secs'))) 
+       options(digits.secs=6)
      start.time <- Sys.time()
      s <- socketConnection(host = host, port = port,
                            open='ab', blocking=TRUE)
@@ -11,7 +13,9 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
        stop(paste("couldn't connect to TWS on port",port))
      }
 
-     writeBin("33", s)
+     CLIENT_VERSION <- "38"
+
+     writeBin(CLIENT_VERSION, s)
      writeBin(as.character(clientId), s)
 
      waiting <- TRUE
@@ -35,46 +39,6 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
          stop('tws connection timed-out')
        }
      }
-
-     structure(list(s,
-                    clientId=clientId,port=port,
-                    server.version=SERVER_VERSION,
-                    connected.at=CONNECTION_TIME), 
-                    class = "twsConnection")
- }
-`twsConnect2` <-
-function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
-          timeout=10)
- {
-     start.time <- Sys.time()
-     s <- socketConnection(host = host, port = port, open='ab')
-
-     if(!isOpen(s)) { 
-       close(s)
-       stop(paste("couldn't connect to TWS on port",port))
-     }
-
-     writeBin("37", s)
-     waiting <- TRUE
-     while(waiting) {
-       response <- readBin(s,character(),1)
-       if(length(response) > 0 && response %in% c('39','40')) {
-         SERVER_VERSION <- response
-         while(waiting) {
-           response <- readBin(s,character(),1)
-           if(length(response) > 0) {
-             CONNECTION_TIME <- response
-             waiting <- FALSE
-           }
-         }
-       }
-       if(Sys.time()-start.time > timeout) {
-         close(s)
-         stop('tws connection timed-out')
-       }
-     }
-
-     writeBin(as.character(clientId), s)
 
      structure(list(s,
                     clientId=clientId,port=port,

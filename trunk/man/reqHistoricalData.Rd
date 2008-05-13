@@ -19,11 +19,10 @@ reqHistoricalData(conn,
                   time.format = "1",
                   verbose = TRUE,
                   tickerId = "1",
-                  timeout = 10,
-                  callback,
+                  eventHistoricalData,
                   file)
 
-cancelHistoricalData(con,tickerId)
+cancelHistoricalData(conn,tickerId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -37,10 +36,8 @@ cancelHistoricalData(con,tickerId)
   \item{time.format}{ POSIX style or seconds from 1970-01-01 }
   \item{verbose}{ should progress be documented }
   \item{tickerId}{ a unique id to associte with the request }
-  \item{timeout}{ length of time before cancelling request }
-  \item{callback}{ callback function to process data }
+  \item{eventHistoricalData}{ callback function to process data }
   \item{file}{ file to write data to }
-  \item{con}{ an \R connection object to the TWS API }
 }
 \details{
 All arguments should be character strings.  Attempts will
@@ -82,15 +79,15 @@ though depending on the overall request it may not succeed.
 
 \code{time.format} should simply be left alone. :D
 
-\code{callback} accepts a user function to process the raw
+\code{eventHistoricalData} accepts a user function to process the raw
 data returned by the TWS.  This consists of a character
 vector that includes the first five elements of header
 information, with the fifth element specifying the number
 of rows in the results set.  Passing \code{NULL} to 
-\code{callback} will return the raw character vector.
+\code{eventHistoricalData} will return the raw character vector.
 If nothing is specified, an xts object is returned.
 
-The \code{callback} function, if any, is called after all
+The \code{eventHistoricalData} function, if any, is called after all
 data has been received by the client.
 
 The \code{file} argument calls \code{write.table} to produce
