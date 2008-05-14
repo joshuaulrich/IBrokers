@@ -1,4 +1,4 @@
-This is pdfeTeXk, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2007.7.11)  13 MAY 2008 16:10
+This is pdfeTeXk, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2007.7.11)  13 MAY 2008 21:17
 entering extended mode
  file:line:error style messages enabled.
 **\nonstopmode \input /Users/jryan/Rdir/svntest/rforge/ibrokers/pkg/inst/doc/IB
@@ -344,4 +344,4 @@ cal/share/texmf-dist/fonts/type1/bluesky/cm/cmbx9.pfb></opt/local/share/texmf-d
 ist/fonts/type1/bluesky/cm/cmr10.pfb></opt/local/share/texmf-dist/fonts/type1/b
 luesky/cm/cmbx10.pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmr12.
 pfb></opt/local/share/texmf-dist/fonts/type1/bluesky/cm/cmbx12.pfb>
-Output written on IBrokers.pdf (5 pages, 108769 bytes).
+Output written on IBrokers.pdf (5 pages, 108768 bytes).

@@ -17,6 +17,16 @@ function(conn,Contract,endDateTime,
 
   con <- conn[[1]]
 
+  cancelHistoricalData <- function(con, tickerId) 
+  {
+      if (!isOpen(con)) 
+          stop("invalid TWS connection")
+  
+      writeBin(.twsOutgoingMSG$CANCEL_HISTORICAL_DATA, con)
+      writeBin("1", con)
+      writeBin(as.character(tickerId), con)
+  }
+
   if(!isOpen(con)) stop("connection to TWS has been closed")
 
   on.exit(cancelHistoricalData(con,as.character(tickerId)))
@@ -24,7 +34,7 @@ function(conn,Contract,endDateTime,
   if(missing(endDateTime) || is.null(endDateTime)) 
     endDateTime <- strftime(
                      as.POSIXlt(as.POSIXct('1970-01-01')+
-                     as.numeric(reqCurrentTime(con))),
+                     as.numeric(reqCurrentTime(conn))),
                      format='%Y%m%d %H:%M:%S',use=FALSE)
 
   VERSION <- "4"
