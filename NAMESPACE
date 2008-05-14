@@ -5,6 +5,8 @@ export(twsConnect,
        serverVersion,
        reqCurrentTime,
 
+       reqContractDetails,
+
        twsContract,
        twsCurrency,
        twsEquity,
@@ -29,3 +31,5 @@ export(.twsIncomingMSG,
       )
 
 S3method(print,twsConnection)
+S3method(print,twsContract)
+S3method(print,twsContractDetails)
