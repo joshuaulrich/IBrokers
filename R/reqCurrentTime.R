@@ -3,7 +3,7 @@ function(conn) {
   if(!inherits(conn,'twsConnection'))
     stop('requires twsConnection object')
 
-  con <- con[[1]]
+  con <- conn[[1]]
 
   writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
   writeBin('1',con)
