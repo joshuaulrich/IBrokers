@@ -6,3 +6,4 @@ function (symbol,currency="USD",exch="IDEALPRO", primary="", strike = "0.0",
         currency, right, local, multiplier, NULL, NULL, include_expired)
 }
 
+`twsCASH` <- twsCurrency

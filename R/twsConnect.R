@@ -1,9 +1,11 @@
 `twsConnect` <-
 function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
-          timeout=5)
+          timeout=5, filename=NULL)
  {
-     if(is.null(getOption('digits.secs'))) 
-       options(digits.secs=6)
+   if(is.null(getOption('digits.secs'))) 
+     options(digits.secs=6)
+
+   if(is.null(filename)) {
      start.time <- Sys.time()
      s <- socketConnection(host = host, port = port,
                            open='ab', blocking=TRUE)
@@ -45,4 +47,26 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
                     server.version=SERVER_VERSION,
                     connected.at=CONNECTION_TIME), 
                     class = "twsConnection")
- }
+  } else { 
+    #file is defined - not a real connection
+    fh <- file(filename,open='r')
+    dat <- scan(fh, what=character(), quiet=TRUE)
+    close(fh)
+
+    tmp <- tempfile()
+    fh <- file(tmp, open='ab')
+
+    writeBin(as.character(length(dat)), fh)
+    for(i in dat) writeBin(i, fh)
+
+    close(fh)
+    s <- file(tmp, open='rb')
+
+    structure(list(s,
+                   clientId=NULL,port=NULL,
+                   server.version=NULL,
+                   connected.at=filename), 
+                   class = c("twsPlayback","twsConnection"))
+
+  }
+}

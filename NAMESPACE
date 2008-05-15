@@ -9,9 +9,13 @@ export(twsConnect,
 
        twsContract,
        twsCurrency,
+       twsCASH,
        twsEquity,
+       twsSTK,
        twsFuture,
+       twsFUT,
        twsOption,
+       twsOPT,
 
        reqHistoricalData,
        cancelHistoricalData,
@@ -20,8 +24,10 @@ export(twsConnect,
        cancelMktData,
 
        reqMktDepth,
+       cancelMktDepth,
 
-       reqRealTimeBars
+       reqRealTimeBars,
+       cancelRealTimeBars
       )
 
 export(.twsIncomingMSG,

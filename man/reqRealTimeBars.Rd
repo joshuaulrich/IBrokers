@@ -1,5 +1,6 @@
 \name{reqRealTimeBars}
 \alias{reqRealTimeBars}
+\alias{cancelRealTimeBars}
 \title{ Request Real Time Bars from TWS }
 \description{
 Allows for streaming real-time bars to be handled in \R
@@ -10,19 +11,23 @@ reqRealTimeBars(conn,
                 whatToShow = "TRADES", 
                 barSize = "5",
                 useRTH = "1",
+                playback = 1,
                 tickerId = "1",
                 file = "",
                 verbose = TRUE,
                 eventRealTimeBars,
                 CALLBACK,
                 ...) 
+
+cancelRealTimeBars(conn, tickerId)
 }
 \arguments{
-  \item{conn}{ a valid \code{twsConnection} object }
+  \item{conn}{ a valid \code{twsConnection} or \code{twsPlayback} object }
   \item{Contract}{ \code{twsContract} object(s) requested }
   \item{tickerId}{ the ticker id to associate with the returned bars }
   \item{whatToShow}{ what to show }
   \item{barSize}{ bar size - currently on 5 secs is TWS supported }
+  \item{playback}{ playback speed adjustment }
   \item{useRTH}{ regular trading hours }
   \item{file}{ passed to internal \code{cat} calls. See associated help. }
   \item{verbose}{ print diagnostics }
@@ -34,6 +39,11 @@ reqRealTimeBars(conn,
 This function provides R level access to real time (5 second) bars
 returned by the TWS API.  The Interactive Brokers documentation
 should be reference for the exact meaning of the returned data.
+
+If the \code{conn} is a connection of data to be played
+back all other arguments are ignores, except for \code{playback},
+which is a multiplier of the bar size in seconds.  To force
+all data to be read without pause set this to 0.
 
 Callbacks, via eventRealTimeBars and CALLBACK are
 designed to allow for R level processing of the real-time data

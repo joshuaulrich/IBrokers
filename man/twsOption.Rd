@@ -1,5 +1,6 @@
 \name{twsOption}
 \alias{twsOption}
+\alias{twsOPT}
 \title{ Create a twsContract for Options }
 \description{
 Create a twsContract for use in API calls.

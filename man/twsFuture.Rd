@@ -1,5 +1,6 @@
 \name{twsFuture}
 \alias{twsFuture}
+\alias{twsFUT}
 \title{ Create a twsFuture Contract }
 \description{
 Create a twsFuture contract for use in API calls.
