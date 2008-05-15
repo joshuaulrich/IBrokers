@@ -50,10 +50,19 @@ function (conn, Contract, tickerId = "1", numRows="20",
     ticker_id <- as.character(tickerId)
 
     for(n in 1:length(Contract)) {
-      signals <- c(.twsOutgoingMSG$REQ_MKT_DEPTH, VERSION, ticker_id,
-          Contract[[n]]$symbol, Contract[[n]]$sectype, Contract[[n]]$expiry, Contract[[n]]$strike, 
-          Contract[[n]]$right, Contract[[n]]$multiplier, Contract[[n]]$exch,
-          Contract[[n]]$currency, Contract[[n]]$local,numRows)
+      signals <- c(.twsOutgoingMSG$REQ_MKT_DEPTH,
+                   VERSION, 
+                   ticker_id,
+                   Contract[[n]]$symbol,
+                   Contract[[n]]$sectype,
+                   Contract[[n]]$expiry,
+                   Contract[[n]]$strike, 
+                   Contract[[n]]$right,
+                   Contract[[n]]$multiplier,
+                   Contract[[n]]$exch,
+                   Contract[[n]]$currency,
+                   Contract[[n]]$local,
+                   numRows)
   
   
       for (i in 1:length(signals)) {
@@ -62,7 +71,7 @@ function (conn, Contract, tickerId = "1", numRows="20",
       ticker_id <- as.character(as.numeric(tickerId)+n)
     }
 
-    if(!missing(CALLBACK) && is.na(CALLBACK))
+    if(!missing(CALLBACK) && is.na(list(CALLBACK)))
       return(as.character(as.numeric(tickerId):length(Contract)))
 
     on.exit(cancelMktDepth(con, as.character(as.numeric(tickerId):length(Contract))))
@@ -86,14 +95,14 @@ function (conn, Contract, tickerId = "1", numRows="20",
               contents <- readBin(con, character(), 7)
               if(is.null(eventUpdateMktDepth)) {
                 if(!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
-                cat(paste(contents),'\n',file=file,append=TRUE)
+                cat(curMsg,paste(contents),'\n',file=file,append=TRUE)
               } else eventUpdateMktDepth(curMsg,contents,timeStamp,file)
           }
           if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) {
               contents <- readBin(con, character(), 8)
               if(is.null(eventUpdateMktDepthL2)) {
                 if(!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
-                cat(paste(contents),'\n',file=file, append=TRUE)
+                cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
               } else eventUpdateMktDepthL2(curMsg,contents,timeStamp,file)
           }
           flush.console()

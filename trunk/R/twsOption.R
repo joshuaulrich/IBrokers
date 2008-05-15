@@ -10,3 +10,4 @@ function(local,expiry,
               include_expired)
 }
 
+`twsOPT` <- twsOption

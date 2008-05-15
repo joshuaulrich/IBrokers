@@ -1,5 +1,6 @@
 \name{twsCurrency}
 \alias{twsCurrency}
+\alias{twsCASH}
 \title{ Create a twsCurrency }
 \description{
 Create a twsCurrency for use in API calls.

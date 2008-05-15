@@ -6,3 +6,4 @@ function(symbol,exch,expiry,primary='',
               currency,right,local,multiplier,NULL,NULL,include_expired)
 }
 
+`twsFUT` <- twsFuture

@@ -1,6 +1,6 @@
 `e_tick_price`    <- function(msg,string,timeStamp,file,...) {
   tickType <- string[3]
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID) {
     cat('bidPrice:',string[4],' ',file=file,append=TRUE)
@@ -51,7 +51,7 @@
 
 `e_tick_size`    <- function(msg,string,timeStamp,file,...) {
   tickType <- string[3] 
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_SIZE) {
     cat('bidSize:',string[4],'\n',file=file,append=TRUE)
@@ -87,7 +87,7 @@
 
 `e_tick_option`  <- function(msg,string,timeStamp,file,...) {
   tickType <- string[3] 
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_OPTION) { #10
     cat('bidOption:',string[4],string[5],'\n',file=file,append=TRUE)
@@ -108,7 +108,7 @@
 
 `e_tick_generic` <- function(msg,string,timeStamp,file,...) {
   tickType <- string[3] 
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$OPTION_IMPLIED_VOL) { #24
     cat('indexFuturePremium:',string[4],'\n',file=file,append=TRUE)
@@ -129,7 +129,7 @@
 
 `e_tick_string`  <- function(msg,contents,timeStamp,file,...) {
   tickType <- contents[3] 
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",contents[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_EXCH) { #32
     cat('bidExchange:',contents[4],'\n',file=file,append=TRUE)

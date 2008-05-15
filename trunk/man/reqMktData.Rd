@@ -13,6 +13,7 @@ reqMktData(conn,
            snapshot = FALSE,
            tickerId = "1",
            timeStamp = TRUE,
+           playback = 1,
            file = "",
            verbose = TRUE,
            eventTickPrice,
@@ -27,12 +28,13 @@ cancelMktData(conn,tickerId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{ a valid \code{twsConnection} connection }
+  \item{conn}{ a valid \code{twsConnection} or \code{twsPlayback} connection }
   \item{Contract}{ \code{twsContract} object(s) requested data for }
   \item{tickGenerics}{ a comman delimited string of generic tick types }
   \item{snapshot}{ should snapshot data be returned }
   \item{tickerId}{ the ticker id to associate with the returned data }
   \item{timeStamp}{ include R time stamps }
+  \item{playback}{ playback speed adjustment }
   \item{file}{ passed to internal \code{cat} calls. See associated help }
   \item{verbose}{ print diagnostics? }
   \item{eventTickPrice}{ callback function, if any }
