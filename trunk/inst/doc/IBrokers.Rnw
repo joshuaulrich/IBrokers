@@ -9,7 +9,7 @@
 
 \title{\bf IBrokers - Interactive Brokers and R }
 \author{Jeffrey A. Ryan}
-\date{May 6, 2008}
+\date{May 16, 2008}
 
 \begin{document}
 
@@ -36,8 +36,8 @@ in the new IBrokers package.
 \section{Introduction}
 \textcolor{red}{
 This software is in no way affiliated, endorsed, or approved by
-     Interactive Brokers or any of its affiliates. It comes with
-     absolutely no warranty and should not be used in actual trading
+     Interactive Brokers or any of its affiliates. \textbf{It comes with
+     absolutely no warranty and should not be used in actual trading}
      unless the user can read and understand the source.
 }
 
@@ -55,12 +55,14 @@ Access to the API has official support in
 Java (all platforms), as well as C++, DDE for Excel, and ActiveX
 (available only for Windows). There are numerous third-party
 applications and API interfaces available to access the
-API. Some include IbPy - a python translation of the
+API. These include IbPy - a python translation of the
 official Java code, a Perl version, and a portable C version.
 
 All of these methods, while useful outside of {\tt R}~\cite{R}
-can't offer true R-level access to the TWS API.  For this an
-R solution was required.
+can't offer true R-level access, including
+native callbacks and error management, to the TWS API.  For this an
+R solution was required. What this also means is that this implementation
+is restricted at present to single-threaded API access.
 
 This introduction is broken into two parts. First
 it will provide an overview of the overall
@@ -71,7 +73,7 @@ IBrokers \cite{IBrokers} package.
 
 \section{The API}
 The most up to date documentation on the overall API can be found
-on Interactive Brokers own site. While it is a constantly evolving
+on Interactive Brokers own site~\cite{TWSAPI}. While it is a constantly evolving
 library - most of the core functionality persists from
 one version to the next. The principal purpose of the API is to
 offer a programmatic alternative to manual screen-based trading
@@ -108,11 +110,11 @@ status and news bulletins from the TWS.
 As R offers an ever-growing tooklit of statistical as well
 as financial functionality, it is becoming a platform
 of choice for quantitative research and even trading. For
-institutional clients many tools exists to help
+institutional users many tools exists to help
 tie data from external sources into R. Probably the most
 common is the use of Bloomberg data in R via the
 RBloomberg package.  While many professionals have
-access to a Bloomberg terminal, it is not really practical
+access to a Bloomberg terminal, it is not usually practical
 or necessary for smaller or single product traders.
 
 Interactive Brokers gives these users access to many
@@ -159,19 +161,20 @@ twsDisconnect(tws)
 
 \subsection{Getting data from the TWS}
 The current IBrokers implementation is focused on
-retrieving data from the TWS. To that end, four
+retrieving data from the TWS. To that end, five important
 functions are made available in the API:
 \begin{quote}
 \begin{description}
+\item[reqContractDetails:] retrieves detailed product information.
 \item[reqMktData:] retrieves real-time market data.
 \item[reqMktDepth:] retrieves real-time order book data.
 \item[reqRealTimeBars:] retrieves real-time OHLC data.
 \item[reqHistoricalData:] retrieves historical data.
 \end{description}
 \end{quote}
-In addition, due to the complexity of requests
-helper functions unique to the {\tt R} API
-are included to make constructing these faster
+In addition, due to the complexity of requests,
+helper functions unique to IBrokers
+are included to make constructing these requests faster
 and less error-prone. A family of contract
 specifier functions used for the above calls
 includes:
@@ -181,19 +184,51 @@ includes:
 \item[twsEquity:] wrapper to create equity Contract objects
 \item[twsOption:] wrapper to create option Contract objects.
 \item[twsFuture:] wrapper to create futures Contract objects.
+\item[twsCurrency:] wrapper to create currency Contract objects.
 \end{description}
 \end{quote}
+Using the above functions to request market data from the TWS
+is quite straightforward.
+
+<<reqmktdata, eval=FALSE>>=
+tws <- twsConnect()
+twsFuture("YM","ECBOT","200806")
+reqContractDetails(tws, twsEquity("QQQQ"))
+reqMktData(tws, twsEquity("QQQQ"))
+@
+
 Unique again to the IBrokers implementation is the
-use of passed callback handlers to the data functions. These are
-available to help customize output and in the creation of
-automated trading programs based on user-defined criteria
-coded in R.
+use of \emph{passed} callback handlers to the data functions. These are
+available to help customize output and to facilitate the creation of
+automated trading programs based on user-defined criteria ---
+coded entirely in R.
 
 Each function has a file argument which allows for persistent
-data capture to a file.  In the case of the real-time methods
+data capture to a file.  In the case of the real-time methods,
 file is passed internally to {\tt cat}, which mean that the
 argument may contain a file name or any valid connection
-object.
+object. Using the default arguments, with some minor allowable
+exceptions, it is possible to record incoming data to a file
+for later playback using the same request functions used on
+live data. The {\tt playback} argument allows for one to control
+the speed of the returned data. By default {\tt playback=1}
+the data is retrieved with respect to the original timestamps.
+This value is multiplied by the difference in time between
+original message timestamps, increasing the value will slow the
+playback and decreasing toward 0 will speed up the playback.
+
+<<playbackmktdata, eval=FALSE>>=
+reqMktData(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
+twsp <- twsConnect(filename="SBUX.dat")
+@
+To playback the saved data, call {\tt reqMktData} again:
+<<playback, eval=FALSE>>=
+reqMktData(twsp)
+reqMktData(twsp, playback=0)
+@
+<<closeplayback, eval=FALSE,echo=FALSE>>=
+twsDisconnect(twsp)
+@
 
 Each data function has special callback methods
 associated with the expected results. These are documented
@@ -202,7 +237,8 @@ Each distinct message recieved from the TWS
 invokes a callback function - by default the callbacks
 built into IBrokers. Users may set these callbacks to
 functions of there own design, or set them to NULL to
-return the raw message data.
+return the raw message data, as was show previously when
+saving data for later playback.
 
 Additionally, the
 real-time data methods {\tt reqMktData}, {\tt reqMktDepth}, and
@@ -214,10 +250,46 @@ bypass the built in error management of TWS errors, so the
 developer should be aware of low-level API interactions
 before using this feature.
 
+Using CALLBACK involves some understanding of the underlying
+API process within IBrokers.  In general it is as simple as
+sending a special series of \emph{nul} seperated messages to the
+TWS, and then interpreting the messages returned.  All are
+character strings, and each request or returned
+value  starts with an identifying
+code indicating the nature of the content to follow.
+
+The current data methods, based on the official API, simply
+request the data, and then enter into a loop awaiting the returned
+messages --- branching to message specific callbacks as appropriate.
+
+Utilizing a custom CALLBACK method allows for this loop to be contained
+entirely within your own code. Setting CALLBACK=NULL will send to raw
+message level data to {\tt cat}, which in turn will use the {\tt file}
+argument to that function to either return the data to the standard
+output, or redirected via an open connection, a file, or a pipe.  The details
+of this can be seen in the help pages for \textbf{R}'s {\tt cat}.
+
+Setting CALLBACK=NA will result in a request to the API for the data
+in question, but will not enter into a loop to manage the incoming messages.
+This can be used to launch multiple requests within one \textbf{R} session, and then
+followed with code to read the resulting messages.  This is simply a short-cut
+to hand-coding the requests, and provides no built in message handling logic.
+This also means that the incoming messages will continue to accumulate until
+read or cancelled by your code, or a disconnect from the TWS.  Obviously this
+requires the most work, but can offer the most flexibility when it comes to
+producing a true real-time analysis tool.
+
+An additional caveat with respect to multiple requests within a single session.
+It is important to recognize that each request must have a unique {\tt tickerId}
+associated with it, to identify the returned content properly.  At present,
+this must be kept track of by the user.
+
 \subsection{Future API access}
 Future additions will focus on implementing a robust order
 management collection of functions to allow for a complete
-data--processing--trade workflow.
+data--processing--trade workflow. Additionally, more
+of the standard API tools will contiue to be integrated into
+the package.
 
 \section{Conclusion}
 The TWS platform offers the quantitative trader unparalleled
@@ -229,6 +301,10 @@ for rapid trade idea development, testing, and eventual execution.
 \bibitem{TWS} Interactive Brokers:
 \emph{Interactive Broker's \emph{Trader Workstation} and API},
 URL http://www.interactivebrokers.com
+
+\bibitem{TWSAPI} Interactive Brokers Application Programming Interface:
+\emph{Interactive Broker's \emph{Trader Workstation} API},
+URL http://individuals.interactivebrokers.com/en/p.php?f=programInterface\&ib\_entity=llc
 
 \bibitem{R} R Development Core Team:
 \emph{R: A Language and Environment for Statistical Computing},

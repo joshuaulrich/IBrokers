@@ -121,7 +121,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
     msg_length <- ifelse(inherits(conn, 'twsPlayback'), 3, 1)
     msg_position <- 0 # where we are in the message - only relevant for playback
     sys.time <- NULL # used for timeStamp interpretation
-
+counter <- 0
     if(missing(CALLBACK) || is.null(CALLBACK)) {
       while (waiting) {
 
@@ -139,16 +139,19 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
         if(!is.null(timeStamp)) {
           if(msg_length > 1) {
             last.time <- sys.time
-            sys.time <- as.POSIXct(paste(curMsg,collapse=' '),format=timeStamp)
+            sys.time <- as.POSIXct(paste(curMsg[1:2],collapse=' '))
             if(!is.null(last.time)) {
               Sys.sleep((sys.time-last.time)*playback)
             } 
-          } else sys.time <- as.POSIXct(Sys.time(),timeStamp)
+          } else sys.time <- Sys.time()
         } else sys.time <- NULL
 
         curMsg <- curMsg[msg_length] 
 
         msg_position <- msg_position + msg_length 
+
+counter <- counter + 1
+if(counter == 20) waiting <- FALSE
 
         if (length(curMsg) > 0) {
           if (curMsg == .twsIncomingMSG$ERR_MSG) {
