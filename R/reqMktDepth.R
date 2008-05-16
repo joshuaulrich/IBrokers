@@ -78,12 +78,14 @@ function (conn, Contract, tickerId = "1", numRows="20",
     waiting <- TRUE
     response <- character(0)
 
+
     if (.Platform$OS == "windows") 
         Sys.sleep(0.1)
     if(missing(CALLBACK) || is.null(CALLBACK)) {
       while (waiting) {
-        curMsg <- suppressWarnings(readBin(con, character(), 
-            1))
+        curMsg <- readBin(con, character(), 1)
+
+
         if (length(curMsg) > 0) {
           if (curMsg == .twsIncomingMSG$ERR_MSG) {
               if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104,2106,2107))) {
