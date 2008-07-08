@@ -59,14 +59,16 @@ a viable alternative for IB-API interaction.  Don't be shy.
 \tabular{ll}{
 Package: \tab IBrokers\cr
 Type: \tab Package\cr
-Version: \tab 0.1-1\cr
-Date: \tab 2008-05-13\cr
+Version: \tab 0.1-2\cr
+Date: \tab 2008-07-08\cr
 License: \tab GPL-3\cr
 }
 The current API methods supported are:
 
 twsConnect: Establish TWS connection
 twsDisconnect: Close TWS connection
+
+twsAccountUpdates: Get Account Details
 
 reqCurrentTime: The TWS server time in seconds since the epoch
 reqHistoricalData: Fetch historical data
