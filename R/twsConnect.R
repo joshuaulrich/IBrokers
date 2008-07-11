@@ -5,6 +5,9 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
    if(is.null(getOption('digits.secs'))) 
      options(digits.secs=6)
 
+   if(is.character(clientId))
+     filename <- clientId
+
    if(is.null(filename)) {
      start.time <- Sys.time()
      s <- socketConnection(host = host, port = port,
@@ -56,8 +59,8 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
     tmp <- tempfile()
     fh <- file(tmp, open='ab')
 
-    writeBin(as.character(length(dat)), fh)
-    for(i in dat) writeBin(i, fh)
+    writeBin(c(as.character(length(dat)),dat), fh)
+    #for(i in dat) writeBin(i, fh)
 
     close(fh)
     s <- file(tmp, open='rb')

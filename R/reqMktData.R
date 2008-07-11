@@ -103,6 +103,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
       }
       msg_expected_length <- NA
     } else {
+      # reading from a file
       msg_expected_length <- as.numeric(readBin(con,character(), 1))
       #timeStamp <- NULL #disable erroneous R timestamps
     }
@@ -129,10 +130,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
         # for standard connection to TWS this is the first
         # character string received. For playback the
         # actual message will be the 3rd (after the date and time
-        # stamps).  There may be a desire to have this recreat
-        # real time stamps - or some time elapse. For now
-        # the playback will be instantaneous - i.e. discarding
-        # the timestamps
+        # stamps).  
 
         curMsg <- readBin(con, character(), msg_length)
 

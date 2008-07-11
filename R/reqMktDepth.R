@@ -1,18 +1,21 @@
 `reqMktDepth` <-
 function (conn, Contract, tickerId = "1", numRows="20",
-          timeStamp=TRUE,
+          timeStamp=TRUE, playback=1,
           file='', verbose=TRUE,
           eventUpdateMktDepth, eventUpdateMktDepthL2,
           CALLBACK,...) 
 {
-    if (class(conn) != "twsConnection") 
+    if (!inherits(conn, "twsConnection"))
         stop("tws connection object required")
 
-    if(class(Contract) == "twsContract") Contract <- list(Contract)
-
-    for(n in 1:length(Contract)) {
-      if (class(Contract[[n]]) != "twsContract") 
-          stop("twsContract required")
+    if(!inherits(conn, 'twsPlayback')) {
+      # if playback from a file, don't test or require contract
+      if(class(Contract) == "twsContract") Contract <- list(Contract)
+  
+      for(n in 1:length(Contract)) {
+        if (class(Contract[[n]]) != "twsContract") 
+            stop("twsContract required")
+      }
     }
 
     con <- conn[[1]]
@@ -20,10 +23,15 @@ function (conn, Contract, tickerId = "1", numRows="20",
         stop("connection to TWS has been closed")
 
     cancelMktDepth <- function(con,tickerId) {
-      for(i in 1:length(tickerId)) {
-        writeBin(.twsOutgoingMSG$CANCEL_MKT_DEPTH,con)
-        writeBin('1',con)
-        writeBin(tickerId[i],con)
+      if(inherits(con, 'sockconn')) {
+        for(i in 1:length(tickerId)) {
+          writeBin(.twsOutgoingMSG$CANCEL_MKT_DEPTH,con)
+          writeBin('1',con)
+          writeBin(tickerId[i],con)
+        }
+      } else {
+        # reset to beginning of file
+        seek(con,0)
       }
     }
 
@@ -49,41 +57,69 @@ function (conn, Contract, tickerId = "1", numRows="20",
  
     ticker_id <- as.character(tickerId)
 
-    for(n in 1:length(Contract)) {
-      signals <- c(.twsOutgoingMSG$REQ_MKT_DEPTH,
-                   VERSION, 
-                   ticker_id,
-                   Contract[[n]]$symbol,
-                   Contract[[n]]$sectype,
-                   Contract[[n]]$expiry,
-                   Contract[[n]]$strike, 
-                   Contract[[n]]$right,
-                   Contract[[n]]$multiplier,
-                   Contract[[n]]$exch,
-                   Contract[[n]]$currency,
-                   Contract[[n]]$local,
-                   numRows)
-  
-  
-      for (i in 1:length(signals)) {
-          writeBin(signals[i], con)
+    if(inherits(con, 'sockconn')) {
+      # write to live TWS Connection
+      for(n in 1:length(Contract)) {
+        signals <- c(.twsOutgoingMSG$REQ_MKT_DEPTH,
+                     VERSION, 
+                     ticker_id,
+                     Contract[[n]]$symbol,
+                     Contract[[n]]$sectype,
+                     Contract[[n]]$expiry,
+                     Contract[[n]]$strike, 
+                     Contract[[n]]$right,
+                     Contract[[n]]$multiplier,
+                     Contract[[n]]$exch,
+                     Contract[[n]]$currency,
+                     Contract[[n]]$local,
+                     numRows)
+    
+    
+        for (i in 1:length(signals)) {
+            writeBin(signals[i], con)
+        }
+        ticker_id <- as.character(as.numeric(tickerId)+n)
       }
-      ticker_id <- as.character(as.numeric(tickerId)+n)
-    }
+      msg_expected_length <- NA
+    } else {
+      msg_expected_length <- as.numeric(readBin(con, character(), 1))
+    } 
 
-    if(!missing(CALLBACK) && is.na(list(CALLBACK)))
+    if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
+      if(inherits(conn, 'twsPlayback')) {
+        seek(conn[[1]], 0)
+        stop("CALLBACK=NA is not available for playback")
+      }
       return(as.character(as.numeric(tickerId):length(Contract)))
-
+    }
     on.exit(cancelMktDepth(con, as.character(as.numeric(tickerId):length(Contract))))
+
     waiting <- TRUE
-    response <- character(0)
+#    response <- character(0)
 
+    msg_length <- ifelse(inherits(conn, 'twsPlayback'), 3, 1)
+    msg_position <- 0  # only relevant for playback???? why???
+    sys.time <- NULL   # timeStamp interpretation
 
-    if (.Platform$OS == "windows") 
-        Sys.sleep(0.1)
+#    if (.Platform$OS == "windows") 
+#        Sys.sleep(0.1)
     if(missing(CALLBACK) || is.null(CALLBACK)) {
       while (waiting) {
-        curMsg <- readBin(con, character(), 1)
+        curMsg <- readBin(con, character(), msg_length)
+
+        if(!is.null(timeStamp)) {
+          if(msg_length > 1) {
+            last.time <- sys.time
+            sys.time <- as.POSIXct(paste(curMsg[1:2],collapse=' '))
+            if(!is.null(last.time)) {
+              Sys.sleep((sys.time-last.time)*playback)
+            }   
+          } else sys.time <- Sys.time()
+        } else sys.time <- NULL
+
+        curMsg <- curMsg[msg_length] 
+
+        msg_position <- msg_position + msg_length 
 
 
         if (length(curMsg) > 0) {
@@ -92,22 +128,27 @@ function (conn, Contract, tickerId = "1", numRows="20",
                 cat("\n")
                 stop("Unable to complete market depth request")
               }
+              msg_position <- msg_position + 4
           }
           if (curMsg == .twsIncomingMSG$MARKET_DEPTH) {
               contents <- readBin(con, character(), 7)
               if(is.null(eventUpdateMktDepth)) {
-                if(!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                if(!is.null(timeStamp)) cat(as.character(sys.time),' ',file=file,append=TRUE)
                 cat(curMsg,paste(contents),'\n',file=file,append=TRUE)
-              } else eventUpdateMktDepth(curMsg,contents,timeStamp,file)
+              } else eventUpdateMktDepth(curMsg,contents,sys.time,file)
+              msg_position <- msg_position + 7
           }
           if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) {
               contents <- readBin(con, character(), 8)
               if(is.null(eventUpdateMktDepthL2)) {
-                if(!is.null(timeStamp)) cat(format(Sys.time(), timeStamp),' ',file=file,append=TRUE)
+                if(!is.null(timeStamp)) cat(as.characer(sys.time),' ',file=file,append=TRUE)
                 cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
-              } else eventUpdateMktDepthL2(curMsg,contents,timeStamp,file)
+              } else eventUpdateMktDepthL2(curMsg,contents,sys.time,file)
+              msg_position <- msg_position + 8
           }
           flush.console()
+          if(!is.na(msg_expected_length) && msg_position == msg_expected_length)
+            waiting <- FALSE
         }
       }
     } else CALLBACK(con,...)

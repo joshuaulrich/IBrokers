@@ -7,7 +7,7 @@ export(twsConnect,
 
        reqContractDetails,
 
-       reAccountUpdates,
+       reqAccountUpdates,
 
        twsContract,
        twsCurrency,
