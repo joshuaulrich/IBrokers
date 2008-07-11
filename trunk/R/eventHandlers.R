@@ -157,7 +157,7 @@
 ######################################################################
 
 `e_update_mkt_depth` <-  function(msg,contents,timeStamp,file,...) {
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>,',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>,',sep='',file=file,append=TRUE)
   id <- contents[2]
   position <- contents[3]
   operation <- switch(contents[4],
@@ -177,7 +177,7 @@
 }
 
 `e_update_mkt_depthL2` <-  function(msg,contents,timeStamp,file,...) {
-  if(!is.null(timeStamp)) cat('<',format(Sys.time(),timeStamp),'>,',sep='',file=file,append=TRUE)
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>,',sep='',file=file,append=TRUE)
   id <- contents[2]
   position <- contents[3]
   marketMaker <- contents[4]
