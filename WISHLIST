@@ -1,2 +1,21 @@
-* complete contract and contract details
-* ???
+** WISHLIST for IBrokers **
+**                       **
+** July 14, 2008         **
+**                       **
+***************************
+
+* combo Legs
+
+* Order and OrderStatus classes
+
+* OrderBook builder
+
+* data extraction from live feeds and replayed for:
+
+  1.  reqTrades
+  2.  reqOHLC
+  3.  reqBidAsk
+  4.  reqBook
+  5.  reqVolatility ???
+
+
