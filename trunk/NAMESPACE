@@ -5,6 +5,8 @@ export(twsConnect,
        serverVersion,
        reqCurrentTime,
 
+       reqIds,
+
        reqContractDetails,
 
        reqAccountUpdates,
@@ -29,13 +31,18 @@ export(twsConnect,
        cancelMktDepth,
 
        reqRealTimeBars,
-       cancelRealTimeBars
+       cancelRealTimeBars,
+
+       twsOrder,
+       placeOrder,
+       cancelOrder
       )
 
 export(.twsIncomingMSG,
        .twsOutgoingMSG,
        .twsERR,
-       .twsTickType
+       .twsTickType,
+       .twsOrderID
       )
 
 S3method(print,twsConnection)
