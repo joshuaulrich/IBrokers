@@ -95,10 +95,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
                      tickGenerics,
                      snapshot)
     
-    
-        for (i in 1:length(signals)) {
-            writeBin(signals[i], con)
-        }
+         writeBin(signals, con) 
+    #    for (i in 1:length(signals)) {
+    #        writeBin(signals[i], con)
+    #    }
         ticker_id <- as.character(as.numeric(tickerId)+n)
       }
       msg_expected_length <- NA
