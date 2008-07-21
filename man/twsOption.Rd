@@ -7,9 +7,9 @@ Create a twsContract for use in API calls.
 }
 \usage{
 twsOption(local,
-          expiry,
-          strike,
-          right="C",
+          expiry="",
+          strike="",
+          right="",
           exch="SMART",
           primary="",
           currency='USD',
@@ -18,10 +18,10 @@ twsOption(local,
 }
 \arguments{
   \item{local}{ the IB symbol requested }
-  \item{expiry}{ option expiration CCYYMM }
-  \item{strike}{ the strike price }
+  \item{expiry}{ option expiration CCYYMM [optional]}
+  \item{strike}{ the strike price [optional] }
   \item{right}{ the requested right - \sQuote{C},\sQuote{CALL},
-                \sQuote{P}, or \sQuote{PUT} }
+                \sQuote{P}, or \sQuote{PUT} [optional]}
   \item{exch}{ the requested exchange [optional, defaults to SMART]}
   \item{primary}{ the primary exchange of the security [optional]}
   \item{currency}{ the requested currency [defaults to USD]}
@@ -41,6 +41,9 @@ standard data requests.
 
 The \code{local} symbol is required. This can be found on the main TWS
 screen under contract details, or via the web at \url{www.interactivebrokers.com}
+
+Since the local symbol is required, all other values are redundant.  It is best to simply
+specify the local name and let the TWS manage the lookup.
 
 The \code{expiry} needs to be either of class \code{Date} to be coerced to
 a string of format \sQuote{CCYYMM}, or provided in that format.

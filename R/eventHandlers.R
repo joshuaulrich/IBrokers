@@ -210,3 +210,98 @@
                "wap","count")
   cat(paste(columns,"=",contents[-1],sep=""),'\n',file=file,append=TRUE)
 }
+
+
+######################################################################
+#
+#  default event handlers for orderStatus callbacks (from placeOrder, )
+#
+######################################################################
+
+`event_order_status` <- function(msg, contents, ...) {
+   eos <- list(orderId = contents[2],
+               status  = contents[3],
+               filled  = contents[4],
+               remaining = contents[5],
+               averageFillPrice = contents[6],
+               permId = contents[7],
+               parentId = contents[8],
+               lastFillPrice = contents[9],
+               clientId = contents[10],
+               whyHeld  = contents[11]
+  )
+  str(eos)
+}
+
+
+`event_open_order` <- function(msg, contents, ...) {
+  eoo <- list(
+         # need to add contractId to twsContract...
+              contract   = twsContract(
+                             symbol  = contents[4],
+                             sectype = contents[5],
+                             expiry  = contents[6],
+                             strike  = contents[7],
+                             exch    = contents[8],
+                             currency= contents[9],
+                             local   = contents[10]
+                           ),
+
+              order      = twsOrder(
+                             orderId = contents[2],
+                             action  = contents[11],                           
+                             totalQuantity = contents[12],
+                             orderType     = contents[13],
+                             lmtPrice      = contents[14],
+                             auxPrice      = contents[15],
+                             tif           = contents[16],
+                             ocaGroup      = contents[17],
+                             account       = contents[18],
+                             openClose     = contents[19],
+                             origin        = contents[20],
+                             orderRef      = contents[21],
+                             clientId      = contents[22],
+                             permId        = contents[23],
+                             outsideRTH    = contents[24],
+                             hidden        = contents[25],
+                             discretionaryAmt = contents[26],
+                             goodAfterTime = contents[27],
+                             # skip deprecated amount contents[28]
+                             faGroup       = contents[29],
+                             faMethod      = contents[30],
+                             faPercentage  = contents[31],
+                             faProfile     = contents[32],
+                             goodTillDate  = contents[33],
+                             rule80A       = contents[34],
+                             settlingFirm  = contents[35],
+                             shortSaleSlot = contents[36],
+                             designatedLocation = contents[37],
+                             auctionStrategy = contents[38],
+                             startingPrice = contents[39],
+                             stockRefPrice = contents[40],
+                             delta         = contents[41],
+                             stockRangeLower = contents[42],
+                             stockRangeUpper = contents[43],
+                             displaySize   = contents[44],
+                             blockOrder    = contents[45],
+                             sweepToFill   = contents[46],
+                             allOrNone     = contents[47],
+                             minQty        = contents[48],
+                             ocaType       = contents[49],
+                             eTradeOnly    = contents[50],
+                             firmQuoteOnly = contents[51],
+                             nbboPriceCap  = contents[52],
+                             parentId      = contents[53],
+                             triggerMethod = contents[54],
+                             volatility    = contents[55],
+                             volatilityType = contents[55],
+                             deltaNeutralOrderType = contents[56],
+                             deltaNeutralAuxPrice  = contents[57],
+                             continuousUpdate = contents[58],
+
+                           ),
+
+              orderstate = twsOrderState()
+         )
+  str(eoo)
+}
