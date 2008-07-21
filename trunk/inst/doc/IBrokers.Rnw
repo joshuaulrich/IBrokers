@@ -9,7 +9,7 @@
 
 \title{\bf IBrokers - Interactive Brokers and R }
 \author{Jeffrey A. Ryan}
-\date{May 16, 2008}
+\date{\today}
 
 \begin{document}
 
@@ -150,7 +150,7 @@ clientId is required, and given R's single threaded nature it is not
 of much value.
 If no further queries are required, {\tt twsDisconnect} will disconnect
 the R session from the TWS.
-<<twsconnect, eval=FALSE>>=
+<<twsconnect, eval=TRUE>>=
 library(IBrokers)
 tws <- twsConnect()
 tws
@@ -190,9 +190,9 @@ includes:
 Using the above functions to request market data from the TWS
 is quite straightforward.
 
-<<reqmktdata, eval=FALSE>>=
+<<reqmktdata, eval=TRUE>>=
 tws <- twsConnect()
-twsFuture("YM","ECBOT","200806")
+twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
 reqMktData(tws, twsEquity("QQQQ"))
 @
@@ -217,16 +217,16 @@ This value is multiplied by the difference in time between
 original message timestamps, increasing the value will slow the
 playback and decreasing toward 0 will speed up the playback.
 
-<<playbackmktdata, eval=FALSE>>=
+<<playbackmktdata, eval=TRUE>>=
 reqMktData(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsp <- twsConnect(filename="SBUX.dat")
 @
 To playback the saved data, call {\tt reqMktData} again:
-<<playback, eval=FALSE>>=
+<<playback, eval=TRUE>>=
 reqMktData(twsp)
 reqMktData(twsp, playback=0)
 @
-<<closeplayback, eval=FALSE,echo=FALSE>>=
+<<closeplayback, eval=TRUE,echo=FALSE>>=
 twsDisconnect(twsp)
 @
 

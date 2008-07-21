@@ -1,11 +1,37 @@
 `placeOrder` <-
-function(conn, Contract, Order, verbose=TRUE) {
+function(conn,
+         Contract,
+         Order,
+         verbose=TRUE, 
+         eventExecutionData,
+         eventOrderStatus,
+         CALLBACK, ...) {
+
   if(!inherits(conn,'twsConnection'))
     stop('requires twsConnection object')
 
-  con <- conn[[1]]
-  VERSION <- "26"
+  if(!inherits(Contract, 'twsContract'))
+    stop('requires twsContract object for Contract arg')
 
+  if(!inherits(Order, 'twsOrder'))
+    stop('requires twsOrder object for Order arg')
+
+  if(missing(CALLBACK)) {
+    if(missing(eventOrderStatus)) 
+      eventOrderStatus <- e_order_status
+    if(missing(eventExecutionData))
+      eventExecutionData <- e_execution_data
+  }
+  else if(is.null(CALLBACK)) {
+    eventOrderStatus <- NULL
+    eventExecutionData <- NULL
+  }
+
+  con <- conn[[1]]
+
+  VERSION <- "25" # Version as of API 9.40
+
+# write order {{{
   order <- c(.twsOutgoingMSG$PLACE_ORDER,
              VERSION,
              as.character(Order$orderId),
@@ -38,7 +64,7 @@ function(conn, Contract, Order, verbose=TRUE) {
              Order$triggerMethod,
              Order$outsideRTH,
              Order$hidden,
-             "",
+             "", # DEPRECATED FIELD
              Order$discretionaryAmt,
              Order$goodAfterTime,
              Order$goodTillDate,
@@ -56,7 +82,7 @@ function(conn, Contract, Order, verbose=TRUE) {
              Order$percentOffset,
              Order$eTradeOnly,
              Order$firmQuoteOnly,
-             Order$nbboPricecap,
+             Order$nbboPriceCap,
              Order$auctionStrategy,
              Order$startingPrice,
              Order$stockRefPrice,
@@ -71,37 +97,50 @@ function(conn, Contract, Order, verbose=TRUE) {
              Order$continuousUpdate,
              Order$referencePriceType,
              Order$trailStopPrice,
-             Order$scaleInitLevelSize,
-             Order$scaleSubsLevelSize,
+             Order$scaleNumComponents,
+             Order$scaleComponentSize,
              Order$scalePriceIncrement,
              Order$clearingAccount,
              Order$clearingIntent,
-             "0", #FALSE
-             "",  #??????
              Order$whatIf
              )
+# }}}
 
   writeBin(order, con)  
 
-
   waiting <- TRUE
 
-  while(waiting) {
-    curChar <- readBin(con,character(),1)
-        
-    if(length(curChar) > 0) {
-      if(curChar==.twsIncomingMSG$ERR_MSG) {
-        if(!errorHandler(con, verbose, OK = c(165, 202, 300, 366, 2104,2106,2107))) {
-          stop("Unable to complete TWS request")
-        }   
-      }   
-
-      if(curChar==.twsIncomingMSG$ORDER_STATUS) {
-        orderStatus <- readBin(con, character(), 11)
-        ### need an orderStatus handler here
-        waiting <- FALSE
+  if(missing(CALLBACK) || is.null(CALLBACK)) {
+    while(waiting) {
+      curChar <- readBin(con,character(),1)
+          
+      if (length(curMsg) > 0) {
+        if (curMsg == .twsIncomingMSG$ERR_MSG) {
+          if (!errorHandler(con, verbose, OK = c(165, 
+              300, 366, 2104, 2106, 2107))) {
+              cat("\n")
+              stop("Unable to complete market data request")
+          }
+        }
+        if (curMsg == .twsIncomingMSG$OPEN_ORDER) {
+          contents <- readBin(con, character(), 11)
+          if (is.null(eventOrderStatus)) {
+            cat(curMsg, paste(contents), "\n")
+          } else eventOpenOrder(curMsg, contents, ...)
+        }
+        if (curMsg == .twsIncomingMSG$ORDER_STATUS) {
+          contents <- readBin(con, character(), 11)
+          if (is.null(eventOrderStatus)) {
+            cat(curMsg, paste(contents), "\n")
+          } else eventOrderStatus(curMsg, contents, ...)
+        }
+        if (curMsg == .twsIncomingMSG$EXECUTION_DATA) {
+          contents <- readBin(con, character(), 11)
+          if (is.null(eventOrderStatus)) {
+            cat(curMsg, paste(contents), "\n")
+          } else eventExecutionData(curMsg, contents, ...)
+        }
       }
-    }   
-  }
-  return(orderStatus)
+    }
+  } else CALLBACK(con, ...)
 }

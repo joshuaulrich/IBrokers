@@ -1,6 +1,6 @@
 `twsOption` <-
-function(local,expiry,
-         strike,right="C",exch="SMART",primary="",
+function(local,expiry="",
+         strike="",right="C",exch="SMART",primary="",
          currency="USD",symbol="",include_expired="0")
 {
   twsContract(symbol,"OPT",exch,primary,

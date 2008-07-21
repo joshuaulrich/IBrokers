@@ -123,6 +123,9 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
     msg_position <- 0 # where we are in the message - only relevant for playback
     sys.time <- NULL # used for timeStamp interpretation
 
+#used for vignette counting only --- not in production code
+VCOUNT <- 0
+
     if(missing(CALLBACK) || is.null(CALLBACK)) {
       while (waiting) {
 
@@ -213,6 +216,8 @@ function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
           if(!is.na(msg_expected_length) && msg_position == msg_expected_length)
             waiting <- FALSE
         }
+        VCOUNT <- VCOUNT + 1
+        if(VCOUNT == 20) waiting <- FALSE
       }
     } else CALLBACK(con,...)
 }
