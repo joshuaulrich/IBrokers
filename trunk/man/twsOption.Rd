@@ -18,15 +18,15 @@ twsOption(local,
 }
 \arguments{
   \item{local}{ the IB symbol requested }
-  \item{expiry}{ option expiration CCYYMM - default to front month}
+  \item{expiry}{ option expiration CCYYMM }
   \item{strike}{ the strike price }
   \item{right}{ the requested right - \sQuote{C},\sQuote{CALL},
                 \sQuote{P}, or \sQuote{PUT} }
-  \item{exch}{ the requested exchange }
-  \item{primary}{ the primary exchange of the security }
-  \item{currency}{ the requested currency }
-  \item{symbol}{ the security name }
-  \item{include_expired}{ should expired contracts be included }
+  \item{exch}{ the requested exchange [optional, defaults to SMART]}
+  \item{primary}{ the primary exchange of the security [optional]}
+  \item{currency}{ the requested currency [defaults to USD]}
+  \item{symbol}{ the security name [optional]}
+  \item{include_expired}{ should expired contracts be included [defaults to \dQuote{0} (false)] }
 }
 \details{
 A wrapper to \code{twsContract} to make \sQuote{option}
@@ -35,10 +35,26 @@ contracts easier to specify.
 \value{
 A \code{twsContract} object.
 }
+\note{
+Option contracts on the TWS have certain rules which are different than
+standard data requests.  
+
+The \code{local} symbol is required. This can be found on the main TWS
+screen under contract details, or via the web at \url{www.interactivebrokers.com}
+
+The \code{expiry} needs to be either of class \code{Date} to be coerced to
+a string of format \sQuote{CCYYMM}, or provided in that format.
+
+Historical requests cannot be for a barSize=\sQuote{1 D}
+or less frequent.  
+
+\code{barSize} must be one of 30 secs, 1 min, 5 mins, 15 mins, 30 mins,
+or 1 hour.
+}
 \references{ Interactive Brokers: \url{www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{reqMktData}}, \code{\link{twsContract}} }
 \examples{
-opt <- twsOption("AEOQW",strike="17.5", right="PUT")
+opt <- twsOption("QQQAS",expiry="200901", strike="45.0", right="C")
 }
 \keyword{ utilities }
