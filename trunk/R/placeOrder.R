@@ -4,6 +4,7 @@ function(conn,
          Order,
          verbose=TRUE, 
          eventExecutionData,
+         eventOpenOrder,
          eventOrderStatus,
          CALLBACK, ...) {
 
@@ -18,12 +19,17 @@ function(conn,
 
   if(missing(CALLBACK)) {
     if(missing(eventOrderStatus)) 
-      eventOrderStatus <- e_order_status
-    if(missing(eventExecutionData))
-      eventExecutionData <- e_execution_data
+      eventOrderStatus   <- e_order_status
+
+    if(missing(eventOpenOrder)) 
+      eventOpenOrder     <- e_open_order
+
+    #if(missing(eventExecutionData))
+      #eventExecutionData <- e_execution_data
   }
   else if(is.null(CALLBACK)) {
-    eventOrderStatus <- NULL
+    eventOrderStatus   <- NULL
+    eventOpenOrder     <- NULL
     eventExecutionData <- NULL
   }
 
@@ -112,21 +118,21 @@ function(conn,
 
   if(missing(CALLBACK) || is.null(CALLBACK)) {
     while(waiting) {
-      curChar <- readBin(con,character(),1)
+      curMsg <- readBin(con,character(),1)
           
       if (length(curMsg) > 0) {
         if (curMsg == .twsIncomingMSG$ERR_MSG) {
           if (!errorHandler(con, verbose, OK = c(165, 
-              300, 366, 2104, 2106, 2107))) {
+              399, 300, 366, 2104, 2106, 2107))) {
               cat("\n")
               stop("Unable to complete market data request")
           }
         }
         if (curMsg == .twsIncomingMSG$OPEN_ORDER) {
-          contents <- readBin(con, character(), 11)
+          contents <- readBin(con, character(), 78)
           if (is.null(eventOrderStatus)) {
             cat(curMsg, paste(contents), "\n")
-          } else eventOpenOrder(curMsg, contents, ...)
+          } else cat(str(eventOpenOrder(curMsg, contents, ...)))
         }
         if (curMsg == .twsIncomingMSG$ORDER_STATUS) {
           contents <- readBin(con, character(), 11)

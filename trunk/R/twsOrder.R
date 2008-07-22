@@ -67,14 +67,15 @@ function(orderId,action="BUY",
          scaleNumComponents="",
          scaleComponentSize="",
          scalePriceIncrement="",
-         whatIf=FALSE
+         whatIf=FALSE,
+         clientId="", permId=""
         )
 {
   structure(
                  # main order fields
             list(orderId=orderId,
-                 clientId="",
-                 permId="",
+                 clientId=clientId,
+                 permId=permId,
                  action=action,
                  totalQuantity=as.character(totalQuantity),
                  orderType=orderType,
