@@ -42,7 +42,7 @@ function (conn, Contract,
    
     if( missing(CALLBACK)) {
       if( missing(eventRealTimeBars))
-        eventRealTimeBars <- event_real_time_bars
+        eventRealTimeBars <- e_real_time_bars
     } else if( is.null(CALLBACK)) {
         eventRealTimeBars <- NULL
     }

@@ -1,4 +1,4 @@
-`twsOrder` <-
+`twsOrderState` <-
 function(status=NULL,
          initMargin=NULL,
          maintMargin=NULL,
