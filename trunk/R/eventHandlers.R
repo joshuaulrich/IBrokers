@@ -388,7 +388,7 @@ function(msg, contents, ...) {
 ##### ACCOUNT_TIME #### {{{
 `e_account_time` <-
 function(msg, contents, ...) {
-  contents[3]
+  contents[2]
 }
 ##### END ACCOUNT_TIME #### }}}
 

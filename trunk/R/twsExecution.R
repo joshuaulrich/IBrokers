@@ -12,8 +12,8 @@ function(orderId,
          liquidation) {
 
   # special constructor if called with no args
-  if(length(names(match.call())) < 1)
-    do.call('twsExecution', rep(list(NULL),11))
+  if(is.null(names(match.call()[-1])))
+    return(do.call('twsExecution', rep(list(NULL),11)))
 
   structure(list(orderId=orderId,
                  clientId=clientId,

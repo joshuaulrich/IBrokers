@@ -34,6 +34,7 @@ function (conn,
       eventAccountTime    <- NULL
   }
 
+  waiting <- TRUE
   while (waiting) {
     curMsg <- readBin(con, character(), 1)
     if (curMsg == .twsIncomingMSG$ERR_MSG) {
@@ -57,14 +58,17 @@ function (conn,
       } else cat(str(eventPortfolioValue(curMsg, contents, ...)))
     }
     if (curMsg == .twsIncomingMSG$ACCT_UPDATE_TIME) {
-      updateTime <- readBin(con, character(), 2)
-      if(length(msgPV > 1)) {
-        waiting <- FALSE
-        writeBin(.twsOutgoingMSG$REQ_ACCOUNT_DATA, con)
-        writeBin(VERSION, con)
-        writeBin(as.character(as.integer(0)), con)
-        writeBin(as.character(account), con)
-      }
+      contents <- readBin(con, character(), 2)
+      if(is.null(eventPortfolioValue)) {
+        cat(curMsg, paste(contents), "\n")
+      } else cat(str(eventAccountTime(curMsg, contents, ...)))
+#      if(length(msgPV > 1)) {
+#        waiting <- FALSE
+#        writeBin(.twsOutgoingMSG$REQ_ACCOUNT_DATA, con)
+#        writeBin(VERSION, con)
+#        writeBin(as.character(as.integer(0)), con)
+#        writeBin(as.character(account), con)
+#      }
     }
   }
   
