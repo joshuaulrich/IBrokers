@@ -1,3 +1,4 @@
+#####  TICK_PRICE ##### {{{
 `e_tick_price`    <- function(msg,string,timeStamp,file,...) {
   tickType <- string[3]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
@@ -48,6 +49,7 @@
     cat(msg,paste(string),'\n',file=file,append=TRUE)
   }
 }
+#####  END TICK_PRICE ##### }}}
 
 `e_tick_size`    <- function(msg,string,timeStamp,file,...) {
   tickType <- string[3] 
@@ -334,3 +336,89 @@
          )
   structure(eoo, class='eventOpenOrder')
 }
+
+#####  EXECUTION_DATA ##### {{{
+`e_execution_data` <-
+function(msg, contents, ...) {
+
+       eed <- list(
+              contract   = twsContract(
+                            #contract = contents[3], #contractId not yet added :(
+                             symbol  = contents[4],
+                             sectype = contents[5],
+                             expiry  = contents[6],
+                             strike  = contents[7],
+                             right   = contents[8],
+                             exch    = contents[9],
+                             currency= contents[10],
+                             local   = contents[11],
+                             # the following are required to correctly specify a contract
+                             combo_legs_desc = NULL,
+                             primary = NULL,
+                             include_expired = NULL,
+                             comboleg = NULL,
+                             multiplier = NULL
+                           ),
+              execution  = twsExecution(orderId = contents[2],
+                                        execId  = contents[12],
+                                        time    = contents[13],
+                                        acctNumber = contents[14],
+                                        exchange   = contents[15],
+                                        side       = contents[16],
+                                        shares     = contents[17],
+                                        price      = contents[18],
+                                        permId     = contents[19],
+                                        clientId   = contents[20],
+                                        liquidation= contents[21]
+                                       )
+              )
+  structure(eed, class="eventExecutionData")
+}
+#####  END EXECUTION_DATA ##### }}}
+
+##### ACCOUNT_VALUE #### {{{
+`e_account_value` <-
+function(msg, contents, ...) {
+  # key          value        currency
+  c(contents[2], contents[3], contents[4])
+}
+##### END ACCOUNT_VALUE #### }}}
+
+
+##### ACCOUNT_TIME #### {{{
+`e_account_time` <-
+function(msg, contents, ...) {
+  contents[3]
+}
+##### END ACCOUNT_TIME #### }}}
+
+
+##### PORTFOLIO_VALUE #### {{{
+`e_portfolio_value` <-
+function(msg, contents, ...) {
+  version          <- as.numeric(contents[1])
+
+  contract         <- twsContract()
+ #contract$conId   <- contents[2]  NOT YET IMPLEMETED IN IBrokers
+  contract$symbol  <- contents[3]
+  contract$sectype <- contents[4]
+  contract$expiry  <- contents[5]
+  contract$strike  <- contents[6]
+  contract$right   <- contents[7]
+  contract$currency<- contents[8]
+  contract$local   <- contents[9]
+  
+  portfolioValue <- list()
+  portfolioValue$position      <- contents[10]
+  portfolioValue$marketPrice   <- contents[11]
+  portfolioValue$marketValue   <- contents[12]
+  portfolioValue$averageCost   <- contents[13]
+  portfolioValue$unrealizedPNL <- contents[14]
+  portfolioValue$realizedPNL   <- contents[15]
+  portfolioValue$accountName   <- contents[15]
+
+  structure(list(contract       = contract,
+                 portfolioValue = portfolioValue),
+            class="eventPortfolioValue") 
+}
+##### END ACCOUNT_DATA #### }}}
