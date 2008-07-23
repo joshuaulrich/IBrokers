@@ -24,8 +24,8 @@ function(conn,
     if(missing(eventOpenOrder)) 
       eventOpenOrder     <- e_open_order
 
-    #if(missing(eventExecutionData))
-      #eventExecutionData <- e_execution_data
+    if(missing(eventExecutionData))
+      eventExecutionData <- e_execution_data
   }
   else if(is.null(CALLBACK)) {
     eventOrderStatus   <- NULL
@@ -141,10 +141,10 @@ function(conn,
           } else eventOrderStatus(curMsg, contents, ...)
         }
         if (curMsg == .twsIncomingMSG$EXECUTION_DATA) {
-          contents <- readBin(con, character(), 11)
+          contents <- readBin(con, character(), 21)
           if (is.null(eventOrderStatus)) {
             cat(curMsg, paste(contents), "\n")
-          } else eventExecutionData(curMsg, contents, ...)
+          } else cat(str(eventExecutionData(curMsg, contents, ...)))
         }
       }
     }

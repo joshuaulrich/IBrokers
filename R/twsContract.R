@@ -3,6 +3,9 @@ function(symbol,sectype,exch,primary,expiry,strike,
          currency,right,local,multiplier,combo_legs_desc,
          comboleg,include_expired)
 {
+  if(length(names(match.call())) < 1)
+    do.call("twsContract", rep(list(NULL), 13))
+
   structure(
             list(symbol=symbol,
                  sectype=sectype,
