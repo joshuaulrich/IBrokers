@@ -59,7 +59,7 @@ a viable alternative for IB-API interaction.  Don't be shy.
 \tabular{ll}{
 Package: \tab IBrokers\cr
 Type: \tab Package\cr
-Version: \tab 0.1-2\cr
+Version: \tab 0.1-3\cr
 Date: \tab 2008-07-08\cr
 License: \tab GPL-3\cr
 }

@@ -194,7 +194,13 @@ is quite straightforward.
 tws <- twsConnect()
 twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
+@
+<<reqmktdata2, eval=FALSE>>=
 reqMktData(tws, twsEquity("QQQQ"))
+@
+<<reqmktdata3, eval=TRUE, echo=FALSE>>=
+IBrokers:::.reqMktData.vignette(tws, twsEquity("QQQQ"))
+twsDisconnect(tws)
 @
 
 Unique again to the IBrokers implementation is the
@@ -217,8 +223,14 @@ This value is multiplied by the difference in time between
 original message timestamps, increasing the value will slow the
 playback and decreasing toward 0 will speed up the playback.
 
-<<playbackmktdata, eval=TRUE>>=
+<<playbackmktdata, eval=FALSE>>=
 reqMktData(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
+twsp <- twsConnect(filename="SBUX.dat")
+@
+<<playbackmktdata, eval=TRUE, echo=FALSE>>=
+tws <- twsConnect()
+IBrokers:::.reqMktData.vignette(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
+twsDisconnect(tws)
 twsp <- twsConnect(filename="SBUX.dat")
 @
 To playback the saved data, call {\tt reqMktData} again:
