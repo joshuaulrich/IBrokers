@@ -27,7 +27,7 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
      while(waiting) {
        curMsg <- readBin(s, character(), 1)
        if(length(curMsg) > 0) {
-         if(curMsg %in% as.character(39:42)) {
+         if(curMsg %in% as.character(39:43)) {
            SERVER_VERSION <- curMsg
            CONNECTION_TIME <- readBin(s,character(),1)
          }
