@@ -1,5 +1,5 @@
 `reqMktData` <-
-function (conn, Contract, tickGenerics='100,101,104,106,162,165,221,225,236',
+function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
           snapshot = FALSE, tickerId = "1", timeStamp=TRUE,playback=1,
           file='', verbose=TRUE,
           eventTickPrice,eventTickSize,
