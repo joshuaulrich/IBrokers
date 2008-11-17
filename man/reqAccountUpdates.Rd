@@ -5,11 +5,20 @@
 Request and view account details from Interactive Brokers
 }
 \usage{
-reqAccountUpdates(conn, account = "1")
+reqAccountUpdates(conn, account = "1",
+                  eventAccountValue,
+                  eventPortfolioValue,
+                  eventAccountTime,
+                  CALLBACK, ...)
 }
 \arguments{
   \item{conn}{ A twsConnection object }
   \item{account}{ an account description - not used for most accounts }
+  \item{eventAccountValue}{ callback function, if any }
+  \item{eventPortfolioValue}{ callback function, if any }
+  \item{eventAccountTime}{ callback function, if any }
+  \item{CALLBACK}{ main receiver callback, if any }
+  \item{\dots}{ additional args }
 }
 \details{
 By default, for non-FA accounts, this returns the current login's

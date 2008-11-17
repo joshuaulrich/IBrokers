@@ -150,13 +150,23 @@ clientId is required, and given R's single threaded nature it is not
 of much value.
 If no further queries are required, {\tt twsDisconnect} will disconnect
 the R session from the TWS.
-<<twsconnect, eval=TRUE>>=
+<<twsconnect, eval=FALSE>>=
 library(IBrokers)
 tws <- twsConnect()
 tws
 reqCurrentTime(tws)
 serverVersion(tws)
 twsDisconnect(tws)
+@
+<<twsconnect, eval=TRUE, echo=TRUE>>=
+if(Sys.getenv("IBrokers_connected")) {
+library(IBrokers)
+tws <- twsConnect()
+tws
+reqCurrentTime(tws)
+serverVersion(tws)
+twsDisconnect(tws)
+}
 @
 
 \subsection{Getting data from the TWS}
@@ -190,17 +200,26 @@ includes:
 Using the above functions to request market data from the TWS
 is quite straightforward.
 
-<<reqmktdata, eval=TRUE>>=
+<<reqmktdata, eval=FALSE>>=
 tws <- twsConnect()
 twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
+@
+<<reqmktdata, eval=TRUE, echo=FALSE>>=
+if(Sys.getenv("IBrokers_connected")) {
+tws <- twsConnect()
+twsFuture("YM","ECBOT","200809")
+reqContractDetails(tws, twsEquity("QQQQ"))
+}
 @
 <<reqmktdata2, eval=FALSE>>=
 reqMktData(tws, twsEquity("QQQQ"))
 @
 <<reqmktdata3, eval=TRUE, echo=FALSE>>=
+if(Sys.getenv("IBrokers_connected")) {
 IBrokers:::.reqMktData.vignette(tws, twsEquity("QQQQ"))
 twsDisconnect(tws)
+}
 @
 
 Unique again to the IBrokers implementation is the
@@ -228,18 +247,28 @@ reqMktData(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsp <- twsConnect(filename="SBUX.dat")
 @
 <<playbackmktdata, eval=TRUE, echo=FALSE>>=
+if(Sys.getenv("IBrokers_connected")) {
 tws <- twsConnect()
 IBrokers:::.reqMktData.vignette(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsDisconnect(tws)
 twsp <- twsConnect(filename="SBUX.dat")
+}
 @
 To playback the saved data, call {\tt reqMktData} again:
-<<playback, eval=TRUE>>=
+<<playback, eval=FALSE>>=
 reqMktData(twsp)
 reqMktData(twsp, playback=0)
 @
+<<playback, eval=TRUE, echo=FALSE>>=
+if(Sys.getenv("IBrokers_connected")) {
+reqMktData(twsp)
+reqMktData(twsp, playback=0)
+}
+@
 <<closeplayback, eval=TRUE,echo=FALSE>>=
+if(Sys.getenv("IBrokers_connected")) {
 twsDisconnect(twsp)
+}
 @
 
 Each data function has special callback methods
