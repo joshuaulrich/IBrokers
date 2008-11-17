@@ -159,7 +159,7 @@ serverVersion(tws)
 twsDisconnect(tws)
 @
 <<twsconnect, eval=TRUE, echo=TRUE>>=
-if(Sys.getenv("IBrokers_connected")) {
+if(Sys.getenv("IBrokers_connected")=="1") {
 library(IBrokers)
 tws <- twsConnect()
 tws
@@ -206,7 +206,7 @@ twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
 @
 <<reqmktdata, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")) {
+if(Sys.getenv("IBrokers_connected")=="1") {
 tws <- twsConnect()
 twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
@@ -216,7 +216,7 @@ reqContractDetails(tws, twsEquity("QQQQ"))
 reqMktData(tws, twsEquity("QQQQ"))
 @
 <<reqmktdata3, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")) {
+if(Sys.getenv("IBrokers_connected")=="1") {
 IBrokers:::.reqMktData.vignette(tws, twsEquity("QQQQ"))
 twsDisconnect(tws)
 }
@@ -247,7 +247,7 @@ reqMktData(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsp <- twsConnect(filename="SBUX.dat")
 @
 <<playbackmktdata, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")) {
+if(Sys.getenv("IBrokers_connected")=="1") {
 tws <- twsConnect()
 IBrokers:::.reqMktData.vignette(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsDisconnect(tws)
@@ -260,13 +260,13 @@ reqMktData(twsp)
 reqMktData(twsp, playback=0)
 @
 <<playback, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")) {
+if(Sys.getenv("IBrokers_connected")=="1") {
 reqMktData(twsp)
 reqMktData(twsp, playback=0)
 }
 @
 <<closeplayback, eval=TRUE,echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")) {
+if(Sys.getenv("IBrokers_connected")=="1") {
 twsDisconnect(twsp)
 }
 @
