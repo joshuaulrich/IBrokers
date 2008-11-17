@@ -141,7 +141,7 @@ function (conn, Contract, tickerId = "1", numRows="20",
           if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) {
               contents <- readBin(con, character(), 8)
               if(is.null(eventUpdateMktDepthL2)) {
-                if(!is.null(timeStamp)) cat(as.characer(sys.time),' ',file=file,append=TRUE)
+                if(!is.null(timeStamp)) cat(as.character(sys.time),' ',file=file,append=TRUE)
                 cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
               } else eventUpdateMktDepthL2(curMsg,contents,sys.time,file)
               msg_position <- msg_position + 8

@@ -9,7 +9,7 @@ to be handled in \R.
 \usage{
 reqMktData(conn, 
            Contract,
-           tickGenerics = "100,101,104,106,162,165,221,225,236",
+           tickGenerics = "100,101,104,106,165,221,225,236",
            snapshot = FALSE,
            tickerId = "1",
            timeStamp = TRUE,
