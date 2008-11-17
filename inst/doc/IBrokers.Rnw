@@ -158,7 +158,7 @@ reqCurrentTime(tws)
 serverVersion(tws)
 twsDisconnect(tws)
 @
-<<twsconnect, eval=TRUE, echo=TRUE>>=
+<<twsconnect, eval=TRUE, echo=FALSE>>=
 if(Sys.getenv("IBrokers_connected")=="1") {
 library(IBrokers)
 tws <- twsConnect()
