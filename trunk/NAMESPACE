@@ -46,5 +46,7 @@ export(.twsIncomingMSG,
       )
 
 S3method(print,twsConnection)
+S3method(close,twsConnection)
+
 S3method(print,twsContract)
 S3method(print,twsContractDetails)
