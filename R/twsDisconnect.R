@@ -4,3 +4,7 @@ function(con) {
   close(con[[1]])
 }
 
+close.twsConnection <- function(con, ...)
+{
+  close(con[[1]])
+} 
