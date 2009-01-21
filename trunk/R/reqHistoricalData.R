@@ -1,10 +1,33 @@
-`reqHistoricalData` <-
+reqHistoricalData <-
 function(conn,Contract,endDateTime,
          barSize='1 day',duration='1 M',
          useRTH='1',whatToShow='TRADES',time.format='1',
          verbose=TRUE, tickerId='1',
          eventHistoricalData, file)
 {
+  if(!missing(endDateTime) && length(endDateTime) > 1) {
+    if(!timeBased(endDateTime))
+      stop("endDateTime length greater than 2 needs to be timeBased")
+    sleep <- 0
+    rHDargs <- list(conn=conn, Contract=Contract,
+                    barSize=barSize, duration=duration,
+                    useRTH=useRTH, whatToShow=whatToShow,
+                    time.format=time.format, verbose=verbose, tickerId=tickerId)
+    if(!missing(eventHistoricalData)) 
+      rHDargs$eventHistoricalData <- eventHistoricalDaa
+    if(!missing(file))
+      rHDargs$file <- file
+    x <- lapply(format(endDateTime,"%Y%m%d %H:%M:%S"),
+                function(eDT) {
+                  rHDargs$endDateTime <- eDT
+                  xx <- do.call('reqHistoricalData', rHDargs)
+                  Sys.sleep(6)
+                  return(xx)
+                })
+    x <- do.call('rbind.xts',x)
+    return(x[-which(duplicated(.index(x)))])
+  }
+    
   if(class(conn) != 'twsConnection') stop('tws connection object required')
   if(class(Contract) != 'twsContract') stop('twsContract required')
 
