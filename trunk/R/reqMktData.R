@@ -119,6 +119,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
     waiting <- TRUE
 
+    n_msg <- 0 # used to count number of msgs recieved or snapshot=TRUE
     msg_length <- ifelse(inherits(conn, 'twsPlayback'), 3, 1)
     msg_position <- 0 # where we are in the message - only relevant for playback
     sys.time <- NULL # used for timeStamp interpretation
@@ -136,6 +137,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         # stamps).  
 
         curMsg <- readBin(con, character(), msg_length)
+        n_msg <- n_msg + 1
 
         if(!is.null(timeStamp)) {
           if(msg_length > 1) {
@@ -198,8 +200,6 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
                 cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
               } else eventTickString(curMsg,contents,sys.time,file)
               msg_position <- msg_position + 4
-              if(snapshot == '1') 
-                waiting <- FALSE
           }
           if (curMsg == .twsIncomingMSG$TICK_EFP) {
               contents <- readBin(con, character(), 13)
@@ -213,6 +213,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
               msg_position <- msg_position + 13
           }
           flush.console()
+          if(n_msg == 12 && snapshot == "1") waiting <- FALSE
           if(!is.na(msg_expected_length) && msg_position == msg_expected_length)
             waiting <- FALSE
         }

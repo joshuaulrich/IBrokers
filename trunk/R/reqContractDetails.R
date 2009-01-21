@@ -8,7 +8,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
 
     con <- conn[[1]]
 
-    VERSION <- "4"
+    VERSION <- "5"
 
     writeBin(.twsOutgoingMSG$REQ_CONTRACT_DATA, con)
     writeBin(VERSION, con)
@@ -27,6 +27,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
     writeBin(as.character(Contract$include_expired),con)
 
     waiting <- TRUE
+    msg <- list()
     while (waiting) {
         curMsg <- readBin(con, character(), 1)
         if (curMsg == .twsIncomingMSG$ERR_MSG) {
@@ -37,7 +38,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
         }
 
         if (curMsg == .twsIncomingMSG$CONTRACT_DATA) {
-          msg <- readBin(con, character(), 17)
+          msg <- c(msg, list(readBin(con, character(), 17)))
           offsetReqId <- 0
           if(as.numeric(VERSION) <= 4) waiting <- FALSE
         }
@@ -46,6 +47,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
           waiting <- FALSE
         }
     }
+    lapply(msg, function(msg) {
     twsContractDetails(contract=list(symbol=msg[2+offsetReqId],
                                      sectype=msg[3+offsetReqId],
                                      expiry=msg[4+offsetReqId],
@@ -62,4 +64,5 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
                        orderTypes=unlist(strsplit(msg[15+offsetReqId],",")),
                        validExchanges=unlist(strsplit(msg[16+offsetReqId],",")),
                        priceMagnifier=msg[17+offsetReqId])
+     })
 }
