@@ -28,6 +28,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
 
     waiting <- TRUE
     msg <- list()
+    offsetReqId <- ifelse(as.numeric(VERSION) > 4, 1, 0)
     while (waiting) {
         curMsg <- readBin(con, character(), 1)
         if (curMsg == .twsIncomingMSG$ERR_MSG) {
@@ -38,24 +39,35 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
         }
 
         if (curMsg == .twsIncomingMSG$CONTRACT_DATA) {
-          msg <- c(msg, list(readBin(con, character(), 17)))
-          offsetReqId <- 0
+          msg <- c(msg, list(readBin(con, character(), 17+offsetReqId)))
           if(as.numeric(VERSION) <= 4) waiting <- FALSE
         }
         if (as.numeric(VERSION) > 4 && curMsg == .twsIncomingMSG$CONTRACT_DATA_END) {
-          offsetReqId <- 1
           waiting <- FALSE
         }
     }
     lapply(msg, function(msg) {
-    twsContractDetails(contract=list(symbol=msg[2+offsetReqId],
-                                     sectype=msg[3+offsetReqId],
-                                     expiry=msg[4+offsetReqId],
-                                     strike=msg[5+offsetReqId],
-                                     right=msg[6+offsetReqId],
-                                     exch=msg[7+offsetReqId],
-                                     currency=msg[8+offsetReqId],
-                                     local=msg[9+offsetReqId]),
+    twsContractDetails(version=msg[1],
+                       contract=twsContract(symbol=msg[2+offsetReqId],
+                                            sectype=msg[3+offsetReqId],
+                                            expiry=msg[4+offsetReqId],
+                                            primary="",
+                                            strike=msg[5+offsetReqId],
+                                            right=msg[6+offsetReqId],
+                                            exch=msg[7+offsetReqId],
+                                            currency=msg[8+offsetReqId],
+                                            multiplier=msg[14+offsetReqId],
+                                            include_expired="",
+                                            combo_legs_desc="", comboleg="",
+                                            local=msg[9+offsetReqId]),
+#                       contract=list(symbol=msg[2+offsetReqId],
+#                                     sectype=msg[3+offsetReqId],
+#                                     expiry=msg[4+offsetReqId],
+#                                     strike=msg[5+offsetReqId],
+#                                     right=msg[6+offsetReqId],
+#                                     exch=msg[7+offsetReqId],
+#                                     currency=msg[8+offsetReqId],
+#                                     local=msg[9+offsetReqId]),
                        marketName=msg[10+offsetReqId],
                        tradingClass=msg[11+offsetReqId],
                        conId=msg[12+offsetReqId],
