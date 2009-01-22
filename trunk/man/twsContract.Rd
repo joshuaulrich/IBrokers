@@ -2,7 +2,7 @@
 \alias{twsContract}
 \title{ Create a twsContract }
 \description{
-Create a twsContract for use in API calls.
+Create, test, and coerce a twsContract for use in API calls.
 }
 \usage{
 twsContract(symbol,
@@ -18,7 +18,12 @@ twsContract(symbol,
             combo_legs_desc,
             comboleg,
             include_expired)
+
+is.twsContract(x)
+
+as.twsContract(x, ...)
 }
+
 \arguments{
   \item{symbol}{ the IB symbol requested }
   \item{sectype}{ the security type }
@@ -33,14 +38,15 @@ twsContract(symbol,
   \item{combo_legs_desc}{ not implemented yet }
   \item{comboleg}{ not implemented yet }
   \item{include_expired}{ should expired contracts be included }
+  \item{x}{ object to test or coerce }
 }
 \details{
 These are directly from the TWS API.  See that help until I can
 find time to fill in this one.
 
-More useful for specific requests are \code{twsEquity} and the
-eventual addition of \code{twsOption}, \code{twsBond}, \code{twsFuture},
-etc.
+More useful for specific requests are \code{twsEquity},
+\code{twsOption}, \code{twsBond}, \code{twsFuture}, 
+and \code{twsCurrency}.
 }
 \value{
 A \code{twsContract} object.
