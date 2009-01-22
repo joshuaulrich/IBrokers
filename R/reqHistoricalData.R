@@ -14,7 +14,7 @@ function(conn,Contract,endDateTime,
                     useRTH=useRTH, whatToShow=whatToShow,
                     time.format=time.format, verbose=verbose, tickerId=tickerId)
     if(!missing(eventHistoricalData)) 
-      rHDargs$eventHistoricalData <- eventHistoricalDaa
+      rHDargs$eventHistoricalData <- eventHistoricalData
     if(!missing(file))
       rHDargs$file <- file
     x <- lapply(format(endDateTime,"%Y%m%d %H:%M:%S"),

@@ -30,6 +30,8 @@ twsCurrency(symbol,
 \details{
 A wrapper to \code{twsContract} to make \sQuote{currency/FX}
 contracts easier to specify.
+
+\code{twsCASH} is an alias.
 }
 \value{
 A \code{twsContract} object.

@@ -31,6 +31,12 @@ twsOption(local,
 \details{
 A wrapper to \code{twsContract} to make \sQuote{option}
 contracts easier to specify.
+
+Some of the optionable parameters are contingent on the
+request being made.  Refer to the \emph{TWS} documentation
+for details.
+
+\code{twsOPT} is an alias.
 }
 \value{
 A \code{twsContract} object.

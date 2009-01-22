@@ -30,6 +30,8 @@ twsEquity(symbol,
 \details{
 A wrapper to \code{twsContract} to make \sQuote{equity}
 contracts easier to specify.
+
+\code{twsSTK} is an alias.
 }
 \value{
 A \code{twsContract} object.

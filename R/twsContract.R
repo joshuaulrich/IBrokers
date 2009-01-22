@@ -29,8 +29,32 @@ function(x, ...) {
   str(unclass(x))
 }
 
+is.twsContract <- function(x)
+{
+  inherits(x, 'twsContract')
+}
 
-`twsContractDetails` <-
+is.twsContractDetails <- function(x)
+{
+  inherits(x, 'twsContractDetails')
+}
+
+as.twsContract <- function(x, ...)
+{
+  UseMethod("as.twsContract")
+}
+
+as.twsContract.twsContract <- function(x, ...)
+{
+  x
+}
+
+as.twsContract.twsContractDetails <- function(x, ...)
+{
+  x$contract
+}
+
+twsContractDetails <-
 function(version=NULL,
          contract=do.call('twsContract',rep(list(NULL),13)),
          marketName=NULL,

@@ -30,6 +30,8 @@ twsFuture(symbol,
 \details{
 A wrapper to \code{twsContract} to make \sQuote{futures}
 contracts easier to specify.
+
+\code{twsFUT} is an alias.
 }
 \value{
 A \code{twsContract} object.
