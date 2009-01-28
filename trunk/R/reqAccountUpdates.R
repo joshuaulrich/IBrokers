@@ -1,3 +1,17 @@
+cancelAccountUpdates <- function(conn, account="1")
+{
+  if(!inherits(conn, "twsConnection"))
+    stop("requires twsConnection object")
+
+  con <- conn[[1]]
+  VERSION <- "2"
+
+  writeBin(c(.twsOutgoingMSG$REQ_ACCOUNT_DATA,
+             VERSION,
+             "0", # FALSE
+             as.character(account)), con)
+}
+
 `reqAccountUpdates` <- 
 function (conn,
           account="1",
@@ -33,6 +47,7 @@ function (conn,
       eventPortfolioValue <- NULL
       eventAccountTime    <- NULL
   }
+  on.exit(cancelAccountUpdates(conn, account))
 
   waiting <- TRUE
   while (waiting) {
@@ -45,7 +60,7 @@ function (conn,
       }
     }
     if (curMsg == .twsIncomingMSG$ACCT_VALUE) {
-      contents <- readBin(con, character(), 4)
+      contents <- readBin(con, character(), 5)
       if(is.null(eventAccountValue)) {
         cat(curMsg, paste(contents), "\n")
       } else cat(str(eventAccountValue(curMsg, contents, ...)))
