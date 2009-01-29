@@ -86,7 +86,7 @@ as well as TWS API interaction.  It is here for advanced use
 and until documented should be left alone.
 }
 \value{
-The book depth.
+The real-time market data from the TWS.
 }
 \references{ Interactive Brokers API:
               \url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm} }
