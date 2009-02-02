@@ -65,16 +65,22 @@ License: \tab GPL-3\cr
 }
 The current API methods supported are:
 
-twsConnect: Establish TWS connection
-twsDisconnect: Close TWS connection
+\code{twsConnect}: Establish TWS connection\cr
+\code{twsDisconnect}: Close TWS connection\cr
+\code{isConnected}: Check connection\cr
+\code{setServerLogLevel}: Set logging level\cr
 
-twsAccountUpdates: Get Account Details
+\code{twsAccountUpdates}: Get Account Details\cr
+\code{reqIds}: Request next available ID\cr
+\code{reqCurrentTime}: The TWS server time in seconds since the epoch\cr
+\code{reqHistoricalData}: Fetch historical data\cr
+\code{reqMktData}: Receive real-time market data\cr
+\code{reqMktDepth}: Receive real-time order book depth\cr
+\code{reqRealTimeBars}: Receive 5 second OHLCVWC bar data\cr
 
-reqCurrentTime: The TWS server time in seconds since the epoch
-reqHistoricalData: Fetch historical data
-reqMktData: Receive real-time market data
-reqMktDepth: Receive real-time order book depth
-reqRealTimeBars: Receive 5 second OHLCVWC bar data
+\emph{Experimental support:}\cr
+\code{placeOrder}: Place a live order to the TWS\cr
+\code{cancelOrder}: Cancel a pending order on the TWS\cr
 }
 \author{
 Jeffrey A. Ryan

@@ -1,9 +1,12 @@
 \name{twsConnect}
 \alias{twsConnect}
+\alias{is.twsConnection}
+\alias{isConnected}
 \alias{twsDisconnect}
-\title{ Establish or Terminate a Connection to TWS }
+\title{ Establish, Check or Terminate a Connection to TWS }
 \description{
-Connect or disconnect to the Trader Workstation (TWS).
+Functions to initiate, check, or disconnect from the Trader
+Workstation (TWS).
 }
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
@@ -11,6 +14,10 @@ twsConnect(clientId = 1, host = 'localhost',
            filename)
 
 twsDisconnect(con)
+
+isConnected(x)
+is.twsConnection(x)
+is.twsPlayback(x)
 }
 \arguments{
   \item{clientId}{ the unique client id to associate with }
@@ -20,6 +27,7 @@ twsDisconnect(con)
   \item{timeout}{ length in seconds before aborting attempt }
   \item{filename}{ file containing recorded TWS data }
   \item{con}{ a valid \code{twsConnection} object }
+  \item{x}{ a connection to be checked }
 }
 \details{
 Returns a \code{twsConnection} object for use in
