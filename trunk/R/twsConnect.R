@@ -1,4 +1,4 @@
-`twsConnect` <-
+twsConnect <-
 function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
           timeout=5, filename=NULL)
  {
@@ -73,3 +73,22 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
 
   }
 }
+
+is.twsConnection <- function(x)
+{
+  inherits(x, "twsConnection")
+}
+
+is.twsPlayback <- function(x)
+{
+  inherits(x, "twsPlayback")
+}
+
+isConnected <- function(x)
+{
+  if(is.twsConnection(x)) {
+    if(inherits(try(isOpen(x[[1]]), silent=TRUE), 'try-error')) {
+      FALSE
+    } else TRUE 
+  } else isOpen(x)
+} 

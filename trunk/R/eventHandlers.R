@@ -113,13 +113,13 @@
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$OPTION_IMPLIED_VOL) { #24
-    cat('indexFuturePremium:',string[4],'\n',file=file,append=TRUE)
+    cat('optionImpliedVol:',string[4],'\n',file=file,append=TRUE)
   } else 
   if(tickType == .twsTickType$OPTION_HISTORICAL_VOL) { #23
     cat('optionHistoricalVol:',string[4],string[5],'\n',file=file,append=TRUE)
   } else
   if(tickType == .twsTickType$INDEX_FUTURE_PREMIUM) { #31
-    cat('optionImpliedVol:',string[4],string[5],'\n',file=file,append=TRUE)
+    cat('indexFuturePremium:',string[4],string[5],'\n',file=file,append=TRUE)
   } else
   if(tickType == .twsTickType$SHORTABLE) { #46
     cat('shortable:',string[4],'\n',file=file,append=TRUE)
