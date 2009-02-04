@@ -42,7 +42,11 @@ export(twsConnect,
     
        twsCALLBACK,
        twsDEBUG,
-       processMsg
+       processMsg,
+
+       eWrapper,
+
+       eWrapper.MktData.CSV
       )
 
 export(.twsIncomingMSG,

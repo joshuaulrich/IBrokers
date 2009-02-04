@@ -81,9 +81,11 @@ function(conn,Contract,endDateTime,
 #               '1 day','1 M','1',
 #               'TRADES','1')
 
-  for(i in 1:length(signals)) {
-    writeBin(signals[i],con)
-  }
+#  for(i in 1:length(signals)) {
+#    writeBin(signals[i],con)
+#  }
+
+  writeBin(signals, con)
 
   waiting <- TRUE           # waiting for valid response?
   response <- character(0)  # currently read response
@@ -110,7 +112,7 @@ function(conn,Contract,endDateTime,
       if(curMsg == .twsIncomingMSG$ERR_MSG) {
         if(!errorHandler(con,verbose,OK=c(165,300,366,2104,2106,2107))) {
           cat('\n')
-          stop('Unable to complete historical data request')
+          stop('Unable to complete historical data request', call.=FALSE)
         }
       }
       # watch for historical data start
@@ -128,7 +130,8 @@ function(conn,Contract,endDateTime,
       }
     }
   }
-
+  cancelHistoricalData(con, as.character(tickerId))
+  on.exit()
   
   if(missing(eventHistoricalData)) {
     # the default: return an xts object
@@ -149,8 +152,9 @@ function(conn,Contract,endDateTime,
     }
 
     x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
-    colnames(x) <- c('Open','High','Low','Close','Volume',
-                     'WAP','hasGaps','Count')
+    localsymbol <- reqContractDetails(conn, Contract)[[1]]$contract$local
+    colnames(x) <- paste(localsymbol, c('Open','High','Low','Close','Volume',
+                     'WAP','hasGaps','Count'), sep='.')
     xtsAttributes(x) <- list(from=req.from,to=req.to,
                              src='IB',updated=Sys.time())
     return(x)

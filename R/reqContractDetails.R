@@ -43,6 +43,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE) {
           if(as.numeric(VERSION) <= 4) waiting <- FALSE
         }
         if (as.numeric(VERSION) > 4 && curMsg == .twsIncomingMSG$CONTRACT_DATA_END) {
+          readBin(con, character(), 2)
           waiting <- FALSE
         }
     }
