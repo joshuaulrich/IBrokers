@@ -37,9 +37,11 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
       curMsg <- readBin(con, character(), 1)
       if(length(curMsg) < 1)
         next
-      if(!is.null(timestamp))
-        timestamp <- Sys.time()
-      processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+      if(!is.null(timestamp)) {
+        processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, ...)
+      } else {
+        processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+      }
     }
   }
 }
