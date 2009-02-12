@@ -46,7 +46,8 @@ export(twsConnect,
 
        eWrapper,
 
-       eWrapper.MktData.CSV
+       eWrapper.MktData.CSV,
+       eWrapper.MktDepth.CSV
       )
 
 export(.twsIncomingMSG,
