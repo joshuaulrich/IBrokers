@@ -151,7 +151,7 @@ function(conn,Contract,endDateTime,
       invisible(return())
     }
 
-    x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=as.POSIXct(dts))
+    x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=structure(as.numeric(as.POSIXlt(dts), class=c("POSIXt", "POSIXct"))))
     localsymbol <- reqContractDetails(conn, Contract)[[1]]$contract$local
     colnames(x) <- paste(localsymbol, c('Open','High','Low','Close','Volume',
                      'WAP','hasGaps','Count'), sep='.')
