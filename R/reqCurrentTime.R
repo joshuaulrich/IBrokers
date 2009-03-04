@@ -8,32 +8,20 @@ function(conn) {
   writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
   writeBin('1',con)
 
-  #waiting <- TRUE
-  #response <- character(0)
   e_current_time <- eWrapper()
-  e_current_time$currentTime <- function(msg, timestamp, file, ...) { msg[2];  }
+  e_current_time$currentTime <- function(curMsg, msg, timestamp, file, ...) { msg[2] }
   while (TRUE) {
     curMsg <- readBin(con, character(), 1)
     if (length(curMsg) < 1) 
       next
-    currentTime <- processMsg(curMsg, con, eWrapper=e_current_time, timestamp=NULL, file="")
+    currentTime <- processMsg(curMsg,
+                              con,
+                              eWrapper=e_current_time,
+                              timestamp=NULL, file="")
     if(curMsg == .twsIncomingMSG$CURRENT_TIME)
       break
   }
 
-#  while(waiting) {
-#
-#    # suppressWarnings to handle readBin issues in Windows
-#    # not returning character(0) when it should
-#    curChar <- suppressWarnings(readBin(con,character(),1))
-#    
-#    if(length(curChar) > 0) {
-#      if(curChar==.twsIncomingMSG$CURRENT_TIME) {
-#        currentTime <- readBin(con,character(),2)[2]
-#        waiting <- FALSE
-#      }
-#    }
-#  }
   tz <- Sys.getenv("TZ")
   on.exit(Sys.setenv(TZ=tz))
   Sys.setenv(TZ='GMT')

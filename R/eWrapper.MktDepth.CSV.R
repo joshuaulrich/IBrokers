@@ -4,7 +4,7 @@ eWrapper.MktDepth.CSV <- function() {
   
   get.data <- function() return(.data.)
 
-  updateMktDepth <- function(msg, timestamp, file, ...)
+  updateMktDepth <- function(curMsg, msg, timestamp, file, ...)
   {
     BID <- 1; ASK <- 2
     string <- character(21)
@@ -104,9 +104,9 @@ eWrapper.MktDepth.CSV <- function() {
   contractDetailsEnd  <- execDetails  <- #updateMktDepth  <- 
   updateMktDepthL2  <- updateNewsBulletin  <- managedAccounts  <-
   receiveFA  <- historicalData  <- scannerParameters  <-
-  scannerData  <- scannerDataEnd  <- realtimeBar  <-
+  scannerData  <- scannerDataEnd  <- realtimeBars  <-
   currentTime  <- fundamentalData  <-
-  deltaNeutralValidation  <- function(msg, timestamp, file, ...) { }
+  deltaNeutralValidation  <- function(curMsg, msg, timestamp, file, ...) { }
 
   return(list(
   get.data = get.data,
@@ -137,7 +137,7 @@ eWrapper.MktDepth.CSV <- function() {
   scannerParameters  =  scannerParameters  ,
   scannerData  =  scannerData  ,
   scannerDataEnd  =  scannerDataEnd  ,
-  realtimeBar  =  realtimeBar  ,
+  realtimeBars  =  realtimeBars  ,
   currentTime  =  currentTime  ,
   fundamentalData  =  fundamentalData  ,
   deltaNeutralValidation  =  deltaNeutralValidation))

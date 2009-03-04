@@ -4,7 +4,7 @@ eWrapper.MktData.CSV <- function() {
   
   get.data <- function() return(.data.)
 
-  tickPrice <- function(msg, timestamp, file, ...) 
+  tickPrice <- function(curMsg, msg, timestamp, file, ...) 
   {
     tickType = msg[3]
     .data.[1] <<- timestamp
@@ -45,7 +45,7 @@ eWrapper.MktData.CSV <- function() {
       .data.[6] <<- msg[4]
     }
   }
-  tickSize  <- function(msg, timestamp, file, ...) 
+  tickSize  <- function(curMsg, msg, timestamp, file, ...) 
   { 
     tickType = msg[3]
     .data.[1] <<- timestamp
@@ -107,9 +107,9 @@ eWrapper.MktData.CSV <- function() {
   contractDetailsEnd  <- execDetails  <- updateMktDepth  <- 
   updateMktDepthL2  <- updateNewsBulletin  <- managedAccounts  <-
   receiveFA  <- historicalData  <- scannerParameters  <-
-  scannerData  <- scannerDataEnd  <- realtimeBar  <-
+  scannerData  <- scannerDataEnd  <- realtimeBars  <-
   currentTime  <- fundamentalData  <-
-  deltaNeutralValidation  <- function(msg, timestamp, file, ...) { }
+  deltaNeutralValidation  <- function(curMsg, msg, timestamp, file, ...) { }
 
   return(list(
   get.data = get.data,
@@ -140,7 +140,7 @@ eWrapper.MktData.CSV <- function() {
   scannerParameters  =  scannerParameters  ,
   scannerData  =  scannerData  ,
   scannerDataEnd  =  scannerDataEnd  ,
-  realtimeBar  =  realtimeBar  ,
+  realtimeBars  =  realtimeBars  ,
   currentTime  =  currentTime  ,
   fundamentalData  =  fundamentalData  ,
   deltaNeutralValidation  =  deltaNeutralValidation))

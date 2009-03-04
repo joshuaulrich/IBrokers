@@ -6,8 +6,8 @@ function (conn, Contract,
           tickerId = "1",
           file = "",
           verbose=TRUE,
-          eventRealTimeBars,
-          CALLBACK,
+          eventWrapper=eWrapper(),
+          CALLBACK=twsCALLBACK,
           ...)
 {
     if (!inherits(conn,"twsConnection") )
@@ -39,15 +39,10 @@ function (conn, Contract,
         seek(con, 0)
       }
     }
-   
-    if( missing(CALLBACK)) {
-      if( missing(eventRealTimeBars))
-        eventRealTimeBars <- e_real_time_bars
-    } else if( is.null(CALLBACK)) {
-        eventRealTimeBars <- NULL
-    }
-
-
+  
+    if(is.null(CALLBACK))
+      CALLBACK <- twsDEBUG # function to simply return raw data
+ 
     VERSION <- "1"
     ticker_id <- as.character(tickerId)
 
@@ -85,41 +80,45 @@ function (conn, Contract,
     }
     on.exit(cancelRealTimeBars(con, as.character(as.numeric(tickerId):length(Contract))))
 
-    waiting <- TRUE
+    #waiting <- TRUE
 
-    msg_position <- 0 # where we are in the message - only relevant for playback
-    PLAYBACK <- ifelse(inherits(conn,'twsPlayback'), TRUE, FALSE)
+    #msg_position <- 0 # where we are in the message - only relevant for playback
+    #PLAYBACK <- ifelse(inherits(conn,'twsPlayback'), TRUE, FALSE)
+    timeStamp <- NULL
 
-    if( missing(CALLBACK) || is.null(CALLBACK)) {
-      while (waiting) {
+    CALLBACK(conn, eWrapper=eventWrapper, timestamp=timeStamp, file=file,
+             playback=playback, ...)
 
-          curMsg <- readBin(con, character(), 1)
-          msg_position <- msg_position + 1
-
-
-        #  if (length(curMsg) > 0) {
-              if (curMsg == .twsIncomingMSG$ERR_MSG) {
-                if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104,2106,2107))) {
-                  cat("\n")
-                  stop("Unable to complete market data request")
-                }
-                msg_position <- msg_position + 4
-              }
-              if( curMsg == .twsIncomingMSG$REAL_TIME_BARS) {
-                contents <- readBin(con,character(),10)
-                if(is.null(eventRealTimeBars)) {
-                  cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
-                } else eventRealTimeBars(curMsg, contents, file=file)
-                msg_position <- msg_position + 10
-              }
-          flush.console()
-          if(PLAYBACK)
-            Sys.sleep(as.numeric(barSize) * playback)
-          if(!is.na(msg_expected_length) && msg_position == msg_expected_length) 
-            waiting <- FALSE
-        # }
-      }
-    } else CALLBACK(con,...)
+#    if( missing(CALLBACK) || is.null(CALLBACK)) {
+#      while (waiting) {
+#
+#          curMsg <- readBin(con, character(), 1)
+#          msg_position <- msg_position + 1
+#
+#
+#        #  if (length(curMsg) > 0) {
+#              if (curMsg == .twsIncomingMSG$ERR_MSG) {
+#                if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104,2106,2107))) {
+#                  cat("\n")
+#                  stop("Unable to complete market data request")
+#                }
+#                msg_position <- msg_position + 4
+#              }
+#              if( curMsg == .twsIncomingMSG$REAL_TIME_BARS) {
+#                contents <- readBin(con,character(),10)
+#                if(is.null(eventRealTimeBars)) {
+#                  cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
+#                } else eventRealTimeBars(curMsg, contents, file=file)
+#                msg_position <- msg_position + 10
+#              }
+#          flush.console()
+#          if(PLAYBACK)
+#            Sys.sleep(as.numeric(barSize) * playback)
+#          if(!is.na(msg_expected_length) && msg_position == msg_expected_length) 
+#            waiting <- FALSE
+#        # }
+#      }
+#    } else CALLBACK(con,...)
 }
 
 `cancelRealTimeBars` <- function(conn,tickerId) {
