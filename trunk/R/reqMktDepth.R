@@ -40,18 +40,9 @@ function (conn, Contract, tickerId = "1", numRows="20",
     } else {
       timeStamp <- NULL
     }
-    # set up default event handlers, if
-    # callback is not set
-#    if(missing(CALLBACK)) {
-#      if(missing(eventUpdateMktDepth))
-#        eventUpdateMktDepth <- e_update_mkt_depth
-#      if(missing(eventUpdateMktDepthL2))
-#        eventUpdateMktDepthL2 <- e_update_mkt_depthL2
-#    } else if(is.null(CALLBACK)) {
-#        # return raw data
-#        eventUpdateMktDepth   <- NULL
-#        eventUpdateMktDepthL2 <- NULL
-#    }
+
+    if(is.null(CALLBACK))
+      CALLBACK <- twsDEBUG
 
     VERSION <- "3"
  
@@ -94,66 +85,8 @@ function (conn, Contract, tickerId = "1", numRows="20",
     }
     on.exit(cancelMktDepth(con, as.character(as.numeric(tickerId):length(Contract))))
 
-#    waiting <- TRUE
-#    response <- character(0)
     CALLBACK(conn, eWrapper=eventWrapper, timestamp=timeStamp, file=file,
              playback=playback, ...)
-#
-#    msg_length <- ifelse(inherits(conn, 'twsPlayback'), 3, 1)
-#    msg_position <- 0  # only relevant for playback???? why???
-#    sys.time <- NULL   # timeStamp interpretation
-#
-##    if (.Platform$OS == "windows") 
-##        Sys.sleep(0.1)
-#    if(missing(CALLBACK) || is.null(CALLBACK)) {
-#      while (waiting) {
-#        curMsg <- readBin(con, character(), msg_length)
-#
-#        if(!is.null(timeStamp)) {
-#          if(msg_length > 1) {
-#            last.time <- sys.time
-#            sys.time <- as.POSIXct(paste(curMsg[1:2],collapse=' '))
-#            if(!is.null(last.time)) {
-#              Sys.sleep((sys.time-last.time)*playback)
-#            }   
-#          } else sys.time <- Sys.time()
-#        } else sys.time <- NULL
-#
-#        curMsg <- curMsg[msg_length] 
-#
-#        msg_position <- msg_position + msg_length 
-#
-#
-#        if (length(curMsg) > 0) {
-#          if (curMsg == .twsIncomingMSG$ERR_MSG) {
-#              if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104,2106,2107))) {
-#                cat("\n")
-#                stop("Unable to complete market depth request")
-#              }
-#              msg_position <- msg_position + 4
-#          }
-#          if (curMsg == .twsIncomingMSG$MARKET_DEPTH) {
-#              contents <- readBin(con, character(), 7)
-#              if(is.null(eventUpdateMktDepth)) {
-#                if(!is.null(timeStamp)) cat(as.character(sys.time),' ',file=file,append=TRUE)
-#                cat(curMsg,paste(contents),'\n',file=file,append=TRUE)
-#              } else eventUpdateMktDepth(curMsg,contents,sys.time,file)
-#              msg_position <- msg_position + 7
-#          }
-#          if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) {
-#              contents <- readBin(con, character(), 8)
-#              if(is.null(eventUpdateMktDepthL2)) {
-#                if(!is.null(timeStamp)) cat(as.character(sys.time),' ',file=file,append=TRUE)
-#                cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
-#              } else eventUpdateMktDepthL2(curMsg,contents,sys.time,file)
-#              msg_position <- msg_position + 8
-#          }
-#          flush.console()
-#          if(!is.na(msg_expected_length) && msg_position == msg_expected_length)
-#            waiting <- FALSE
-#        }
-#      }
-#    } else CALLBACK(con,...)
 }
 
 `cancelMktDepth` <- function(conn,tickerId) {

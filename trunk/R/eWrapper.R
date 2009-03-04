@@ -1,95 +1,90 @@
-eWrapper <- function(debug=FALSE) {
+eWrapper <- function(debug=FALSE, symbols=NULL) {
+  # a possibly non-NULL vector of symbol names/ids
+  symbols <- symbols
+  get.symbols <- function() return(symbols)
+
+  # two branches:
+  #   the first is the non-debug version
+  #   the second is the debug version (raw data)
+
   if(!debug) {
-  tickPrice <- function(msg, timestamp, file, ...) 
-  {
-    e_tick_price(NULL,msg,timestamp,file,...) 
-  }
-  tickSize  <- function(msg, timestamp, file, ...) 
-  { 
-    e_tick_size(NULL, msg, timestamp, file, ...) 
-  }
-  tickOptionComputation <- function(msg, timestamp, file, ...)
-  {
-    e_tick_option(NULL, msg, timestamp, file, ...)
-  }
-  tickGeneric  <- function(msg, timestamp, file, ...) 
-  {
-    e_tick_generic(NULL, msg, timestamp, file, ...)
-  }
-  tickString <- function(msg, timestamp, file, ...) 
-  { 
-    e_tick_string(NULL, msg, timestamp, file, ...) 
-  }
-  tickEFP  <- function(msg, timestamp, file, ...) 
-  { 
-    e_tick_EFP(NULL, msg, timestamp, file, ...)
-  }
-  orderStatus <- function(msg, timestamp, file, ...) { msg }
-  openOrder  <- function(msg, timestamp, file, ...) { msg }
-  openOrderEnd <- function(msg, timestamp, file, ...) { msg }
-  updateAccountValue  <- function(msg, timestamp, file, ...) { msg }
-  updatePortfolio <- function(msg, timestamp, file, ...) { msg }
-  updateAccountTime  <- function(msg, timestamp, file, ...) { msg }
-  accountDownloadEnd  <- function(msg, timestamp, file, ...) { msg }
-  nextValidId  <- function(msg, timestamp, file, ...) { msg }
-  contractDetails  <- function(msg, timestamp, file, ...) { msg }
-  bondContractDetails  <- function(msg, timestamp, file, ...) { msg }
-  contractDetailsEnd  <- function(msg, timestamp, file, ...) { msg }
-  execDetails  <- function(msg, timestamp, file, ...) { msg }
-  updateMktDepth  <- function(msg, timestamp, file, ...) 
-  { 
-    e_update_mkt_depth(NULL, msg, timestamp, file, ...)
-  }
-  updateMktDepthL2  <- function(msg, timestamp, file, ...) 
-  { 
-    e_update_mkt_depthL2(NULL, msg, timestamp, file, ...)
-  }
-  updateNewsBulletin  <- function(msg, timestamp, file, ...) { msg }
-  managedAccounts  <- function(msg, timestamp, file, ...) { msg }
-  receiveFA  <- function(msg, timestamp, file, ...) { msg }
-  historicalData  <- function(msg, timestamp, file, ...) { msg }
-  scannerParameters  <- function(msg, timestamp, file, ...) { msg }
-  scannerData  <- function(msg, timestamp, file, ...) { msg }
-  scannerDataEnd  <- function(msg, timestamp, file, ...) { msg }
-  realtimeBar  <- function(msg, timestamp, file, ...) 
-  { 
-    e_real_time_bars(NULL, msg, file=file, ...) 
-  }
-  currentTime  <- function(msg, timestamp, file, ...) { msg }
-  fundamentalData  <- function(msg, timestamp, file, ...) { msg }
-  deltaNeutralValidation  <- function(msg, timestamp, file, ...) { msg }
+    tickPrice <- function(curMsg, msg, timestamp, file, ...) 
+    {
+      e_tick_price(NULL,msg,timestamp,file, get.symbols(),...) 
+    }
+    tickSize  <- function(curMsg, msg, timestamp, file, ...) 
+    { 
+      e_tick_size(NULL, msg, timestamp, file, get.symbols(), ...) 
+    }
+    tickOptionComputation <- function(curMsg, msg, timestamp, file, ...)
+    {
+      e_tick_option(NULL, msg, timestamp, file, get.symbols(), ...)
+    }
+    tickGeneric  <- function(curMsg, msg, timestamp, file, ...) 
+    {
+      e_tick_generic(NULL, msg, timestamp, file, get.symbols(), ...)
+    }
+    tickString <- function(curMsg, msg, timestamp, file, ...) 
+    { 
+      e_tick_string(NULL, msg, timestamp, file, get.symbols(), ...) 
+    }
+    tickEFP  <- function(curMsg, msg, timestamp, file, ...) 
+    { 
+      e_tick_EFP(NULL, msg, timestamp, file, get.symbols(), ...)
+    }
+    orderStatus <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    openOrder  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    openOrderEnd <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    updateAccountValue  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    updatePortfolio <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    updateAccountTime  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    accountDownloadEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    nextValidId  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    contractDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    bondContractDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    contractDetailsEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    execDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    updateMktDepth  <- function(curMsg, msg, timestamp, file,  ...) 
+    { 
+      e_update_mkt_depth(NULL, msg, timestamp, file, get.symbols(), ...)
+    }
+    updateMktDepthL2  <- function(curMsg, msg, timestamp, file, ...) 
+    { 
+      e_update_mkt_depthL2(NULL, msg, timestamp, file, get.symbols(), ...)
+    }
+    updateNewsBulletin  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    managedAccounts  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    receiveFA  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    historicalData  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    scannerParameters  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    scannerData  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    scannerDataEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    realtimeBars  <- function(curMsg, msg, timestamp, file,  ...) 
+    { 
+      e_real_time_bars(NULL, msg, file=file, get.symbols(), ...) 
+    }
+    currentTime  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    fundamentalData  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    deltaNeutralValidation  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
   } else {
-  tickPrice <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  tickSize  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  tickOptionComputation <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  tickGeneric  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  tickString <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  tickEFP  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  orderStatus <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  openOrder  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  openOrderEnd <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  updateAccountValue  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  updatePortfolio <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  updateAccountTime  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  accountDownloadEnd  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  nextValidId  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  contractDetails  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  bondContractDetails  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  contractDetailsEnd  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  execDetails  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  updateMktDepth  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  updateMktDepthL2  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  updateNewsBulletin  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  managedAccounts  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  receiveFA  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  historicalData  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  scannerParameters  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  scannerData  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  scannerDataEnd  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  realtimeBar  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  currentTime  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  fundamentalData  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
-  deltaNeutralValidation  <- function(msg, timestamp, file, ...) { cat(as.character(timestamp),msg,"\n",file=file, ...) }
+    # DEBUG code [ twsDEBUG ]
+    tickPrice <- tickSize <-
+    tickOptionComputation <- tickGeneric <-
+    tickString <- tickEFP <-
+    orderStatus <- openOrder <- openOrderEnd <-
+    updateAccountValue <- updateAccountTime <- updatePortfolio <- 
+    accountDownloadEnd <- nextValidId <-
+    contractDetails <- bondContractDetails <-
+    contractDetailsEnd <- execDetails <-
+    updateMktDepth <- updateMktDepthL2 <-
+    updateNewsBulletin <- managedAccounts <-
+    receiveFA <- historicalData <-
+    scannerParameters <- scannerData <- scannerDataEnd <-
+    realtimeBars <- currentTime <- fundamentalData <-
+    deltaNeutralValidation  <- 
+      function(curMsg, msg, timestamp, file, ...) {
+        cat(as.character(timestamp),curMsg, msg,"\n",file=file, append=TRUE,...) 
+      }
   }
 
   return(list(
@@ -120,7 +115,7 @@ eWrapper <- function(debug=FALSE) {
   scannerParameters  =  scannerParameters  ,
   scannerData  =  scannerData  ,
   scannerDataEnd  =  scannerDataEnd  ,
-  realtimeBar  =  realtimeBar  ,
+  realtimeBars  =  realtimeBars  ,
   currentTime  =  currentTime  ,
   fundamentalData  =  fundamentalData  ,
   deltaNeutralValidation  =  deltaNeutralValidation))
