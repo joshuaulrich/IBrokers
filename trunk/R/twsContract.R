@@ -49,6 +49,17 @@ as.twsContract.twsContract <- function(x, ...)
   x
 }
 
+as.twsContract.list <- function(x, ...)
+{
+  lapply(x, function(xx) {
+                if(is.twsContract(xx)) {
+                  return(xx)
+                } else
+                if(is.twsContractDetails(xx)) {
+                  return(as.twsContract(xx))
+                }})
+}
+
 as.twsContract.twsContractDetails <- function(x, ...)
 {
   x$contract
@@ -73,7 +84,6 @@ function(version=NULL,
                  tradingClass=tradingClass,
                  conId=conId,
                  minTick=minTick,
-                 multiplier=multiplier,
                  orderTypes=orderTypes,
                  validExchanges=validExchanges,
                  priceMagnifier=priceMagnifier

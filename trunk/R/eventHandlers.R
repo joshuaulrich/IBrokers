@@ -101,7 +101,8 @@
     cat('lastOption:',string[4],string[5],'\n',file=file,append=TRUE)
   } else
   if(tickType == .twsTickType$MODEL_OPTION) { #13
-    cat('modelOption:',string[4],string[5],'\n',file=file,append=TRUE)
+    cat('modelOption: impVol: ',string[4],' delta:',string[5],
+        ' modelPrice: ',string[6],' pvDiv: ',string[7],'\n',file=file,append=TRUE)
   } else {
     cat('<default option> ',file=file,append=TRUE)
     cat(paste(string),'\n',file=file,append=TRUE)

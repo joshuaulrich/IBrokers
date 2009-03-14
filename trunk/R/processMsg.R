@@ -85,6 +85,8 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$CONTRACT_DATA) {
     msg <- readBin(con, character(), 17)
+    if(msg[1] > 4)
+      msg <- c(msg, readBin(con, character(), 2)) # makes up for id, and underConId
     eWrapper$contractData(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$EXECUTION_DATA) {
@@ -132,6 +134,9 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) {
     msg <- readBin(con, character(), 5)
+    if(msg[3] == .twsTickType$MODEL_OPTION) {
+      msg <- c(msg, readBin(con, character(), 2))
+    } else msg <- c(msg,NA,NA)
     eWrapper$tickOptionComputation(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_GENERIC) {
