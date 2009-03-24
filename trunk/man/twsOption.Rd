@@ -14,6 +14,7 @@ twsOption(local,
           primary="",
           currency='USD',
           symbol='',
+          multiplier="100",
           include_expired='0')
 }
 \arguments{
@@ -26,6 +27,7 @@ twsOption(local,
   \item{primary}{ the primary exchange of the security [optional]}
   \item{currency}{ the requested currency [defaults to USD]}
   \item{symbol}{ the security name [optional]}
+  \item{multiplier}{ the contract multiplier }
   \item{include_expired}{ should expired contracts be included [defaults to \dQuote{0} (false)] }
 }
 \details{
@@ -57,8 +59,7 @@ a string of format \sQuote{CCYYMM}, or provided in that format.
 Historical requests cannot be for a barSize=\sQuote{1 D}
 or less frequent.  
 
-\code{barSize} must be one of 30 secs, 1 min, 5 mins, 15 mins, 30 mins,
-or 1 hour.
+\code{barSize} must be "1 min" per Interactive Brokers API.
 }
 \references{ Interactive Brokers: \url{www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }

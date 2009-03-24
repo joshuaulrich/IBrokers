@@ -7,12 +7,13 @@ Create an eWrapper closure to allow for custom
 incoming message management.
 }
 \usage{
-eWrapper(debug = FALSE)
+eWrapper(debug = FALSE, symbols=NULL)
 
-eWapper.MktData.CSV()
+eWrapper.MktData.CSV()
 }
 \arguments{
   \item{debug}{ should debugging be enabled }
+  \item{symbols}{ optional names to assign to incoming messages }
 }
 \details{
 \pkg{IBrokers} implements an eWrapper scheme similar
@@ -35,6 +36,16 @@ found in \code{.twsIncomingMSG}.  Each message has a corresponding
 function in the eWrapper designed
 to handle the particular details of each incoming message type.
 
+There is also an embedded environment in which data
+can be saved and retrieved via a handful of accessor functions mimicing
+the standard \R tools.
+
+The data environment is \code{.Data}, with accessor
+methods \code{get.Data}, \code{assign.Data}, and \code{remove.Data}.
+
+These methods can be called from the closure object \code{eWrapper$get.Data},
+\code{eWrapper$assign.Data}, etc.
+
 The basic eWrapper call simply produces a visually informative
 display of the incoming stream.  E.g. bidSize data would be represented
 with a \emph{bidSize} label, instead of the internal TWS code(s) returned
@@ -52,9 +63,15 @@ An example of this ability to modify the object is given in
 the \code{eWrapper.MktData.CSV} code. This object produces
 output deisgned to be space efficient, as well as easily read back into
 any R session as a standard CSV file.
+
+Additional, but creating methods that update the internal environment
+of the eWrapper object, it is possible to maintain a snapshot of
+last k values for any field of interest.  This is directly applicable to
+implementing an automated strategy from within a custom \code{twsCALLBACK}
+method.
 }
 \value{
-A list of functions to be used for the \code{eventWrapper} argument
+A list of functions [and optionally data] to be used for the \code{eventWrapper} argument
 to \code{reqMktData} and \code{reqMktDepth}
 }
 \references{ ~put references to the literature/web site here ~ }
@@ -76,6 +93,10 @@ myWrapper$tickPrice <- function(msg, timestamp, file, ...) {}
 
 # add new tickPrice action
 myWrapper$tickPrice <- function(msg, timestamp, file, ...) { cat("tickPrice",msg) }
+
+# add new data into the object, and retrieve
+myWrapper$assign.Data("myData", 1010)
+myWrapper$get.Data("myData")
 
 \dontrun{
 tws <- twsConnect()

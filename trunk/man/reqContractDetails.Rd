@@ -7,7 +7,13 @@ Returns an object (a list of class \code{twsContractDetails} objects)
 to a particular IB tradeable product.
 }
 \usage{
-reqContractDetails(conn, Contract, reqId = "1", conId = "", verbose = FALSE)
+reqContractDetails(conn,
+                   Contract,
+                   reqId = "1",
+                   conId = "",
+                   verbose = FALSE,
+                   eventWrapper = eWrapper(),
+                   CALLBACK = twsCALLBACK, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,6 +22,9 @@ reqContractDetails(conn, Contract, reqId = "1", conId = "", verbose = FALSE)
   \item{reqId}{ a unique ID }
   \item{conId}{ a contract ID }
   \item{verbose}{ be verbose? }
+  \item{eventWrapper}{ event callback closure }
+  \item{CALLBACK}{ main callback loop }
+  \item{\dots}{ be verbose? }
 }
 \details{
 Returns a list of details for the product specified.  See the TWS

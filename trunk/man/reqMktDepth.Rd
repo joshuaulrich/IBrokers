@@ -15,9 +15,8 @@ reqMktDepth(conn,
             playback = 1,
             file = "",
             verbose = TRUE,
-            eventUpdateMktDepth,
-            eventUpdateMktDepthL2,
-            CALLBACK, ...)
+            eventWrapper = eWrapper(),
+            CALLBACK = twsCALLBACK, ...)
 
 cancelMktDepth(conn,tickerId)
 }
@@ -31,9 +30,8 @@ cancelMktDepth(conn,tickerId)
   \item{playback}{ playback speed adjustment }
   \item{file}{ passed to internal \code{cat} calls. See associated help. }
   \item{verbose}{ print diagnostics? }
-  \item{eventUpdateMktDepth}{ callback function, if any }
-  \item{eventUpdateMktDepthL2}{ callback function, if any }
-  \item{CALLBACK}{ main reciever callback, if any }
+  \item{eventWrapper}{ callback closure }
+  \item{CALLBACK}{ main reciever loop }
   \item{\dots}{ additional args }
 }
 \details{
