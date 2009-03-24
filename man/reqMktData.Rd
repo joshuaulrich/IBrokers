@@ -12,17 +12,12 @@ reqMktData(conn,
            tickGenerics = "100,101,104,106,165,221,225,236",
            snapshot = FALSE,
            tickerId = "1",
-           timeStamp = TRUE,
+           timeStamp = "\%Y\%m\%d \%H:\%M:\%OS",
            playback = 1,
            file = "",
            verbose = TRUE,
-           eventTickPrice,
-           eventTickSize,
-           eventTickOption,
-           eventTickGeneric,
-           eventTickString,
-           eventTickEFP,
-           CALLBACK, ...)
+           eventWrapper = eWrapper(),
+           CALLBACK = twsCALLBACK, ...)
 
 cancelMktData(conn,tickerId)
 }
@@ -37,13 +32,8 @@ cancelMktData(conn,tickerId)
   \item{playback}{ playback speed adjustment }
   \item{file}{ passed to internal \code{cat} calls. See associated help }
   \item{verbose}{ print diagnostics? }
-  \item{eventTickPrice}{ callback function, if any }
-  \item{eventTickSize}{ callback function, if any }
-  \item{eventTickOption}{ callback function, if any }
-  \item{eventTickGeneric}{ callback function, if any }
-  \item{eventTickString}{ callback function, if any }
-  \item{eventTickEFP}{ callback function, if any }
-  \item{CALLBACK}{ main reciever callback, if any }
+  \item{eventWrapper}{ eWrapper object }
+  \item{CALLBACK}{ main reciever callback}
   \item{\dots}{ additional args }
 }
 \details{
@@ -59,17 +49,14 @@ pass a formatting string for use in
 set the argument to NULL.  This is \emph{not} sent by
 the TWS - merely prepended to the output by \R.
 
-Callbacks, via eventTickPrice, eventTickSize,
-eventTickOption, eventTickGeneric, eventTickString,
-eventTickEFP, or
-CALLBACK are designed to allow for \R level processing
+Callbacks, via CALLBACK and eventWrapper
+are designed to allow for \R level processing
 of the real-time data stream.
 
-The first six correspond to actions based upon the actual signal
-recieved.  These may be user-defined functions taking
-the appropriate arguments.  Each message recieved (each
+Each message recieved (each
 update to the market data) will invoke one
-of these callbacks, depending on the message type.  By default when nothing is
+the appropriately names eWrapper callback,
+depending on the message type.  By default when nothing is
 specified, the code will call the default method for
 printing the results to the screen via \code{cat}.
 
@@ -96,7 +83,10 @@ As \R is single threaded - this request will run until
 interupted by an error or by user action. Both will
 clean up after themselves when appropriate.
 }
-\seealso{ \code{\link{twsConnect}},\code{\link{twsContract}} }
+\seealso{ \code{\link{twsCALLBACK}},
+          \code{\link{eWrapper}},
+          \code{\link{twsConnect}},
+          \code{\link{twsContract}} }
 \examples{
 \dontrun{
 tws <- twsConnect()

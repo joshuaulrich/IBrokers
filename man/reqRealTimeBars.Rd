@@ -15,8 +15,8 @@ reqRealTimeBars(conn,
                 tickerId = "1",
                 file = "",
                 verbose = TRUE,
-                eventRealTimeBars,
-                CALLBACK,
+                eventWrapper=eWrapper(),
+                CALLBACK=twsCALLBACK,
                 ...) 
 
 cancelRealTimeBars(conn, tickerId)
@@ -31,8 +31,8 @@ cancelRealTimeBars(conn, tickerId)
   \item{useRTH}{ regular trading hours }
   \item{file}{ passed to internal \code{cat} calls. See associated help. }
   \item{verbose}{ print diagnostics }
-  \item{eventRealTimeBars}{ callback function, if any. }
-  \item{CALLBACK}{ main reciever callback, if any. }
+  \item{eventWrapper}{ eventWrapper object }
+  \item{CALLBACK}{ main reciever callback }
   \item{\dots}{ additional args to callback }
 }
 \details{
@@ -49,7 +49,7 @@ Callbacks, via eventRealTimeBars and CALLBACK are
 designed to allow for R level processing of the real-time data
 stream.
 
-eventRealTimeBars allows for direct manipulation of the actual
+eventWrapper allows for direct manipulation of the actual
 signal recieved.
 These may be user-defined functions taking the
 appropriate arguments.  Each message recieved (each new bar)
@@ -82,7 +82,7 @@ As R is single threaded - this request will run until interupted
 by an error or by user action. Both will clean up after themselves
 when appropriate.
 }
-\seealso{ \code{\link{twsConnect}},\code{\link{twsContract}} }
+\seealso{ \code{\link{twsConnect}},\code{\link{twsContract}},\code{\link{eWrapper}}}
 \examples{
 \dontrun{
 tws <- twsConnect()

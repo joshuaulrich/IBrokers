@@ -1,6 +1,7 @@
 \name{twsConnect}
 \alias{twsConnect}
 \alias{is.twsConnection}
+\alias{is.twsPlayback}
 \alias{isConnected}
 \alias{twsDisconnect}
 \title{ Establish, Check or Terminate a Connection to TWS }

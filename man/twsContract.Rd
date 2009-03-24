@@ -1,5 +1,7 @@
 \name{twsContract}
 \alias{twsContract}
+\alias{is.twsContract}
+\alias{as.twsContract}
 \title{ Create a twsContract }
 \description{
 Create, test, and coerce a twsContract for use in API calls.
@@ -39,6 +41,7 @@ as.twsContract(x, ...)
   \item{comboleg}{ not implemented yet }
   \item{include_expired}{ should expired contracts be included }
   \item{x}{ object to test or coerce }
+  \item{\dots}{ additional arguments }
 }
 \details{
 These are directly from the TWS API.  See that help until I can
