@@ -67,7 +67,7 @@ function (conn,
     }
     if (curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) {
       # code suggested by Adrian Dragulescu.
-      contents <- readBin(con, character(), 15)
+      contents <- readBin(con, character(), 18)
       if(is.null(eventPortfolioValue)) {
         cat(curMsg, paste(contents), "\n")
       } else cat(str(eventPortfolioValue(curMsg, contents, ...)))

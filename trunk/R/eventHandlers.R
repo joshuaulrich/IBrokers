@@ -400,23 +400,25 @@ function(msg, contents, ...) {
   version          <- as.numeric(contents[1])
 
   contract         <- twsContract()
- #contract$conId   <- contents[2]  NOT YET IMPLEMETED IN IBrokers
+  contract$conId   <- contents[2]
   contract$symbol  <- contents[3]
   contract$sectype <- contents[4]
   contract$expiry  <- contents[5]
   contract$strike  <- contents[6]
   contract$right   <- contents[7]
-  contract$currency<- contents[8]
-  contract$local   <- contents[9]
+  contract$multiplier <- contents[8]
+  contract$primary <- contents[9]
+  contract$currency<- contents[10]
+  contract$local   <- contents[11]
   
   portfolioValue <- list()
-  portfolioValue$position      <- contents[10]
-  portfolioValue$marketPrice   <- contents[11]
-  portfolioValue$marketValue   <- contents[12]
-  portfolioValue$averageCost   <- contents[13]
-  portfolioValue$unrealizedPNL <- contents[14]
-  portfolioValue$realizedPNL   <- contents[15]
-  portfolioValue$accountName   <- contents[15]
+  portfolioValue$position      <- contents[12]
+  portfolioValue$marketPrice   <- contents[13]
+  portfolioValue$marketValue   <- contents[14]
+  portfolioValue$averageCost   <- contents[15]
+  portfolioValue$unrealizedPNL <- contents[16]
+  portfolioValue$realizedPNL   <- contents[17]
+  portfolioValue$accountName   <- contents[18]
 
   structure(list(contract       = contract,
                  portfolioValue = portfolioValue),

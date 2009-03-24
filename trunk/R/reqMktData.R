@@ -1,6 +1,6 @@
 reqMktData <-
 function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
-          snapshot = FALSE, tickerId = "1", timeStamp=TRUE,playback=1,
+          snapshot = FALSE, tickerId = "1", timeStamp="%Y%m%d %H:%M:%OS",playback=1,
           file='', verbose=TRUE,
           eventWrapper=eWrapper(), CALLBACK=twsCALLBACK, ...)
 {
@@ -38,11 +38,6 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     if(is.null(CALLBACK))
       CALLBACK <- twsDEBUG
 
-    if(!is.character(timeStamp) && timeStamp) {
-      timeStamp <- "%Y%m%d %H:%M:%OS"
-    } else {
-      timeStamp <- NULL
-    }
     snapshot <- ifelse(snapshot,"1","0")
 
     if(snapshot == '1' && missing(tickGenerics)) tickGenerics <- ''
@@ -73,12 +68,12 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         writeBin(signals, con) 
         ticker_id <- as.character(as.numeric(tickerId)+n)
       }
-      msg_expected_length <- NA
-    } else {
+      #msg_expected_length <- NA
+    } #else {
       # reading from a file
-      msg_expected_length <- as.numeric(readBin(con,character(), 1))
+      #msg_expected_length <- as.numeric(readBin(con,character(), 1))
       #timeStamp <- NULL #disable erroneous R timestamps
-    }
+    #}
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
       if(inherits(conn, 'twsPlayback')) {

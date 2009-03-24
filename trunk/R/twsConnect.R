@@ -59,7 +59,8 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
     tmp <- tempfile()
     fh <- file(tmp, open='ab')
 
-    writeBin(c(as.character(length(dat)),dat), fh)
+    #writeBin(c(as.character(length(dat)),dat), fh)
+    writeBin(dat, fh)
     #for(i in dat) writeBin(i, fh)
 
     close(fh)
