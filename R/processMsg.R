@@ -18,7 +18,7 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
     sys.time <- NULL
     while(TRUE) {
       last.time <- sys.time
-      sys.time <- as.POSIXct(strptime(paste(readBin(con, character(), 2), collapse=' '), "%Y%m%d %H:%M:%OS"))
+      sys.time <- as.POSIXct(strptime(paste(readBin(con, character(), 2), collapse=' '), timestamp))
       if(!is.null(last.time)) {
         Sys.sleep((sys.time-last.time)*playback)
       }
@@ -72,7 +72,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
     eWrapper$accountValue(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) {
-    msg <- readBin(con, character(), 15)
+    msg <- readBin(con, character(), 18)
     eWrapper$portfolioValue(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_UPDATE_TIME) {

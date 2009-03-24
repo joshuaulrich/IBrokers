@@ -1,12 +1,33 @@
 eWrapper <- function(debug=FALSE, symbols=NULL) {
-  # a possibly non-NULL vector of symbol names/ids
+  # environment for data to be stored/accessed between messages
+  .Data <- new.env()
+  get.Data <- function(x) get(x,.Data)
+  assign.Data <- function(x, value) assign(x, value, .Data)
+  remove.Data <- function(x) remove(x, .Data)
   symbols <- symbols
   get.symbols <- function() return(symbols)
+
 
   # two branches:
   #   the first is the non-debug version
   #   the second is the debug version (raw data)
 
+  if(is.null(debug)) {
+    tickPrice <- tickSize <-
+    tickOptionComputation <- tickGeneric <-
+    tickString <- tickEFP <-
+    orderStatus <- openOrder <- openOrderEnd <-
+    updateAccountValue <- updateAccountTime <- updatePortfolio <- 
+    accountDownloadEnd <- nextValidId <-
+    contractDetails <- bondContractDetails <-
+    contractDetailsEnd <- execDetails <-
+    updateMktDepth <- updateMktDepthL2 <-
+    updateNewsBulletin <- managedAccounts <-
+    receiveFA <- historicalData <-
+    scannerParameters <- scannerData <- scannerDataEnd <-
+    realtimeBars <- currentTime <- fundamentalData <-
+    deltaNeutralValidation  <-  function(...) {}
+  } else
   if(!debug) {
     tickPrice <- function(curMsg, msg, timestamp, file, ...) 
     {
@@ -88,6 +109,7 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
   }
 
   return(list(
+  .Data = .Data, get.Data = get.Data, assign.Data = assign.Data, remove.Data = remove.Data,
   tickPrice =  tickPrice ,
   tickSize  =  tickSize  ,
   tickOptionComputation =  tickOptionComputation ,

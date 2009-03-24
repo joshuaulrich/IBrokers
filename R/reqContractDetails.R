@@ -1,6 +1,6 @@
 `reqContractDetails` <-
 function(conn, Contract, reqId="1", conId="", verbose=FALSE,
-         eventWrapper=eWrapper(), CALLBACK=twsCALLBACK) {
+         eventWrapper=eWrapper(), CALLBACK=twsCALLBACK, ...) {
     if(!inherits(conn, "twsConnection")) 
       stop("requires twsConnection object")
 
