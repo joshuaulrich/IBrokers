@@ -14,7 +14,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         if (class(Contract[[n]]) != "twsContract") 
             stop("twsContract required")
       }
-    } else file <- ""
+    } #else file <- ""
 
     con <- conn[[1]]
     if (!isOpen(con)) 

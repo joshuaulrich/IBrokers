@@ -8,6 +8,11 @@ twsDEBUG <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
   twsCALLBACK(twsCon, eWrapper, timestamp, file, playback, ...)
 }
 
+#  tws <- twsConnect();CON2 <- twsConnect(2)
+#  reqMktData(CON2, twsSTK("AAPL"), event=eWrapper(TRUE), CALLBACK=NA, tickerId="2")
+#  reqMktData(tws, twsSTK("IBM"), event=eWrapper(symbols=c("AAPL","IBM")))
+#  close(tws); close(CON2)
+#  uncomment the elements of twsCALLBACK as appropriate
 twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
 {
   if(missing(eWrapper))
@@ -33,15 +38,37 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
     }
   } 
   else { 
+    p <- 0.001
+    #dataCON <- get("DATACON", .GlobalEnv)[[1]]
     while(TRUE) {
       curMsg <- readBin(con, character(), 1)
-      if(length(curMsg) < 1)
-        next
-      if(!is.null(timestamp)) {
-        processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, ...)
+      #curMsg2 <- readBin(con, character(), 1)
+      if(length(curMsg) < 1) {
+        p <- min(p*1.01, 0.01)
+        Sys.sleep(p)
       } else {
-        processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+        p <- 0.001
+        if(!is.null(timestamp)) {
+          processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, ...)
+        } else {
+          processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+        }
       }
+      # data processing
+      # depending on the data provider, processMsg will be replaced with the message processing
+      # loop required.
+#      if(length(curMsg2) < 1) {
+#        p <- min(p*1.01, 0.01)
+#        Sys.sleep(p)
+#      } else {
+#        p <- 0.001
+#        if(!is.null(timestamp)) {
+#          processMsg(curMsg2, dataCON, eWrapper, format(Sys.time(), timestamp), file, ...)
+#        } else {
+#          processMsg(curMsg2, dataCON, eWrapper, timestamp, file, ...)
+#        }
+#     }
+      # INSERT TRADE LOGIC HERE
     }
   }
 }
@@ -69,15 +96,15 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_VALUE) {
     msg <- readBin(con, character(), 5)
-    eWrapper$accountValue(curMsg, msg, timestamp, file, ...)
+    eWrapper$updateAccountValue(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) {
     msg <- readBin(con, character(), 18)
-    eWrapper$portfolioValue(curMsg, msg, timestamp, file, ...)
+    eWrapper$updatePortfolio(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_UPDATE_TIME) {
     msg <- readBin(con, character(), 2)
-    eWrapper$accountUpdateTime(curMsg, msg, timestamp, file, ...)
+    eWrapper$updateAccountTime(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$NEXT_VALID_ID) {
     msg <- readBin(con, character(), 2)

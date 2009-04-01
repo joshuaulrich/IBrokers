@@ -1,6 +1,6 @@
 twsConnect <-
 function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
-          timeout=5, filename=NULL)
+          timeout=5, filename=NULL, blocking=FALSE)
  {
    if(is.null(getOption('digits.secs'))) 
      options(digits.secs=6)
@@ -11,7 +11,7 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
    if(is.null(filename)) {
      start.time <- Sys.time()
      s <- socketConnection(host = host, port = port,
-                           open='ab', blocking=TRUE)
+                           open='ab', blocking=blocking)
 
      if(!isOpen(s)) { 
        close(s)
