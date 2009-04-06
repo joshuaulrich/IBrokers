@@ -253,7 +253,69 @@ current time, the version is simply the character "1".
 <<reqCurrentTime, eval=FALSE>>=
 writeBin(c("49","1"), con)
 @
+
 \subsubsection{Callback}
+The callback within IBrokers is in fact the first level of
+callbacks that are used to manage the events sent and returned
+from the TWS.
+
+After a request has been sent to the TWS, the function
+passed via the {\tt CALLBACK} argument
+is called.  By default this is the main {\tt twsCALLBACK}
+wrapper.  The basic control structure is that within this
+callback an event handler object is created, and
+subsequently passed into an infinite event loop. Within
+this loop new messages are read and in turn passed into
+the {\tt processMsg} function for individual handling.
+A common object that is used at each level of the process
+is the event handler.  This is where customized
+data management logic can be added, as well as data
+stored and read from.
+
+In addition to the event handler being available to
+user level customization, the main event loop itself (the one
+calling processMsg on each new message) should contain code
+that implements the trading logic to be employed in a given
+strategy or strategies.
+
+Examining the relevant section of twsCALLBACK we can see exactly
+where this logic can be inserted:
+
+<<twsCALLBACK>>=
+require(IBrokers)
+deparse(twsCALLBACK)[30:47]
+@
+
+At line \#2 the call to readBin returns the current message
+from the TWS, here stored as {\tt curMsg}.  This will be any
+of the fifty or so incoming message types as defined by the API.
+
+A check to make sure that the message isn't empty is then made.
+As we may be employing non-blocking connections (true by default),
+we choose to add a system delay up to 1/100th of a second to
+ease the computational overhead of the request loop.  This isn't necessary
+and will be irrelevant for blocking connections, but is
+good practice to maintain.
+
+Assuming the second if-else branch is taken, the code
+now dispatches to the processMsg call, which itself
+is simply a large if-else construct with a single call
+to the apporpriate functional method set by the {\tt eWrapper}
+object (closure).
+
+The processMsg event handler returns nothing and is
+only used to create side-effects.  Most useful of these
+are to update the environment that is attached to the
+{\tt eWrapper} object with new data.
+
+Following this processing of the current message,
+it would be possible to add trade logic based on the
+data contained in the eWrapper environment. An implementation of this
+will be clear in the example that follows this section.
+
+(a closure created in R, containing
+an environment for data, as well as a list of functions
+to handle all possible incoming messages from the TWS)
 \subsubsection{Event Loop}
 \subsubsection{Closure}
 
