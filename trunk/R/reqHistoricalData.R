@@ -5,6 +5,7 @@ function(conn,Contract,endDateTime,
          verbose=TRUE, tickerId='1',
          eventHistoricalData, file)
 {
+  conn <- twsConnection(123456, blocking=TRUE) # need a blocking connection
   if(!missing(endDateTime) && length(endDateTime) > 1) {
     if(!timeBased(endDateTime))
       stop("endDateTime length greater than 2 needs to be timeBased")
@@ -81,10 +82,6 @@ function(conn,Contract,endDateTime,
 #               '1 day','1 M','1',
 #               'TRADES','1')
 
-#  for(i in 1:length(signals)) {
-#    writeBin(signals[i],con)
-#  }
-
   writeBin(signals, con)
 
   waiting <- TRUE           # waiting for valid response?
@@ -157,14 +154,17 @@ function(conn,Contract,endDateTime,
                      'WAP','hasGaps','Count'), sep='.')
     xtsAttributes(x) <- list(from=req.from,to=req.to,
                              src='IB',updated=Sys.time())
+    close(conn)
     return(x)
   } else
   if(is.null(eventHistoricalData)) {
     # return raw TWS data including header
+    close(conn)
     return(c(header,response))
   } else {
     # pass to callback function
     FUN <- match.fun(eventHistoricalData)
+    close(conn)
     return(FUN(c(header,response)))
   }
   
