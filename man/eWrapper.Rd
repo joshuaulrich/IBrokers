@@ -1,6 +1,7 @@
 \name{eWrapper}
 \alias{eWrapper}
 \alias{eWrapper.MktData.CSV}
+\alias{eWrapper.MktDepth.CSV}
 \title{ eWrapper Closure For Message Processing }
 \description{
 Create an eWrapper closure to allow for custom
