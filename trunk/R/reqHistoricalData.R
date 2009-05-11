@@ -1,11 +1,13 @@
 reqHistoricalData <-
-function(conn,Contract,endDateTime,
+function(Contract,endDateTime,
          barSize='1 day',duration='1 M',
          useRTH='1',whatToShow='TRADES',time.format='1',
          verbose=TRUE, tickerId='1',
          eventHistoricalData, file)
 {
-  conn <- twsConnection(123456, blocking=TRUE) # need a blocking connection
+  if(is.twsConnection(Contract))
+    stop("no connection object is required for reqHistoricalData")
+  conn <- twsConnect(123456, blocking=TRUE) # need a blocking connection
   if(!missing(endDateTime) && length(endDateTime) > 1) {
     if(!timeBased(endDateTime))
       stop("endDateTime length greater than 2 needs to be timeBased")

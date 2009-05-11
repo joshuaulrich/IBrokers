@@ -26,7 +26,7 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
     receiveFA <- historicalData <-
     scannerParameters <- scannerData <- scannerDataEnd <-
     realtimeBars <- currentTime <- fundamentalData <-
-    deltaNeutralValidation  <-  function(...) {}
+    deltaNeutralValidation  <- function(curMsg, msg, timestamp, file,  ...) {}
   } else
   if(!debug) {
     tickPrice <- function(curMsg, msg, timestamp, file, ...) 

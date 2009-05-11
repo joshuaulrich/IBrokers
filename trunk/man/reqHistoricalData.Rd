@@ -9,8 +9,7 @@ and returns an xts object containing the results of the request
 if successful.
 }
 \usage{
-reqHistoricalData(conn, 
-                  Contract,
+reqHistoricalData(Contract,
                   endDateTime,
                   barSize = "1 day",
                   duration = "1 M",
@@ -21,12 +20,9 @@ reqHistoricalData(conn,
                   tickerId = "1",
                   eventHistoricalData,
                   file)
-
-cancelHistoricalData(conn,tickerId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{ a \code{tws} connection object }
   \item{Contract}{ a \code{twsContract} }
   \item{endDateTime}{ end date/time for request. See details. }
   \item{barSize}{ bar size to retrieve }
@@ -40,6 +36,11 @@ cancelHistoricalData(conn,tickerId)
   \item{file}{ file to write data to }
 }
 \details{
+A significant API change now removes the use of
+a global twsConnection object from the argument list.  This
+is useful when blocking=FALSE is set for the standard
+data connection (the current defalt).
+
 All arguments should be character strings.  Attempts will
 be made to coerce, but should not be relied upon.
 
@@ -97,6 +98,7 @@ string will return the output to the console.
 
 The \emph{hasGaps} column is converted automatically from
 (true,false) to 1 or 0, respectively. 
+
 }
 \value{
 Returns an \code{xts} object containing the requested data, along
