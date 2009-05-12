@@ -136,7 +136,7 @@ of this package.
 tws <- twsConnect()
 contract <- twsEquity('QQQQ','SMART','ISLAND')
 
-reqHistoricalData(tws,Contract=contract)
+reqHistoricalData(Contract=contract)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
