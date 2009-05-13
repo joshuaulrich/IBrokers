@@ -211,7 +211,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
     eWrapper$deltaNeutralValidation(curMsg, msg, timestamp, file, ...)
   } else {
     # default handler/error
-    warning("Unknown incoming message. Please reset connection", call.=FALSE)
+    warning(paste("Unknown incoming message: ",curMsg,". Please reset connection",sep=""), call.=FALSE)
   }
   # end of messages
 }

@@ -34,6 +34,9 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE,
     offsetReqId <- ifelse(as.numeric(VERSION) > 4, 1, 0)
     while (TRUE) {
         curMsg <- readBin(con, character(), 1)
+        if (length(curMsg) < 1)
+          next
+
         if (curMsg == .twsIncomingMSG$ERR_MSG) {
           if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104, 2106, 2107))) {
             cat("\n")
