@@ -51,6 +51,7 @@ function(Contract,endDateTime,
       writeBin(.twsOutgoingMSG$CANCEL_HISTORICAL_DATA, con)
       writeBin("1", con)
       writeBin(as.character(tickerId), con)
+      close(con)
   }
 
   if(!isOpen(con)) stop("connection to TWS has been closed")
@@ -95,7 +96,7 @@ function(Contract,endDateTime,
     flush.console()
   }
 
-  if(.Platform$OS=='windows') Sys.sleep(.1)
+  if(.Platform$OS.type == 'windows') Sys.sleep(.1)
 
   while(waiting) {
     curMsg <- suppressWarnings(readBin(con,character(),1))
@@ -129,8 +130,6 @@ function(Contract,endDateTime,
       }
     }
   }
-  cancelHistoricalData(con, as.character(tickerId))
-  on.exit()
   
   if(missing(eventHistoricalData)) {
     # the default: return an xts object
@@ -156,23 +155,23 @@ function(Contract,endDateTime,
                      'WAP','hasGaps','Count'), sep='.')
     xtsAttributes(x) <- list(from=req.from,to=req.to,
                              src='IB',updated=Sys.time())
-    close(conn)
+    #close(conn)
     return(x)
   } else
   if(is.null(eventHistoricalData)) {
     # return raw TWS data including header
-    close(conn)
+    #close(conn)
     return(c(header,response))
   } else {
     # pass to callback function
     FUN <- match.fun(eventHistoricalData)
-    close(conn)
+    #close(conn)
     return(FUN(c(header,response)))
   }
   
 }
 
-`cancelHistoricalData` <- function(conn, tickerId) 
+cancelHistoricalData <- function(conn, tickerId) 
 {
     if(!inherits(conn, "twsConnection")) 
         stop("twsConnection object required")
