@@ -1,6 +1,7 @@
 twsConnect <-
 function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
-          timeout=5, filename=NULL, blocking=FALSE)
+          timeout=5, filename=NULL,
+          blocking=ifelse(.Platform$OS.type=="unix", FALSE, TRUE))
  {
    if(is.null(getOption('digits.secs'))) 
      options(digits.secs=6)
