@@ -12,7 +12,8 @@ Workstation (TWS).
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
            port = 7496, verbose = TRUE, timeout = 5,
-           filename = NULL, blocking = FALSE)
+           filename = NULL,
+           blocking = ifelse(.Platform$OS.type=="unix",FALSE,TRUE))
 
 twsDisconnect(con)
 
@@ -42,10 +43,14 @@ data recorded in the standard TWS format - calls
 using this connection will playback the recorded
 data.
 
-The new default connection type is set to blocking=FALSE.
-This has been tested on *nix style machines, though not
-extensively on Windows. If using Windows you may find that
-you need to set blocking=TRUE.
+By default, on Unix-alike platforms blocking is set
+to FALSE.  This allows for multiple connections to be
+managed within a single R session (e.g. manage data from
+an external source, and execute with Interactive Brokers).
+Due to a bug (?) in the Windows implementation of R's
+socket connections, readBin on a non-blocking connection
+will return random bytes.  If the .Platform\$OS.type is
+not "unix", the connection will block.
 }
 \value{
 A \code{twsConnection} object.
