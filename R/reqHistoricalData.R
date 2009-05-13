@@ -7,12 +7,12 @@ function(Contract,endDateTime,
 {
   if(is.twsConnection(Contract))
     stop("no connection object is required for reqHistoricalData")
-  conn <- twsConnect(123456, blocking=TRUE) # need a blocking connection
+
   if(!missing(endDateTime) && length(endDateTime) > 1) {
     if(!timeBased(endDateTime))
       stop("endDateTime length greater than 2 needs to be timeBased")
     sleep <- 0
-    rHDargs <- list(conn=conn, Contract=Contract,
+    rHDargs <- list(Contract=Contract,
                     barSize=barSize, duration=duration,
                     useRTH=useRTH, whatToShow=whatToShow,
                     time.format=time.format, verbose=verbose, tickerId=tickerId)
@@ -30,19 +30,9 @@ function(Contract,endDateTime,
     x <- do.call('rbind.xts',x)
     return(x[-which(duplicated(.index(x)))])
   }
-    
-  if(class(conn) != 'twsConnection') stop('tws connection object required')
-  if(class(Contract) != 'twsContract') stop('twsContract required')
 
-  validBarSize <- c('1 secs','5 secs','15 secs','30 secs',
-                    '1 min', '2 mins','3 mins','5 mins','15 mins',
-                    '30 mins','1 hour','1 day','1 week','1 month',
-                    '3 months','1 year')
-  if(!barSize %in% validBarSize)
-    stop(paste('unknown barSize try',paste(validBarSize)))
-
+  conn <- twsConnect(123456, blocking=TRUE) # need a blocking connection
   con <- conn[[1]]
-
   cancelHistoricalData <- function(con, tickerId) 
   {
       if (!isOpen(con)) 
@@ -53,10 +43,19 @@ function(Contract,endDateTime,
       writeBin(as.character(tickerId), con)
       close(con)
   }
-
   if(!isOpen(con)) stop("connection to TWS has been closed")
-
   on.exit(cancelHistoricalData(con,as.character(tickerId)))
+
+  if(class(conn) != 'twsConnection') stop('tws connection object required')
+  if(class(Contract) != 'twsContract') stop('twsContract required')
+
+  validBarSize <- c('1 secs','5 secs','15 secs','30 secs',
+                    '1 min', '2 mins','3 mins','5 mins','15 mins',
+                    '30 mins','1 hour','1 day','1 week','1 month',
+                    '3 months','1 year')
+  if(!barSize %in% validBarSize)
+    stop(paste('unknown barSize try',paste(validBarSize)))
+
 
   if(missing(endDateTime) || is.null(endDateTime)) 
     endDateTime <- strftime(
