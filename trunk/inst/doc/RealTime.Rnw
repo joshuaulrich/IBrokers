@@ -19,7 +19,7 @@
 \begin{abstract}
 While many trading systems in production make use of
 different languages for different tasks, the ideal
-environment from a user standpoint involves a single
+environment involves a single
 language that can handle incoming data, make
 trade decisions, and execute all from one environment.
 This paper explores the issues relating to managing
@@ -27,8 +27,8 @@ this entire process in the {\tt R} programming langauge.
 \end{abstract}
 
 \section{Introduction to Real Time Processing in {\tt R}}
-{\tt R} is a statistical programming language based on the
-{\tt S} dialect created by Chambers et al at Bell Laboratories.
+{\tt R}~\cite{R} is a statistical programming language based on the
+{\tt S}~\cite{S} dialect created by Chambers et al at Bell Laboratories.
 
 As a scripting language with a
 well-developed interpreter it 
@@ -66,8 +66,17 @@ including three functions.  These are {\tt socketConnection},
 {\tt writeBin}, and {\tt readBin}.
 
 The establish a connection the socketConnection function
-is called, and it returns a connection object.  This
-connection can be specified to be 
+is called. This call returns an R connection object.  This
+connection can be used to send and receive data from sockets. 
+Connection types can be specified using the \emph{open=} argument.
+Additional details can be found in the respective help pages.
+
+Connections can be either text-based, or binary based, depending
+on the open argument. The functions used with text
+connection objects returned by socketConnect
+are \emph{readChar} and \emph{writeChar}.  For network connections
+\emph{readBin} and \emph{writeBin} are often more appropriate.  
+Byte-ordering is handled by these functions as well.
 
 \subsubsection{Usage}
 Cover connecting with socketConnection, the read/write semantics,
@@ -191,7 +200,9 @@ as well as implementation of R-based trade logic, using
 Interactive Brokers as both a data feed and execution platform.
 This has subsequently evolved to include the possibility of
 incorporating a separate data feed external to Interactive Brokers
-for the purposes of flexibility and robustness.
+for the purposes of flexibility and robustness.  This last
+point is currently experimental and only supported on non-Windows
+platforms, where R's underlying readBin function is well behaved.
 
 \subsection{Message Structure}
 The basic structure of the formal API allows for
@@ -322,7 +333,12 @@ to handle all possible incoming messages from the TWS)
 \subsection{Example: A Software Implemented Stop Order with IBrokers}
 
 <SHOW SCHEMATIC HERE>
-
+\begin{thebibliography}{99}
+\bibitem{R} R Development Core Team:
+\emph{R: A Language and Environment for Statistical Computing},
+R Foundation for Statistical Computing, Vienna, Austria.
+ISBN 3-900051-07-0, URL http://www.R-project.org
+\end{thebibliography}
 
 \end{document}
 
