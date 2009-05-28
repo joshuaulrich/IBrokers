@@ -41,6 +41,7 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
     p <- 0.001
     #dataCON <- get("DATACON", .GlobalEnv)[[1]]
     while(TRUE) {
+      socketSelect(list(con), FALSE, NULL)
       curMsg <- readBin(con, character(), 1)
       #curMsg2 <- readBin(con, character(), 1)
       if(length(curMsg) < 1) {
