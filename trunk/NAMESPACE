@@ -26,6 +26,7 @@ export(twsConnect,
 
        reqHistoricalData,
        cancelHistoricalData,
+       reqHistory,              # convenience wrapper
 
        reqMktData,
        cancelMktData,

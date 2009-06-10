@@ -1,5 +1,6 @@
 \name{reqHistoricalData}
 \alias{reqHistoricalData}
+\alias{reqHistory}
 \alias{cancelHistoricalData}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ Request Historical Data From TWS }
@@ -9,7 +10,8 @@ and returns an xts object containing the results of the request
 if successful.
 }
 \usage{
-reqHistoricalData(Contract,
+reqHistoricalData(conn,
+                  Contract,
                   endDateTime,
                   barSize = "1 day",
                   duration = "1 M",
@@ -20,9 +22,13 @@ reqHistoricalData(Contract,
                   tickerId = "1",
                   eventHistoricalData,
                   file)
+
+reqHistory(conn, Contract, barSize, ...)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{conn}{ a \code{twsConnection} object }
   \item{Contract}{ a \code{twsContract} }
   \item{endDateTime}{ end date/time for request. See details. }
   \item{barSize}{ bar size to retrieve }
@@ -34,12 +40,12 @@ reqHistoricalData(Contract,
   \item{tickerId}{ a unique id to associte with the request }
   \item{eventHistoricalData}{ callback function to process data }
   \item{file}{ file to write data to }
+  \item{\dots}{ args to pass to reqHistoricalData }
 }
 \details{
-A significant API change now removes the use of
-a global twsConnection object from the argument list.  This
-is useful when blocking=FALSE is set for the standard
-data connection (the current defalt).
+The \code{reqHistory} function is a simple wrapper to
+request maximal history from IB. It is meant to be
+used directlty, or as a template for new wrappers.
 
 All arguments should be character strings.  Attempts will
 be made to coerce, but should not be relied upon.
@@ -108,6 +114,13 @@ unless \code{callback} or \code{file} is specified.
 \references{ Interactive Brokers \url{www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
 \note{
+As this code is under active development, the interface has changed again.
+The requests now require an valid twsConnection object as the
+first argument.  The most recent release used an internal connection.
+When this caught an error, it became difficult to make further requests. The
+previous change was only made to accomodate a bug in R that has since been
+worked around by this author.
+
 Historical data via the TWS API is at best unreliable. As historical
 data is not a priority of the IB API, outside of regular trading
 hours it may become unresponsive or unavailable.  The only current
@@ -136,7 +149,12 @@ of this package.
 tws <- twsConnect()
 contract <- twsEquity('QQQQ','SMART','ISLAND')
 
-reqHistoricalData(Contract=contract)
+# by default retreives 30 days of daily data
+reqHistoricalData(tws, Contract=contract)
+
+# by default retreives a year of 1 minute bars
+reqHistory(tws, Contract=contract)
+
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
