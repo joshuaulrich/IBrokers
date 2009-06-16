@@ -75,7 +75,9 @@ function(version=NULL,
          multiplier=NULL,
          orderTypes=NULL,
          validExchanges=NULL,
-         priceMagnifier=NULL
+         priceMagnifier=NULL,
+         underConId=NULL,
+         longName=NULL
          )
   structure(
             list(version=version,
@@ -86,7 +88,9 @@ function(version=NULL,
                  minTick=minTick,
                  orderTypes=orderTypes,
                  validExchanges=validExchanges,
-                 priceMagnifier=priceMagnifier
+                 priceMagnifier=priceMagnifier,
+                 underConId=underConId,
+                 longName=longName
                 ),
             class='twsContractDetails'
            )

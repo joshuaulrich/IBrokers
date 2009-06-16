@@ -284,17 +284,17 @@
                              faProfile     = contents[33],
                              goodTillDate  = contents[34],
                              rule80A       = contents[35],
-                             settlingFirm  = contents[36],
-                             shortSaleSlot = contents[37],
-                             designatedLocation = contents[38],
-                             auctionStrategy = contents[39],
-                             startingPrice = contents[40],
-                             stockRefPrice = contents[41],
-                             delta         = contents[42],
-                             stockRangeLower = contents[43],
-                             stockRangeUpper = contents[44],
-                             displaySize   = contents[45],
-                             # rthOnly (version 18) = contents[46],
+                             percentOffset = contents[36],
+                             settlingFirm  = contents[37],
+                             shortSaleSlot = contents[38],
+                             designatedLocation = contents[39],
+                             auctionStrategy = contents[40],
+                             startingPrice = contents[41],
+                             stockRefPrice = contents[42],
+                             delta         = contents[43],
+                             stockRangeLower = contents[44],
+                             stockRangeUpper = contents[45],
+                             displaySize   = contents[46],
                              blockOrder    = contents[47],
                              sweepToFill   = contents[48],
                              allOrNone     = contents[49],
@@ -315,24 +315,27 @@
                              basisPoints        = contents[64],
                              basisPointsType    = contents[65],
                              # part of contract #66
-                             scaleNumComponents = contents[67],
-                             scaleComponentSize = contents[68],
+                             scaleInitLevelSize = contents[67],
+                             scaleSubsLevelSize = contents[68],
                              scalePriceIncrement = contents[69],
                              clearingAccount = contents[70],
                              clearingIntent  = contents[71],
-                             whatIf          = contents[72],
+                             notHeld         = contents[72],
+                             # this contingent on UnderComp Not Yet Available in IBrokers [74+]
+                             # algoStrategy [75+]
+                             whatIf          = contents[75]
                            ),
 
               orderstate = twsOrderState(
-                             status      = contents[73],
-                             initMargin  = contents[74],
-                             maintMargin = contents[75],
-                             equityWithLoan = contents[76],
-                             commission  = contents[77],
-                             minCommission = contents[78],
-                             maxCommission = contents[79],
-                             commissionCurrency = contents[80],
-                             warningText = contents[81]
+                             status      = contents[76],
+                             initMargin  = contents[77],
+                             maintMargin = contents[78],
+                             equityWithLoan = contents[79],
+                             commission  = contents[80],
+                             minCommission = contents[81],
+                             maxCommission = contents[82],
+                             commissionCurrency = contents[83],
+                             warningText = contents[84]
                            )
          )
   structure(eoo, class='eventOpenOrder')

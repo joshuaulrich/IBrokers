@@ -1,18 +1,23 @@
-eWrapper <- function(debug=FALSE, symbols=NULL) {
+eWrapper <- function(debug=FALSE) {
   # environment for data to be stored/accessed between messages
+  # an example of this functionality is for the "symbols" variable
+  # that can be set (by default) to display contract names
   .Data <- new.env()
   get.Data <- function(x) get(x,.Data)
   assign.Data <- function(x, value) assign(x, value, .Data)
   remove.Data <- function(x) remove(x, .Data)
-  symbols <- symbols
-  get.symbols <- function() return(symbols)
 
 
-  # two branches:
-  #   the first is the non-debug version
-  #   the second is the debug version (raw data)
+  # three branches:
+  #   the first is a version that returns nothing. Useful as a template.
+  #   the second is the non-debug version (defaults console output)
+  #   the third is the debug version (raw data console output)
 
   if(is.null(debug)) {
+    errorMessage <- function(curMsg, msg, timestamp, file, ...)
+    {
+      cat(msg,"\n")
+    }
     tickPrice <- tickSize <-
     tickOptionComputation <- tickGeneric <-
     tickString <- tickEFP <-
@@ -26,34 +31,45 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
     receiveFA <- historicalData <-
     scannerParameters <- scannerData <- scannerDataEnd <-
     realtimeBars <- currentTime <- fundamentalData <-
-    deltaNeutralValidation  <- function(curMsg, msg, timestamp, file,  ...) {}
+    deltaNeutralValidation  <- tickSnapshotEnd <- 
+    function(curMsg, msg, timestamp, file,  ...) {}
   } else
   if(!debug) {
     tickPrice <- function(curMsg, msg, timestamp, file, ...) 
     {
-      e_tick_price(NULL,msg,timestamp,file, get.symbols(),...) 
+      symbols <- get.Data("symbols")
+      e_tick_price(NULL,msg,timestamp,file, symbols,...) 
     }
     tickSize  <- function(curMsg, msg, timestamp, file, ...) 
     { 
-      e_tick_size(NULL, msg, timestamp, file, get.symbols(), ...) 
+      symbols <- get.Data("symbols")
+      e_tick_size(NULL, msg, timestamp, file, symbols, ...) 
     }
     tickOptionComputation <- function(curMsg, msg, timestamp, file, ...)
     {
-      e_tick_option(NULL, msg, timestamp, file, get.symbols(), ...)
+      symbols <- get.Data("symbols")
+      e_tick_option(NULL, msg, timestamp, file, symbols, ...)
     }
     tickGeneric  <- function(curMsg, msg, timestamp, file, ...) 
     {
-      e_tick_generic(NULL, msg, timestamp, file, get.symbols(), ...)
+      symbols <- get.Data("symbols")
+      e_tick_generic(NULL, msg, timestamp, file, symbols, ...)
     }
     tickString <- function(curMsg, msg, timestamp, file, ...) 
     { 
-      e_tick_string(NULL, msg, timestamp, file, get.symbols(), ...) 
+      symbols <- get.Data("symbols")
+      e_tick_string(NULL, msg, timestamp, file, symbols, ...) 
     }
     tickEFP  <- function(curMsg, msg, timestamp, file, ...) 
     { 
-      e_tick_EFP(NULL, msg, timestamp, file, get.symbols(), ...)
+      symbols <- get.Data("symbols")
+      e_tick_EFP(NULL, msg, timestamp, file, symbols, ...)
     }
     orderStatus <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    errorMessage <- function(curMsg, msg, timestamp, file, ...)
+    {
+      msg
+    }
     openOrder  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     openOrderEnd <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updateAccountValue  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
@@ -67,11 +83,13 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
     execDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updateMktDepth  <- function(curMsg, msg, timestamp, file,  ...) 
     { 
-      e_update_mkt_depth(NULL, msg, timestamp, file, get.symbols(), ...)
+      symbols <- get.Data("symbols")
+      e_update_mkt_depth(NULL, msg, timestamp, file, symbols, ...)
     }
     updateMktDepthL2  <- function(curMsg, msg, timestamp, file, ...) 
     { 
-      e_update_mkt_depthL2(NULL, msg, timestamp, file, get.symbols(), ...)
+      symbols <- get.Data("symbols")
+      e_update_mkt_depthL2(NULL, msg, timestamp, file, symbols, ...)
     }
     updateNewsBulletin  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     managedAccounts  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
@@ -82,17 +100,19 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
     scannerDataEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     realtimeBars  <- function(curMsg, msg, timestamp, file,  ...) 
     { 
-      e_real_time_bars(NULL, msg, file=file, get.symbols(), ...) 
+      symbols <- get.Data("symbols")
+      e_real_time_bars(NULL, msg, file=file, symbols, ...) 
     }
     currentTime  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     fundamentalData  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     deltaNeutralValidation  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    tickSnapshotEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
   } else {
     # DEBUG code [ twsDEBUG ]
     tickPrice <- tickSize <-
     tickOptionComputation <- tickGeneric <-
     tickString <- tickEFP <-
-    orderStatus <- openOrder <- openOrderEnd <-
+    orderStatus <- errorMessage <- openOrder <- openOrderEnd <-
     updateAccountValue <- updateAccountTime <- updatePortfolio <- 
     accountDownloadEnd <- nextValidId <-
     contractDetails <- bondContractDetails <-
@@ -102,7 +122,7 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
     receiveFA <- historicalData <-
     scannerParameters <- scannerData <- scannerDataEnd <-
     realtimeBars <- currentTime <- fundamentalData <-
-    deltaNeutralValidation  <- 
+    deltaNeutralValidation  <- tickSnapshotEnd <- 
       function(curMsg, msg, timestamp, file, ...) {
         cat(as.character(timestamp),curMsg, msg,"\n",file=file, append=TRUE,...) 
       }
@@ -117,6 +137,7 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
   tickString =  tickString ,
   tickEFP  =  tickEFP  ,
   orderStatus =  orderStatus ,
+  errorMessage = errorMessage, 
   openOrder  =  openOrder  ,
   openOrderEnd =  openOrderEnd ,
   updateAccountValue  =  updateAccountValue  ,
@@ -140,5 +161,6 @@ eWrapper <- function(debug=FALSE, symbols=NULL) {
   realtimeBars  =  realtimeBars  ,
   currentTime  =  currentTime  ,
   fundamentalData  =  fundamentalData  ,
-  deltaNeutralValidation  =  deltaNeutralValidation))
+  deltaNeutralValidation  =  deltaNeutralValidation,
+  tickSnapshotEnd = tickSnapshotEnd))
 }

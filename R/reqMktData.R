@@ -42,8 +42,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
     if(snapshot == '1' && missing(tickGenerics)) tickGenerics <- ''
   
-    VERSION <- "7"
+    VERSION <- "8"
  
+    fullSnapshot <- data.frame()
+    symbols. <- NULL
     ticker_id <- as.character(tickerId)
 
     if(inherits(con, 'sockconn')) {
@@ -62,18 +64,45 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
                      Contract[[n]]$primary, 
                      Contract[[n]]$currency,
                      Contract[[n]]$local,
+                     "0",
                      tickGenerics,
                      snapshot)
     
         writeBin(signals, con) 
+        if(snapshot == "1") {
+          eventWrapper <- eWrapper.snapshot()
+          while(1) {
+            socketSelect(list(con), FALSE, NULL)
+            curMsg <- readBin(con, character(), 1)
+            processMsg(curMsg, con, eventWrapper, NULL, file, ...)
+            if(curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) {
+            fullSnapshot <- rbind(fullSnapshot, data.frame(
+                                    lastTimeStamp=eventWrapper$get.Data("lastTimeStamp"),
+                                    symbol=Contract[[n]]$symbol,
+                                    bidSize=eventWrapper$get.Data("bidSize"),
+                                    bidPrice=eventWrapper$get.Data("bidPrice"),
+                                    askPrice=eventWrapper$get.Data("askPrice"),
+                                    askSize=eventWrapper$get.Data("askSize"),
+                                    lastPrice=eventWrapper$get.Data("lastPrice"),
+                                    Volume=eventWrapper$get.Data("Volume"),
+                                    Open=eventWrapper$get.Data("Open"),
+                                    High=eventWrapper$get.Data("High"),
+                                    Low=eventWrapper$get.Data("Low"),
+                                    Close=eventWrapper$get.Data("Close")
+                                   ))
+            break
+            }
+          }
+        if(n == length(Contract)) return(fullSnapshot)
+        }
         ticker_id <- as.character(as.numeric(tickerId)+n)
+        symbols. <- c(symbols., Contract[[n]]$symbol)
       }
-      #msg_expected_length <- NA
-    } #else {
-      # reading from a file
-      #msg_expected_length <- as.numeric(readBin(con,character(), 1))
-      #timeStamp <- NULL #disable erroneous R timestamps
-    #}
+    }
+    if(missing(eventWrapper)) {
+      eventWrapper$assign.Data("symbols", symbols.)
+    }
+
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
       if(inherits(conn, 'twsPlayback')) {
@@ -82,11 +111,12 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
       }
       return(as.character(as.numeric(tickerId):length(Contract)))
     }
-    on.exit(cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
+    if(snapshot=="0")
+      on.exit(cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
 
-    waiting <- TRUE
-
-    CALLBACK(conn, eWrapper=eventWrapper, timestamp=timeStamp, file=file, playback=playback, ...)
+    CALLBACK(conn, eWrapper=eventWrapper, 
+             timestamp=timeStamp, file=file,
+             playback=playback, timeout=NULL, ...)
 
 }
 

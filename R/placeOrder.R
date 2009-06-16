@@ -35,7 +35,7 @@ function(conn,
 
   con <- conn[[1]]
 
-  VERSION <- "25" # Version as of API 9.40
+  VERSION <- "28" # Version as of API 9.62
 
 # write order {{{
   order <- c(.twsOutgoingMSG$PLACE_ORDER,
@@ -103,11 +103,14 @@ function(conn,
              Order$continuousUpdate,
              Order$referencePriceType,
              Order$trailStopPrice,
-             Order$scaleNumComponents,
-             Order$scaleComponentSize,
+             Order$scaleInitLevelSize,
+             Order$scaleSubsLevelSize,
              Order$scalePriceIncrement,
              Order$clearingAccount,
              Order$clearingIntent,
+             Order$notHeld,
+             "0", # Order$underComp .. not yet supported by IBrokers
+             "",  # Order$algoStrategy .. not yet supported by IBrokers
              Order$whatIf
              )
 # }}}
@@ -129,7 +132,7 @@ function(conn,
           }
         }
         if (curMsg == .twsIncomingMSG$OPEN_ORDER) {
-          contents <- readBin(con, character(), 78)
+          contents <- readBin(con, character(), 84)
           if (is.null(eventOrderStatus)) {
             cat(curMsg, paste(contents), "\n")
           } else cat(str(eventOpenOrder(curMsg, contents, ...)))

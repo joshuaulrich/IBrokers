@@ -64,9 +64,12 @@ function(orderId,action="BUY",
          trailStopPrice="",
          basisPoints="",
          basisPointsType="",
-         scaleNumComponents="",
-         scaleComponentSize="",
+         scaleInitLevelSize="",
+         scaleSubsLevelSize="",
          scalePriceIncrement="",
+         notHeld=FALSE,
+         algoStrategy="",
+         algoParams=NULL,
          whatIf=FALSE,
          clientId="", permId=""
         )
@@ -147,8 +150,8 @@ function(orderId,action="BUY",
                  basisPointsType=basisPointsType,
 
                  # SCALE orders
-                 scaleNumComponents=scaleNumComponents,
-                 scaleComponentSize=scaleComponentSize,
+                 scaleInitLevelSize=scaleInitLevelSize,
+                 scaleSubsLevelSize=scaleSubsLevelSize,
                  scalePriceIncrement=scalePriceIncrement,
 
                  # Clearing info
@@ -157,8 +160,15 @@ function(orderId,action="BUY",
                  clearingAccount=clearingAccount,
                  clearingIntent=clearingIntent,
 
+                 # Algo Orders Only
+                 algoStrategy=algoStrategy,
+                 algoParams=algoParams,
+
                  # what if
-                 whatIf=as.character(as.integer(whatIf))
+                 whatIf=as.character(as.integer(whatIf)),
+
+                 # Not Held
+                 notHeld=as.character(as.integer(notHeld))
                 ),
             class='twsOrder'
            )
