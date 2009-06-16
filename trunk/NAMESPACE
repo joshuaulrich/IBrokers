@@ -5,10 +5,12 @@ export(twsConnect,
        serverVersion,
        reqCurrentTime,
 
+      .reqIds,                  # send only
        reqIds,
 
        reqContractDetails,
 
+      .reqAccountUpdates,       # send only
        reqAccountUpdates,
 
        twsContract,
