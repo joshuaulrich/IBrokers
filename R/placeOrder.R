@@ -1,3 +1,100 @@
+.placeOrder <-
+function(conn,Contract,Order)
+{
+  if(!inherits(conn,'twsConnection'))
+    stop('requires twsConnection object')
+
+  if(!inherits(Contract, 'twsContract'))
+    stop('requires twsContract object for Contract arg')
+
+  if(!inherits(Order, 'twsOrder'))
+    stop('requires twsOrder object for Order arg')
+
+  con <- conn[[1]]
+
+  VERSION <- "28" # Version as of API 9.62
+
+# write order {{{
+  order <- c(.twsOutgoingMSG$PLACE_ORDER,
+             VERSION,
+             as.character(Order$orderId),
+             Contract$symbol,
+             Contract$sectype,
+             Contract$expiry,
+             Contract$strike,
+             Contract$right,
+             Contract$multiplier,
+             Contract$exch,
+             Contract$primary,
+             Contract$currency,
+             Contract$local,
+             Order$action,
+             Order$totalQuantity,
+             Order$orderType,
+             Order$lmtPrice,
+             Order$auxPrice,
+             Order$tif,
+             Order$ocaGroup,
+             Order$account,
+             Order$openClose,
+             Order$origin,
+             Order$orderRef,
+             Order$transmit,
+             Order$parentId,
+             Order$blockOrder,
+             Order$sweepToFill,
+             Order$displaySize,
+             Order$triggerMethod,
+             Order$outsideRTH,
+             Order$hidden,
+             "", # DEPRECATED FIELD
+             Order$discretionaryAmt,
+             Order$goodAfterTime,
+             Order$goodTillDate,
+             Order$faGroup,
+             Order$faMethod,
+             Order$faPercentage,
+             Order$faProfile,
+             Order$shortSaleSlot,
+             Order$designatedLocation,
+             Order$ocaType,
+             Order$rule80A,
+             Order$settlingFirm,
+             Order$allOrNone,
+             Order$minQty,
+             Order$percentOffset,
+             Order$eTradeOnly,
+             Order$firmQuoteOnly,
+             Order$nbboPriceCap,
+             Order$auctionStrategy,
+             Order$startingPrice,
+             Order$stockRefPrice,
+             Order$delta,
+             Order$stockRangeLower,
+             Order$stockRangeUpper,
+             Order$overridePercentageConstraints,
+             Order$volatility,
+             Order$volatilityType,
+             Order$deltaNeutralOrderType,
+             Order$deltaNeutralAuxPrice,
+             Order$continuousUpdate,
+             Order$referencePriceType,
+             Order$trailStopPrice,
+             Order$scaleInitLevelSize,
+             Order$scaleSubsLevelSize,
+             Order$scalePriceIncrement,
+             Order$clearingAccount,
+             Order$clearingIntent,
+             Order$notHeld,
+             "0", # Order$underComp .. not yet supported by IBrokers
+             "",  # Order$algoStrategy .. not yet supported by IBrokers
+             Order$whatIf
+             )
+# }}}
+
+  writeBin(order, con)  
+}
+
 `placeOrder` <-
 function(conn,
          Contract,
