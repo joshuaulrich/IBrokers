@@ -10,7 +10,7 @@ reqRealTimeBars(conn,
                 Contract,
                 whatToShow = "TRADES", 
                 barSize = "5",
-                useRTH = "1",
+                useRTH = TRUE,
                 playback = 1,
                 tickerId = "1",
                 file = "",
@@ -28,7 +28,7 @@ cancelRealTimeBars(conn, tickerId)
   \item{whatToShow}{ what to show }
   \item{barSize}{ bar size - currently on 5 secs is TWS supported }
   \item{playback}{ playback speed adjustment }
-  \item{useRTH}{ regular trading hours }
+  \item{useRTH}{ regular trading hours (logical) }
   \item{file}{ passed to internal \code{cat} calls. See associated help. }
   \item{verbose}{ print diagnostics }
   \item{eventWrapper}{ eventWrapper object }

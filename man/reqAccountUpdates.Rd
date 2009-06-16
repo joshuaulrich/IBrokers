@@ -1,37 +1,38 @@
 \name{reqAccountUpdates}
 \alias{reqAccountUpdates}
+\alias{.reqAccountUpdates}
 \title{ Request Account Updates }
 \description{
 Request and view account details from Interactive Brokers
 }
 \usage{
-reqAccountUpdates(conn, account = "1",
-                  eventAccountValue,
-                  eventPortfolioValue,
-                  eventAccountTime,
-                  CALLBACK, ...)
+reqAccountUpdates(conn, 
+                  subscribe = TRUE,
+                  acctCode = "1",
+                  eventWrapper = eWrapper(), 
+                  CALLBACK=twsCALLBACK, ...)
+
+.reqAccountUpdates(conn, subscribe = TRUE, acctCode = "1")
 }
 \arguments{
   \item{conn}{ A twsConnection object }
-  \item{account}{ an account description - not used for most accounts }
-  \item{eventAccountValue}{ callback function, if any }
-  \item{eventPortfolioValue}{ callback function, if any }
-  \item{eventAccountTime}{ callback function, if any }
-  \item{CALLBACK}{ main receiver callback, if any }
+  \item{subscribe}{ subscribe (TRUE) or unsubscribe (FALSE) }
+  \item{acctCode}{ an account description - not used for most accounts }
+  \item{eventWrapper}{ message-level callback closure }
+  \item{CALLBACK}{ main receiver loop, if any }
   \item{\dots}{ additional args }
 }
 \details{
 By default, for non-FA accounts, this returns the current login's
 account information.
 
-This returns a data.frame with 4 columns. The first column is the
-name of the account value being returned. The second is the value
-associated with the specific name in column 1.  The third column
-contains the currency, if applicable.  The fourth contains the
-account the information applies to.
-}
-\value{
-A data.frame with key account information.
+This main version simply prints to screen the results
+returned by the TWS.  \code{.reqAccountUpdates} sends
+the request to subscribe or cancel, but returns immediately.
+This is designed to be used within a larger
+custom callback routine, where the \code{eventWrapper} object
+passed to processMsg (see also) keeps trace of the portfolio
+updates in a consistent manner.
 }
 \references{ Interactive Brokers API: \url{http://www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
@@ -39,7 +40,13 @@ A data.frame with key account information.
 \examples{
 \dontrun{
   tws <- twsConnect()
-  reqAccountUpdates(tws)
+
+  reqAccountUpdates(tws)        # this will require a user interrupt
+  .reqAccountUpdates(tws)       # this will return immediately
+
+  .reqAccountUpdates(tws, "0")  # cancel the request
+  cancelAccountUpdates(tws)     # the same
+
   twsDisconnect(tes)
 }
 }

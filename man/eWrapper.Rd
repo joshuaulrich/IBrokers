@@ -8,13 +8,12 @@ Create an eWrapper closure to allow for custom
 incoming message management.
 }
 \usage{
-eWrapper(debug = FALSE, symbols=NULL)
+eWrapper(debug = FALSE)
 
 eWrapper.MktData.CSV()
 }
 \arguments{
   \item{debug}{ should debugging be enabled }
-  \item{symbols}{ optional names to assign to incoming messages }
 }
 \details{
 \pkg{IBrokers} implements an eWrapper scheme similar
@@ -75,7 +74,6 @@ method.
 A list of functions [and optionally data] to be used for the \code{eventWrapper} argument
 to \code{reqMktData} and \code{reqMktDepth}
 }
-\references{ ~put references to the literature/web site here ~ }
 \author{ Jeffrey A. Ryan }
 \note{ 
 It is possible to also attach data to the closure object, allowing for
