@@ -19,7 +19,7 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
        stop(paste("couldn't connect to TWS on port",port))
      }
 
-     CLIENT_VERSION <- "38"
+     CLIENT_VERSION <- "45"
 
      writeBin(CLIENT_VERSION, s)
      writeBin(as.character(clientId), s)

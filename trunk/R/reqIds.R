@@ -1,5 +1,5 @@
 `reqIds` <-
-function (conn, numIds=1) 
+function (conn, numIds=1, CALLBACK=NA) 
 {
   if (!inherits(conn, "twsConnection")) 
     stop("requires twsConnection object")
@@ -11,9 +11,10 @@ function (conn, numIds=1)
   writeBin(as.character(numIds), con)
 
   e_next_id <- eWrapper()
-  e_next_id$nextValidId <- function(msg, timestamp, file, ...) { msg[2] }
+  e_next_id$nextValidId <- function(curMsg, msg, timestamp, file, ...) { msg[2] }
 
 
+  if(!is.na(CALLBACK)) {
   while(TRUE) {
     curMsg <- readBin(con, character(), 1)
     if(length(curMsg) < 1)
@@ -25,8 +26,8 @@ function (conn, numIds=1)
     if(curMsg == .twsIncomingMSG$NEXT_VALID_ID)
       break
   }
-
   return(nextValidID)
+  }
 #  while (waiting) {
 #    curChar <- readBin(con, character(), 1)
 #    if (curChar == .twsIncomingMSG$NEXT_VALID_ID) {

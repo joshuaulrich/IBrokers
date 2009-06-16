@@ -33,9 +33,8 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE,
     msg <- list()
     offsetReqId <- ifelse(as.numeric(VERSION) > 4, 1, 0)
     while (TRUE) {
+        socketSelect(list(con), FALSE, NULL) 
         curMsg <- readBin(con, character(), 1)
-        if (length(curMsg) < 1)
-          next
 
         if (curMsg == .twsIncomingMSG$ERR_MSG) {
           if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104, 2106, 2107))) {
@@ -44,7 +43,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE,
            }
         } else 
         if (curMsg == .twsIncomingMSG$CONTRACT_DATA) {
-          msg <- c(msg, list(readBin(con, character(), 17+offsetReqId)))
+          msg <- c(msg, list(readBin(con, character(), 20+offsetReqId)))
           if(as.numeric(VERSION) <= 4) waiting <- FALSE
         } else
         if (as.numeric(VERSION) > 4 && curMsg == .twsIncomingMSG$CONTRACT_DATA_END) {
@@ -61,7 +60,7 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE,
                        contract=twsContract(symbol=msg[2+offsetReqId],
                                             sectype=msg[3+offsetReqId],
                                             expiry=msg[4+offsetReqId],
-                                            primary="",
+                                            primary=msg[20+offsetReqId],
                                             strike=msg[5+offsetReqId],
                                             right=msg[6+offsetReqId],
                                             exch=msg[7+offsetReqId],
@@ -76,6 +75,8 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE,
                        minTick=msg[13+offsetReqId],
                        orderTypes=unlist(strsplit(msg[15+offsetReqId],",")),
                        validExchanges=unlist(strsplit(msg[16+offsetReqId],",")),
-                       priceMagnifier=msg[17+offsetReqId])
+                       priceMagnifier=msg[17+offsetReqId],
+                       underConId=msg[18+offsetReqId],
+                       longName=msg[19+offsetReqId])
      })
 }

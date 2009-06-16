@@ -90,9 +90,10 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ERR_MSG) {
     msg <- readBin(con, character(), 4)
+    eWrapper$errorMessage(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$OPEN_ORDER) {
-    msg <- readBin(con, character(), 78)
+    msg <- readBin(con, character(), 84)
     eWrapper$openOrder(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_VALUE) {
@@ -210,6 +211,10 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   if(curMsg == .twsIncomingMSG$DELTA_NEUTRAL_VALIDATION) {
     msg <- readBin(con, character(), 5)
     eWrapper$deltaNeutralValidation(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) {
+    msg <- readBin(con, character(), 2)
+    eWrapper$tickSnapshotEnd(curMsg, msg, timestamp, file, ...)
   } else {
     # default handler/error
     warning(paste("Unknown incoming message: ",curMsg,". Please reset connection",sep=""), call.=FALSE)
