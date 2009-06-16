@@ -1,7 +1,7 @@
 `reqRealTimeBars` <-
 function (conn, Contract,
           whatToShow="TRADES",
-          barSize="5",useRTH="1",
+          barSize="5",useRTH=TRUE,
           playback = 1,
           tickerId = "1",
           file = "",
@@ -59,11 +59,10 @@ function (conn, Contract,
             Contract[[n]]$exch, 
             Contract[[n]]$primary, 
             Contract[[n]]$currency,
-            Contract[[n]]$local,barSize,whatToShow,useRTH)
+            Contract[[n]]$local,barSize,whatToShow,
+            as.character(as.numeric(useRTH)))
     
-        for (i in 1:length(signals)) {
-            writeBin(signals[i], con)
-        }
+        writeBin(signals, con)
         ticker_id <- as.character(as.numeric(tickerId) + n)
       }
       msg_expected_length <- NA
@@ -80,45 +79,9 @@ function (conn, Contract,
     }
     on.exit(cancelRealTimeBars(con, as.character(as.numeric(tickerId):length(Contract))))
 
-    #waiting <- TRUE
-
-    #msg_position <- 0 # where we are in the message - only relevant for playback
-    #PLAYBACK <- ifelse(inherits(conn,'twsPlayback'), TRUE, FALSE)
     timeStamp <- NULL
-
     CALLBACK(conn, eWrapper=eventWrapper, timestamp=timeStamp, file=file,
              playback=playback, ...)
-
-#    if( missing(CALLBACK) || is.null(CALLBACK)) {
-#      while (waiting) {
-#
-#          curMsg <- readBin(con, character(), 1)
-#          msg_position <- msg_position + 1
-#
-#
-#        #  if (length(curMsg) > 0) {
-#              if (curMsg == .twsIncomingMSG$ERR_MSG) {
-#                if (!errorHandler(con, verbose, OK = c(165, 300, 366, 2104,2106,2107))) {
-#                  cat("\n")
-#                  stop("Unable to complete market data request")
-#                }
-#                msg_position <- msg_position + 4
-#              }
-#              if( curMsg == .twsIncomingMSG$REAL_TIME_BARS) {
-#                contents <- readBin(con,character(),10)
-#                if(is.null(eventRealTimeBars)) {
-#                  cat(curMsg,paste(contents),'\n',file=file, append=TRUE)
-#                } else eventRealTimeBars(curMsg, contents, file=file)
-#                msg_position <- msg_position + 10
-#              }
-#          flush.console()
-#          if(PLAYBACK)
-#            Sys.sleep(as.numeric(barSize) * playback)
-#          if(!is.na(msg_expected_length) && msg_position == msg_expected_length) 
-#            waiting <- FALSE
-#        # }
-#      }
-#    } else CALLBACK(con,...)
 }
 
 `cancelRealTimeBars` <- function(conn,tickerId) {
