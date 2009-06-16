@@ -1,16 +1,23 @@
 eWrapper.MktDepth.CSV <- function() {
   # internally updated data
-  .data. <- character(21)
-  
-  get.data <- function() return(.data.)
+#  .data. <- character(21)
+#  
+#  get.data <- function() return(.data.)
+#
+stop("eWrapper.MktDepth.CSV is being rewritten. Check back soon :)")
+  eW <- eWrapper(NULL)
+  eW$assign.Data("data", rep(NA, 21))
 
-  updateMktDepth <- function(curMsg, msg, timestamp, file, ...)
+  eW$updateMktDepth <- function(curMsg, msg, timestamp, file, ...)
   {
     BID <- 1; ASK <- 2
+    tickType <- msg[3]
     string <- character(21)
-    .data.[1] <<- timestamp
-    string[1] <-  timestamp
-    if(msg[3] == "0") {
+    data <- eW$get.Data("data")
+
+    data[1] <- timestamp
+    #string[1] <-  timestamp
+    if(tickType == "0") {
       if(msg[4] == "2") {
 #        msg[6] <- NA
 #        msg[7] <- NA
