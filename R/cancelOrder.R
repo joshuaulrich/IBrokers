@@ -1,5 +1,5 @@
-`cancelOrder` <-
-function(conn, orderId, verbose=TRUE) {
+.cancelOrder <- function(conn, orderId)
+{
   if(!inherits(conn,'twsConnection'))
     stop('requires twsConnection object')
 
@@ -9,25 +9,23 @@ function(conn, orderId, verbose=TRUE) {
   writeBin(.twsOutgoingMSG$CANCEL_ORDER, con)
   writeBin(VERSION,con)
   writeBin(as.character(orderId),con)
+}
 
-  waiting <- TRUE
+`cancelOrder` <-
+function(conn, orderId, verbose=TRUE) {
 
-  while(waiting) {
-    curChar <- readBin(con,character(),1)
+  .cancelOrder(conn, orderId)
+
+  con <- conn[[1]]
+  while(1) {
+    socketSelect(list(con), FALSE, NULL)
+    curMsg <- readBin(con,character(),1)
+
+    processMsg(curMsg, con, eWrapper(), timestamp=NULL, file="")
         
-    if(length(curChar) > 0) {
-      if(curChar==.twsIncomingMSG$ERR_MSG) {
-        if(!errorHandler(con, verbose, OK = c(165, 202, 300, 366, 2104,2106,2107))) {
-          stop("Unable to complete TWS request")
-        }   
-      }   
-
-      if(curChar==.twsIncomingMSG$ORDER_STATUS) {
-        orderStatus <- readBin(con, character(), 11)
-        ### need an orderStatus handler here
-        waiting <- FALSE
-      }
-    }   
+    if(curChar==.twsIncomingMSG$ORDER_STATUS) {
+      orderStatus <- readBin(con, character(), 11)
+    }
   }
   return(orderStatus)
 }

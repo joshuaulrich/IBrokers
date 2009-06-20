@@ -208,10 +208,13 @@
 #
 ######################################################################
 
-`e_real_time_bars` <- function(msg,contents,file=file,...) {
+`e_real_time_bars` <- function(curMsg, msg, symbols, file, ...) {
+  # msg[1] is VERSION
   columns <- c("Id","time","open","high","low","close","volume",
                "wap","count")
-  cat(paste(columns,"=",contents[-1],sep=""),'\n',file=file,append=TRUE)
+  msg[2] <- symbols[as.numeric(msg[2])]
+  msg[3] <- strftime(structure(as.numeric(msg[3]), class=c("POSIXt","POSIXct")))
+  cat(paste(columns,"=",msg[-1],sep=""),'\n',file=file,append=TRUE)
 }
 
 

@@ -7,7 +7,6 @@ eWrapper <- function(debug=FALSE) {
   assign.Data <- function(x, value) assign(x, value, .Data)
   remove.Data <- function(x) remove(x, .Data)
 
-
   # three branches:
   #   the first is a version that returns nothing. Useful as a template.
   #   the second is the non-debug version (defaults console output)
@@ -101,7 +100,7 @@ eWrapper <- function(debug=FALSE) {
     realtimeBars  <- function(curMsg, msg, timestamp, file,  ...) 
     { 
       symbols <- get.Data("symbols")
-      e_real_time_bars(NULL, msg, file=file, symbols, ...) 
+      e_real_time_bars(curMsg, msg, symbols, file, ...) 
     }
     currentTime  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     fundamentalData  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }

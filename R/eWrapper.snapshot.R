@@ -1,6 +1,11 @@
 eWrapper.snapshot <- function() {
   eW <- eWrapper(NULL)
   eW$assign.Data("EOD", FALSE)
+  sapply(c("bidSize","bidPrice",
+           "askPrice","askSize",
+           "lastPrice",
+           "Open","High","Low","Close",
+           "lastSize","Volume","lastTimeStamp"), function(X) eW$assign.Data(X, NA))
   eW$tickPrice <- function(curMsg, msg, timestamp, file, ...)
   {
     tickType = msg[3]
