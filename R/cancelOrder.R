@@ -21,11 +21,11 @@ function(conn, orderId, verbose=TRUE) {
     socketSelect(list(con), FALSE, NULL)
     curMsg <- readBin(con,character(),1)
 
-    processMsg(curMsg, con, eWrapper(), timestamp=NULL, file="")
         
-    if(curChar==.twsIncomingMSG$ORDER_STATUS) {
+    if(curMsg==.twsIncomingMSG$ORDER_STATUS) {
       orderStatus <- readBin(con, character(), 11)
-    }
+    } else
+    processMsg(curMsg, con, eWrapper(), timestamp=NULL, file="")
   }
   return(orderStatus)
 }
