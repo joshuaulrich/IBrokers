@@ -99,9 +99,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         symbols. <- c(symbols., Contract[[n]]$symbol)
       }
     }
-    if(missing(eventWrapper)) {
+    #if(missing(eventWrapper)) {
       eventWrapper$assign.Data("symbols", symbols.)
-    }
+      eventWrapper$assign.Data("data", rep(list(rep(NA,8)),length(Contract)))
+    #}
 
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
