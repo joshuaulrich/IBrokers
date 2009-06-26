@@ -22,18 +22,24 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
   if(inherits(twsCon, 'twsPlayback')) {
     sys.time <- NULL
     while(TRUE) {
-      last.time <- sys.time
-      sys.time <- as.POSIXct(strptime(paste(readBin(con, character(), 2), collapse=' '), timestamp))
-      if(!is.null(last.time)) {
-        Sys.sleep((sys.time-last.time)*playback)
-      }
-      curMsg <- readBin(con, character(), 1)
-      if(length(curMsg) < 1)
-        next
       if(!is.null(timestamp)) {
+        # MktData
+        last.time <- sys.time
+        sys.time <- as.POSIXct(strptime(paste(readBin(con, character(), 2), collapse=' '), timestamp))
+        if(!is.null(last.time)) {
+          Sys.sleep((sys.time-last.time)*playback)
+        }
+        curMsg <- readBin(con, character(), 1)
+        if(length(curMsg) < 1)
+          next
         processMsg(curMsg, con, eWrapper, format(sys.time, timestamp), file, ...)
       } else {
+        # RealTimeBars
+        curMsg <- readBin(con, character(), 1)
+        if(length(curMsg) < 1)
+          next
         processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+        if(curMsg == .twsIncomingMSG$REAL_TIME_BARS) Sys.sleep(5 * playback)
       }
     }
   } 
@@ -110,7 +116,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$EXECUTION_DATA) {
     msg <- readBin(con, character(), 21)
-    eWrapper$execData(curMsg, msg, timestamp, file, ...)
+    eWrapper$execDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$MARKET_DEPTH) {
     msg <- readBin(con, character(), 7)
