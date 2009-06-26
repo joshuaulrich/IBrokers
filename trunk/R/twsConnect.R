@@ -28,12 +28,13 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
      while(waiting) {
        curMsg <- readBin(s, character(), 1)
        if(length(curMsg) > 0) {
-         if(curMsg %in% as.character(39:44)) {
+         if(curMsg == CLIENT_VERSION) {
            SERVER_VERSION <- curMsg
            CONNECTION_TIME <- readBin(s,character(),1)
          }
          if(curMsg == .twsIncomingMSG$NEXT_VALID_ID) {
            NEXT_VALID_ID <- readBin(s,character(),2)[2]
+           assign(".tws_nextValidId", NEXT_VALID_ID, .GlobalEnv)
            waiting <- FALSE
          }
          if(curMsg == .twsIncomingMSG$ERR_MSG) {

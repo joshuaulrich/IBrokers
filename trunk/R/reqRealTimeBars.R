@@ -56,10 +56,8 @@ function (conn, Contract,
           ...)
 {
     if(!inherits(conn, "twsPlayback")) {
-  
+      tickerId <- .reqRealTimeBars(conn, Contract, whatToShow, barSize, useRTH, tickerId)
     }
-
-    tickerId <- .reqRealTimeBars(conn, Contract, whatToShow, barSize, useRTH, tickerId)
 
     if(inherits(Contract,"twsContract")) 
       Contract <- list(Contract)
