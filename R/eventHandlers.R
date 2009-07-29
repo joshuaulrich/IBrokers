@@ -1,6 +1,8 @@
 #####  TICK_PRICE ##### {{{
 `e_tick_price`    <- function(msg,string,timeStamp,file,symbols,...) {
   tickType <- string[3]
+  id <- as.numeric(string[2])
+  file <- file[[id]]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," symbol=",symbols[as.numeric(string[2])]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID) {
@@ -53,6 +55,8 @@
 
 `e_tick_size`    <- function(msg,string,timeStamp,file,symbols,...) {
   tickType <- string[3] 
+  id <- as.numeric(string[2])
+  file <- file[[id]]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," symbol=",symbols[as.numeric(string[2])]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_SIZE) {
@@ -89,6 +93,8 @@
 
 `e_tick_option`  <- function(msg,string,timeStamp,file,symbols,...) {
   tickType <- string[3] 
+  id <- as.numeric(string[2])
+  file <- file[[id]]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," symbol=",symbols[as.numeric(string[2])]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_OPTION) { #10
@@ -111,6 +117,8 @@
 
 `e_tick_generic` <- function(msg,string,timeStamp,file,symbols,...) {
   tickType <- string[3] 
+  id <- as.numeric(string[2])
+  file <- file[[id]]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," symbol=",symbols[as.numeric(string[2])]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$OPTION_IMPLIED_VOL) { #24
@@ -132,6 +140,8 @@
 
 `e_tick_string`  <- function(msg,string,timeStamp,file,symbols,...) {
   tickType <- string[3] 
+  id <- as.numeric(string[2])
+  file <- file[[id]]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>',sep='',file=file,append=TRUE)
   cat(" id=",string[2]," symbol=",symbols[as.numeric(string[2])]," ",sep='',file=file,append=TRUE)
   if(tickType == .twsTickType$BID_EXCH) { #32
@@ -149,6 +159,7 @@
 }
 
 `e_tick_EFP`     <- function(msg,string,timeStamp,file,symbols,...) {
+file <- file[[1]]  # FIXME
     cat('<default EFP> ',file=file,append=TRUE)
     cat(paste(string),'\n',file=file,append=TRUE)
 }
@@ -160,8 +171,9 @@
 ######################################################################
 
 `e_update_mkt_depth` <-  function(msg,contents,timeStamp,file,...) {
+  id <- as.numeric(contents[2])
+  file <- file[[id]]
   if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>,',sep='',file=file,append=TRUE)
-  id <- contents[2]
   position <- contents[3]
   operation <- switch(contents[4],
                       '0' = 'insert',
@@ -180,8 +192,10 @@
 }
 
 `e_update_mkt_depthL2` <-  function(msg,contents,timeStamp,file,...) {
-  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>,',sep='',file=file,append=TRUE)
   id <- contents[2]
+  if(!is.null(timeStamp)) cat('<',as.character(timeStamp),'>,',sep='',file=file,append=TRUE)
+  id <- as.numeric(contents[2])
+  file <- file[[id]]
   position <- contents[3]
   marketMaker <- contents[4]
   operation <- switch(contents[5],
@@ -212,6 +226,8 @@
   # msg[1] is VERSION
   columns <- c("Id","time","open","high","low","close","volume",
                "wap","count")
+  id <- as.numeric(msg[2])
+  file <- file[[id]]
   msg[2] <- symbols[as.numeric(msg[2])]
   msg[3] <- strftime(structure(as.numeric(msg[3]), class=c("POSIXt","POSIXct")))
   cat(paste(columns,"=",msg[-1],sep=""),'\n',file=file,append=TRUE)

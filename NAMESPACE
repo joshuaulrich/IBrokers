@@ -49,6 +49,10 @@ export(twsConnect,
 
        eWrapper,
 
+       eWrapper.data,
+       eWrapper.RealTimeBars,
+
+       eWrapper.RealTimeBars.CSV,
        eWrapper.MktData.CSV,
        eWrapper.MktDepth.CSV
       )

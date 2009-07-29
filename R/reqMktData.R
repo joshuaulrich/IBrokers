@@ -1,3 +1,53 @@
+.reqMktData <-
+function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
+          snapshot = FALSE, tickerId = "1")
+{
+    if (!inherits(conn,"twsConnection") )
+        stop("tws connection object required")
+
+    if(!inherits(conn,'twsPlayback')) {
+      if(class(Contract) == "twsContract") Contract <- list(Contract)
+  
+      for(n in 1:length(Contract)) {
+        if (class(Contract[[n]]) != "twsContract") 
+            stop("twsContract required")
+      }
+    } #else file <- ""
+    con <- conn[[1]]
+    if (!isOpen(con)) 
+        stop("connection to TWS has been closed")
+    VERSION <- "8"
+ 
+    ticker_id <- as.character(tickerId)
+    snapshot <- "0"
+
+    if(inherits(con, 'sockconn')) {
+      # write to TWS connection
+      for(n in 1:length(Contract)) {
+        signals <- c(.twsOutgoingMSG$REQ_MKT_DATA,
+                     VERSION,
+                     ticker_id,  # why?
+                     Contract[[n]]$symbol,
+                     Contract[[n]]$sectype,
+                     Contract[[n]]$expiry,
+                     Contract[[n]]$strike, 
+                     Contract[[n]]$right,
+                     Contract[[n]]$multiplier,
+                     Contract[[n]]$exch,
+                     Contract[[n]]$primary, 
+                     Contract[[n]]$currency,
+                     Contract[[n]]$local,
+                     "0",
+                     tickGenerics,
+                     snapshot)
+    
+        writeBin(signals, con) 
+        ticker_id <- as.character(as.numeric(tickerId)+n)
+      }
+    }
+    ticker_id # this needs to be a vector to be of any use.
+}
+
 reqMktData <-
 function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
           snapshot = FALSE, tickerId = "1", timeStamp="%Y%m%d %H:%M:%OS",playback=1,
@@ -14,6 +64,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         if (class(Contract[[n]]) != "twsContract") 
             stop("twsContract required")
       }
+      
     } #else file <- ""
 
     con <- conn[[1]]
@@ -48,6 +99,15 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     symbols. <- NULL
     ticker_id <- as.character(tickerId)
 
+    symbol.or.local <- function(x) {
+      # used to find best name for id in output
+      symbol <- x$symbol
+      local  <- x$local
+      if(local=="") {
+        return(symbol)
+      } else return(local)
+    }
+
     if(inherits(con, 'sockconn')) {
       # write to TWS connection
       for(n in 1:length(Contract)) {
@@ -78,7 +138,8 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
             if(curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) {
             fullSnapshot <- rbind(fullSnapshot, data.frame(
                                     lastTimeStamp=eventWrapper$get.Data("lastTimeStamp"),
-                                    symbol=Contract[[n]]$symbol,
+                                    symbol=symbol.or.local(Contract[[n]]),
+                                    #symbol=Contract[[n]]$symbol,
                                     bidSize=eventWrapper$get.Data("bidSize"),
                                     bidPrice=eventWrapper$get.Data("bidPrice"),
                                     askPrice=eventWrapper$get.Data("askPrice"),
@@ -96,7 +157,8 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         if(n == length(Contract)) return(fullSnapshot)
         }
         ticker_id <- as.character(as.numeric(tickerId)+n)
-        symbols. <- c(symbols., Contract[[n]]$symbol)
+        symbols. <- c(symbols., symbol.or.local(Contract[[n]]))
+        #symbols. <- c(symbols., Contract[[n]]$symbol)
       }
     }
     #if(missing(eventWrapper)) {
@@ -115,6 +177,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     if(snapshot=="0")
       on.exit(cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
 
+    if(!is.list(file))
+      file <- list(file)
+    if(length(file) != length(Contract))
+      file <- rep(file, length(Contract))
     CALLBACK(conn, eWrapper=eventWrapper, 
              timestamp=timeStamp, file=file,
              playback=playback, timeout=NULL, ...)

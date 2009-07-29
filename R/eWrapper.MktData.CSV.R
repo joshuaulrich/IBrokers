@@ -1,3 +1,26 @@
+eWrapper.RealTimeBars.CSV <- function() {
+  eW <- eWrapper(NULL)
+
+  eW$realtimeBars <- function(curMsg, msg, timestamp, file, ...)
+  {
+    id <- as.numeric(msg[2])
+    file <- file[[id]]
+    data <- eW$get.Data("data")
+    cat(paste(msg[3],  # timestamp in POSIXct
+              msg[4],  # Open
+              msg[5],  # High
+              msg[6],  # Low
+              msg[7],  # Close
+              msg[8],  # Volume
+              msg[9],  # WAP
+              msg[10], # Count
+              sep=","), "\n", file=file, append=TRUE)
+    data[[id]][1:8] <- as.numeric(msg[3:10])
+    eW$assign.Data("data", data)
+  }
+  return(eW)
+}
+
 eWrapper.MktData.CSV <- function() {
   # internally updated data
 #  .data. <- character(8)
@@ -10,6 +33,7 @@ eWrapper.MktData.CSV <- function() {
   {
     tickType = msg[3]
     id <- as.numeric(msg[2])
+    file <- file[[id]]
     data <- eW$get.Data("data") #[[1]]  # list position of symbol (by id == msg[2])
     data[[id]][1] <- timestamp
     if(tickType == .twsTickType$BID) {
@@ -57,6 +81,7 @@ eWrapper.MktData.CSV <- function() {
     data <- eW$get.Data("data")
     tickType = msg[3]
     id <- as.numeric(msg[2])
+    file <- file[[id]]
     data[[id]][1] <- timestamp
     if(tickType == .twsTickType$BID_SIZE) {
       cat(paste(timestamp,
