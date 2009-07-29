@@ -123,7 +123,7 @@ eWrapper <- function(debug=FALSE) {
     realtimeBars <- currentTime <- fundamentalData <-
     deltaNeutralValidation  <- tickSnapshotEnd <- 
       function(curMsg, msg, timestamp, file, ...) {
-        cat(as.character(timestamp),curMsg, msg,"\n",file=file, append=TRUE,...) 
+        cat(as.character(timestamp),curMsg, msg,"\n",file=file[[1]], append=TRUE,...) 
       }
   }
 

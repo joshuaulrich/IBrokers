@@ -87,11 +87,23 @@ function (conn, Contract,
     }
     on.exit(cancelRealTimeBars(con, tickerId))
     
-    #if(missing(eventWrapper)) {
-      eventWrapper$assign.Data("symbols", sapply(Contract, `[[`, "symbol"))
-    #}
+    symbol.or.local <- function(x) {
+      # used to find best name for id in output
+      symbol <- x$symbol
+      local  <- x$local
+      if(local=="") {
+        return(symbol)
+      } else return(local)
+    }
+    eventWrapper$assign.Data("symbols", sapply(Contract, symbol.or.local))
+    # data is list of vectors TimeStamp, Open, High, Low, Close, Volume, VWAP, Count
+    eventWrapper$assign.Data("data", rep(list(rep(NA, 8)), length(Contract)))
 
     timeStamp <- NULL
+    if(!is.list(file))
+      file <- list(file)
+    if(length(file) != length(Contract))
+      file <- rep(file, length(Contract))
     CALLBACK(conn, eWrapper=eventWrapper, timestamp=timeStamp, file=file,
              playback=playback, ...)
 }

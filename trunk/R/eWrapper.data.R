@@ -53,3 +53,17 @@ eWrapper.data <- function() {
   }
   return(eW)
 }
+
+eWrapper.RealTimeBars <- function(nbars=1, nsymbols=1) {
+  eW <- eWrapper(NULL)  # use basic template
+
+  eW$realtimeBars <- function(curMsg, msg, timestamp, file, ...) 
+  {
+    id <- as.numeric(msg[2])
+    data <- eW$get.Data("data") #[[1]]  # list position of symbol (by id == msg[2])
+    data[[id]][1] <- as.numeric(msg[3])
+    data[[id]][2:8] <- as.numeric(msg[4:10])
+    eW$assign.Data("data", data)
+  }
+  return(eW)
+}
