@@ -74,6 +74,7 @@ eWrapper.MktData.CSV <- function() {
     }
     #data[[as.numeric(msg[2])]] <- data
     eW$assign.Data("data", data)
+    c(curMsg, msg)
   }
   eW$tickSize  <- function(curMsg, msg, timestamp, file, ...) 
   { 
@@ -132,6 +133,7 @@ eWrapper.MktData.CSV <- function() {
       data[[id]][8] <- msg[4]
     }
     eW$assign.Data("data", data)
+    c(curMsg, msg) # processMsg sees this raw vector
   }
 
   return(eW)

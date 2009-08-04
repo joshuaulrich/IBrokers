@@ -16,6 +16,7 @@ eWrapper <- function(debug=FALSE) {
     errorMessage <- function(curMsg, msg, timestamp, file, ...)
     {
       cat(msg,"\n")
+      #c(curMsg, msg)
     }
     tickPrice <- tickSize <-
     tickOptionComputation <- tickGeneric <-
@@ -31,7 +32,7 @@ eWrapper <- function(debug=FALSE) {
     scannerParameters <- scannerData <- scannerDataEnd <-
     realtimeBars <- currentTime <- fundamentalData <-
     deltaNeutralValidation  <- tickSnapshotEnd <- 
-    function(curMsg, msg, timestamp, file,  ...) {}
+    function(curMsg, msg, timestamp, file,  ...) { c(curMsg,msg) }
   } else
   if(!debug) {
     tickPrice <- function(curMsg, msg, timestamp, file, ...) 

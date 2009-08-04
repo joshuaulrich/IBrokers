@@ -163,7 +163,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     }
     #if(missing(eventWrapper)) {
       eventWrapper$assign.Data("symbols", symbols.)
-      eventWrapper$assign.Data("data", rep(list(rep(NA,8)),length(Contract)))
+      #eventWrapper$assign.Data("data", rep(list(rep(NA,8)),length(Contract)))
     #}
 
 
