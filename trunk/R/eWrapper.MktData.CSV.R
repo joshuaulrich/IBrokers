@@ -21,21 +21,30 @@ eWrapper.RealTimeBars.CSV <- function() {
   return(eW)
 }
 
-eWrapper.MktData.CSV <- function() {
+eWrapper.MktData.CSV <- function(n=1) {
   # internally updated data
 #  .data. <- character(8)
 #  
 #  get.data <- function() return(.data.)
 #
   eW <- eWrapper(NULL)  # use basic template
+  eW$assign.Data("data", rep(list(structure(.xts(matrix(rep(NA_real_,7),nc=7),0),
+                                      .Dimnames=list(NULL,
+                                                     c("BidSize","BidPrice",
+                                                       "AskPrice","AskSize",
+                                                       "Last","LastSize","Volume")))),n))
+
 
   eW$tickPrice <- function(curMsg, msg, timestamp, file, ...) 
   {
     tickType = msg[3]
+    msg <- as.numeric(msg)
     id <- as.numeric(msg[2])
     file <- file[[id]]
     data <- eW$get.Data("data") #[[1]]  # list position of symbol (by id == msg[2])
-    data[[id]][1] <- timestamp
+    attr(data[[id]], "index") <- as.numeric(Sys.time())
+    nr.data <- NROW(data[[id]])
+    #data[[id]][1] <- timestamp
     if(tickType == .twsTickType$BID) {
       cat(paste(timestamp,
                 msg[5], #bidSize
@@ -46,7 +55,7 @@ eWrapper.MktData.CSV <- function() {
                 "",     #lastSize
                 "",     #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][2:3] <- msg[5:4]
+      data[[id]][nr.data,1:2] <- msg[5:4]
     } else
     if(tickType == .twsTickType$ASK) {
       cat(paste(timestamp,
@@ -58,7 +67,7 @@ eWrapper.MktData.CSV <- function() {
                 "",     #lastSize
                 "",     #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][4:5] <- msg[4:5]
+      data[[id]][nr.data,3:4] <- msg[4:5]
     } else
     if(tickType == .twsTickType$LAST) {
       cat(paste(timestamp,
@@ -70,7 +79,7 @@ eWrapper.MktData.CSV <- function() {
                 "",     #lastSize
                 "",     #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][6] <- msg[4]
+      data[[id]][nr.data,5] <- msg[4]
     }
     #data[[as.numeric(msg[2])]] <- data
     eW$assign.Data("data", data)
@@ -78,12 +87,14 @@ eWrapper.MktData.CSV <- function() {
   }
   eW$tickSize  <- function(curMsg, msg, timestamp, file, ...) 
   { 
-    #data <- eW$get.Data("data")
     data <- eW$get.Data("data")
     tickType = msg[3]
+    msg <- as.numeric(msg)
     id <- as.numeric(msg[2])
     file <- file[[id]]
-    data[[id]][1] <- timestamp
+    attr(data[[id]], "index") <- as.numeric(Sys.time())
+    nr.data <- NROW(data[[id]])
+    #data[[id]][1] <- timestamp
     if(tickType == .twsTickType$BID_SIZE) {
       cat(paste(timestamp,
                 msg[4], #bidSize
@@ -94,7 +105,7 @@ eWrapper.MktData.CSV <- function() {
                 "",     #lastSize
                 "",     #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][2] <- msg[4]
+      data[[id]][nr.data,1] <- msg[4]
     } else
     if(tickType == .twsTickType$ASK_SIZE) {
       cat(paste(timestamp,
@@ -106,7 +117,7 @@ eWrapper.MktData.CSV <- function() {
                 "",     #lastSize
                 "",     #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][5] <- msg[4]
+      data[[id]][nr.data,4] <- msg[4]
     } else 
     if(tickType == .twsTickType$LAST_SIZE) {
       cat(paste(timestamp,
@@ -118,7 +129,7 @@ eWrapper.MktData.CSV <- function() {
                 msg[4], #lastSize
                 "",     #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][7] <- msg[4]
+      data[[id]][nr.data,6] <- msg[4]
     } else
     if(tickType == .twsTickType$VOLUME) {
       cat(paste(timestamp,
@@ -130,7 +141,7 @@ eWrapper.MktData.CSV <- function() {
                 "",     #lastSize
                 msg[4], #Volume
                 sep=","), "\n", file=file, append=TRUE)
-      data[[id]][8] <- msg[4]
+      data[[id]][nr.data,7] <- msg[4]
     }
     eW$assign.Data("data", data)
     c(curMsg, msg) # processMsg sees this raw vector
