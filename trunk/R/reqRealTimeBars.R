@@ -97,7 +97,7 @@ function (conn, Contract,
     }
     eventWrapper$assign.Data("symbols", sapply(Contract, symbol.or.local))
     # data is list of vectors TimeStamp, Open, High, Low, Close, Volume, VWAP, Count
-    eventWrapper$assign.Data("data", rep(list(rep(NA, 8)), length(Contract)))
+    # eventWrapper$assign.Data("data", rep(list(rep(NA, 8)), length(Contract)))
 
     timeStamp <- NULL
     if(!is.list(file))

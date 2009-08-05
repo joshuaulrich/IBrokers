@@ -1,11 +1,19 @@
-eWrapper.RealTimeBars.CSV <- function() {
+eWrapper.RealTimeBars.CSV <- function(n=1) {
   eW <- eWrapper(NULL)
+  eW$assign.Data("data", 
+                 rep(list(structure(.xts(matrix(rep(NA_real_,7),nc=7),0),
+                                    .Dimnames=list(NULL,
+                                                  c("Open","High",
+                                                    "Low","Close",
+                                                    "Volume","WAP","Count")))),n))
 
   eW$realtimeBars <- function(curMsg, msg, timestamp, file, ...)
   {
     id <- as.numeric(msg[2])
     file <- file[[id]]
     data <- eW$get.Data("data")
+    attr(data[[id]], "index") <- as.numeric(msg[3])
+    nr.data <- NROW(data[[id]])
     cat(paste(msg[3],  # timestamp in POSIXct
               msg[4],  # Open
               msg[5],  # High
@@ -15,25 +23,19 @@ eWrapper.RealTimeBars.CSV <- function() {
               msg[9],  # WAP
               msg[10], # Count
               sep=","), "\n", file=file, append=TRUE)
-    data[[id]][1:8] <- as.numeric(msg[3:10])
+    data[[id]][nr.data,1:7] <- as.numeric(msg[4:10])
     eW$assign.Data("data", data)
   }
   return(eW)
 }
 
 eWrapper.MktData.CSV <- function(n=1) {
-  # internally updated data
-#  .data. <- character(8)
-#  
-#  get.data <- function() return(.data.)
-#
   eW <- eWrapper(NULL)  # use basic template
   eW$assign.Data("data", rep(list(structure(.xts(matrix(rep(NA_real_,7),nc=7),0),
                                       .Dimnames=list(NULL,
                                                      c("BidSize","BidPrice",
                                                        "AskPrice","AskSize",
                                                        "Last","LastSize","Volume")))),n))
-
 
   eW$tickPrice <- function(curMsg, msg, timestamp, file, ...) 
   {
