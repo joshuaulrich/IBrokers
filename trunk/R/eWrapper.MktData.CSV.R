@@ -25,6 +25,7 @@ eWrapper.RealTimeBars.CSV <- function(n=1) {
               sep=","), "\n", file=file, append=TRUE)
     data[[id]][nr.data,1:7] <- as.numeric(msg[4:10])
     eW$assign.Data("data", data)
+    c(curMsg, msg)
   }
   return(eW)
 }
