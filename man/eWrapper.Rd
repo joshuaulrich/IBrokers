@@ -1,6 +1,9 @@
 \name{eWrapper}
 \alias{eWrapper}
 \alias{eWrapper.MktData.CSV}
+\alias{eWrapper.RealTimeBars}
+\alias{eWrapper.RealTimeBars.CSV}
+\alias{eWrapper.data}
 \alias{eWrapper.MktDepth.CSV}
 \title{ eWrapper Closure For Message Processing }
 \description{
@@ -10,10 +13,14 @@ incoming message management.
 \usage{
 eWrapper(debug = FALSE)
 
-eWrapper.MktData.CSV()
+eWrapper.data(n)
+
+eWrapper.MktData.CSV(n=1)
+eWrapper.RealTimeBars.CSV(n=1)
 }
 \arguments{
   \item{debug}{ should debugging be enabled }
+  \item{n}{ number of contracts being watched }
 }
 \details{
 \pkg{IBrokers} implements an eWrapper scheme similar
@@ -24,7 +31,8 @@ capture function must manage all incoming signals
 correctly, while allowing for the end user to
 create custom handlers for each specific event.
 
-Internal to the \code{reqMktData} and \code{reqMktDepth}
+Internal to the \code{reqRealTimeBars}, 
+\code{reqMktData}, and \code{reqMktDepth}
 functions is a single call to the CALLBACK routine
 passed to it.  By default this is \code{twsCALLBACK} (see also).
 A standard argument to this callback is an
@@ -37,7 +45,7 @@ function in the eWrapper designed
 to handle the particular details of each incoming message type.
 
 There is also an embedded environment in which data
-can be saved and retrieved via a handful of accessor functions mimicing
+can be saved and retrieved via a handful of accessor functions mimicking
 the standard \R tools.
 
 The data environment is \code{.Data}, with accessor
@@ -63,6 +71,18 @@ An example of this ability to modify the object is given in
 the \code{eWrapper.MktData.CSV} code. This object produces
 output deisgned to be space efficient, as well as easily read back into
 any R session as a standard CSV file.
+
+Setting \code{debug=NULL} will cause empty function objects
+to be created within the eWrapper object returned.  This object
+can be treated as a template to implement only the methods
+that are needed.  By default, all functions silently return
+the entire message they would normally parse.  This includes
+\emph{empty} functions created by setting debug to NULL.
+
+\code{eWrapper.data()} allows for data states to be maintained
+from call to call, as an xts history of updates/messages is stored
+within the object.  This is designed to minimize calling overhead by
+removing unneeded function calls from each message parsed.
 
 Additional, but creating methods that update the internal environment
 of the eWrapper object, it is possible to maintain a snapshot of
