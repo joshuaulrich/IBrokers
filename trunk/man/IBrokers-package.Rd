@@ -12,15 +12,14 @@ It comes with absolutely no warranty and should
 not be used in actual trading unless the user can
 read and understand the source.}
 
-A very limited R implementation of the TWS API.  At present
+\pkg{IBrokers} is a pure R implementation of the TWS API.  At present
 it is only able pull data from the Interactive
 Brokers servers via the TWS.  Future additions will include more API
 access, including live
-order handling.
+order handling, and better management across R sessions.
 
 Possible real-time charting via the \pkg{quantmod}
-package as well as replay of saved data for automated
-testing purposes may be incorporated into future
+package may be incorporated into future
 releases.
 
 Recent changes to move to version 0.1-0
@@ -59,8 +58,8 @@ a viable alternative for IB-API interaction.  Don't be shy.
 \tabular{ll}{
 Package: \tab IBrokers\cr
 Type: \tab Package\cr
-Version: \tab 0.2-2\cr
-Date: \tab 2009-06-13\cr
+Version: \tab 0.2-4\cr
+Date: \tab 2009-08-11\cr
 License: \tab GPL-3\cr
 }
 The current API methods supported are:
