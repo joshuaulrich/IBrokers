@@ -1,6 +1,6 @@
 `twsConnectionTime` <-
 function(con) {
-  if(!inherits(con,'twsConnection'))
+  if(!is.twsConnection(con))
     stop('con must be a twsConnection object')
 
   return(con$connected.at)

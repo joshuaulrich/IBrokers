@@ -1,4 +1,4 @@
-`twsContract` <-
+twsContract <-
 function(symbol,sectype,exch,primary,expiry,strike,
          currency,right,local,multiplier,combo_legs_desc,
          comboleg,include_expired)

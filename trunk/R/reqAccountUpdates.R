@@ -1,13 +1,13 @@
 cancelAccountUpdates <- function(conn, acctCode="1")
 {
-  if(!inherits(conn, "twsConnection"))
+  if(!is.twsConnection(conn))
     stop("requires twsConnection object")
   .reqAccountUpdates(conn, "0", acctCode)
 }
 
 .reqAccountUpdates <- function(conn, subscribe=TRUE, acctCode="1")
 {
-  if (!inherits(conn, "twsConnection")) 
+  if (!is.twsConnection(conn))
       stop("requires twsConnection object")
 
   con <- conn[[1]]
@@ -20,14 +20,14 @@ cancelAccountUpdates <- function(conn, acctCode="1")
   writeBin(as.character(acctCode), con)
 }
 
-`reqAccountUpdates` <- 
+reqAccountUpdates <- 
 function (conn,
           subscribe=TRUE,
           acctCode="1",
           eventWrapper=eWrapper(),
           CALLBACK=twsCALLBACK, ...)
 {
-  if (!inherits(conn, "twsConnection")) 
+  if (!is.twsConnection(conn))
       stop("requires twsConnection object")
 
   .reqAccountUpdates(conn, subscribe, acctCode)

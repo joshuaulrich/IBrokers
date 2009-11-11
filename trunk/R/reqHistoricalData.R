@@ -44,15 +44,19 @@ function(conn, Contract,endDateTime,
   if(!isOpen(con)) stop("connection to TWS has been closed")
   on.exit(cancelHistoricalData(con,as.character(tickerId)))
 
-  if(class(conn) != 'twsConnection') stop('tws connection object required')
-  if(class(Contract) != 'twsContract') stop('twsContract required')
+  #if(class(conn) != 'twsConnection') stop('tws connection object required')
+  if(!is.twsConnection(conn))
+    stop('tws connection object required')
+  #if(class(Contract) != 'twsContract') stop('twsContract required')
+  if(!is.twsContract(Contract))
+    stop('twsContract required')
 
   validBarSize <- c('1 secs','5 secs','15 secs','30 secs',
                     '1 min', '2 mins','3 mins','5 mins','15 mins',
                     '30 mins','1 hour','1 day','1 week','1 month',
                     '3 months','1 year')
   if(!barSize %in% validBarSize)
-    stop(paste('unknown barSize try',paste(validBarSize)))
+    stop(paste('unknown barSize try: ',paste(validBarSize,sep=";")))
 
 
   if(missing(endDateTime) || is.null(endDateTime)) 
@@ -168,7 +172,8 @@ function(conn, Contract,endDateTime,
 cancelHistoricalData <- function(conn, tickerId) 
 {
     if(!inherits(conn, "twsConnection")) 
-        stop("twsConnection object required")
+    if(!is.twsConnection(conn)) 
+      stop("twsConnection object required")
 
     con <- conn[[1]]
 

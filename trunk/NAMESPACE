@@ -1,8 +1,12 @@
 export(twsConnect,
+       twsConnect2,             # experimental connection object
        twsDisconnect,
+
+       is.twsConnection,
 
        twsConnectionTime,
        serverVersion,
+       setServerLogLevel,
        reqCurrentTime,
 
       .reqIds,                  # send only
@@ -65,7 +69,10 @@ export(.twsIncomingMSG,
       )
 
 S3method(print,twsConnection)
+S3method(print,twsconn)
+S3method("[[", twsconn)
 S3method(close,twsConnection)
+S3method(close,twsconn)
 
 S3method(print,twsContract)
 S3method(as.twsContract, twsContract)
