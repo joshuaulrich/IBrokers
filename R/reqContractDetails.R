@@ -1,6 +1,6 @@
 .reqContractDetails <- function(conn, Contract, reqId="1", conId="")
 {
-    if(!inherits(conn, "twsConnection")) 
+    if(!is.twsConnection(conn))
       stop("requires twsConnection object")
 
     if(!inherits(Contract, "twsContract"))
@@ -27,7 +27,7 @@
     writeBin(as.character(request), con)            
 }
 
-`reqContractDetails` <-
+reqContractDetails <-
 function(conn, Contract, reqId="1", conId="", verbose=FALSE,
          eventWrapper=eWrapper(), CALLBACK=twsCALLBACK, ...) {
 

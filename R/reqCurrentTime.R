@@ -1,7 +1,7 @@
 .reqCurrentTime <-
 function(conn) {
 
-  if(!inherits(conn,'twsConnection'))
+  if(!is.twsConnection(conn))
     stop('requires twsConnection object')
 
   con <- conn[[1]]
@@ -13,7 +13,7 @@ function(conn) {
 
 reqCurrentTime <-
 function(conn) {
-  if(!inherits(conn,'twsConnection'))
+  if(!is.twsConnection(conn))
     stop('requires twsConnection object')
 
   con <- conn[[1]]

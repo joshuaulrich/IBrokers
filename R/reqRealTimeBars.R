@@ -3,13 +3,13 @@
           barSize="5",useRTH=TRUE,
           tickerId = "1")
 {
-  if(!inherits(conn,"twsConnection") )
+  if(!is.twsConnection(conn))
     stop("tws connection object required")
-  if(inherits(Contract,"twsContract")) 
+  if(is.twsContract(Contract))
     Contract <- list(Contract)
 
   for(n in 1:length(Contract)) {
-    if(!inherits(Contract[[n]],"twsContract") )
+    if(!is.twsContract(Contract[[n]]))
        stop("twsContract required")
   }
   con <- conn[[1]]
@@ -55,11 +55,11 @@ function (conn, Contract,
           CALLBACK=twsCALLBACK,
           ...)
 {
-    if(!inherits(conn, "twsPlayback")) {
+    if(!is.twsPlayback(conn)) {
       tickerId <- .reqRealTimeBars(conn, Contract, whatToShow, barSize, useRTH, tickerId)
     }
 
-    if(inherits(Contract,"twsContract")) 
+    if(is.twsContract(Contract))
       Contract <- list(Contract)
 
     con <- conn[[1]]
@@ -79,7 +79,7 @@ function (conn, Contract,
       CALLBACK <- twsDEBUG # function to simply return raw data
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
-      if(inherits(conn, 'twsPlayback')) {
+      if(is.twsPlayback(conn)) {
         seek(conn[[1]], 0)
         stop("CALLBACK=NA is not available for playback")
       }
@@ -109,7 +109,7 @@ function (conn, Contract,
 }
 
 `cancelRealTimeBars` <- function(conn,tickerId) {
-      if(!inherits(conn,"twsConnection"))
+      if(!is.twsConnection(conn))
         stop("twsConnection object required")
 
       con <- conn[[1]]

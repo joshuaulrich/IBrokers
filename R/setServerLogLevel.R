@@ -1,6 +1,6 @@
 setServerLogLevel <- function(conn, logLevel=2)
 {
-  if(!inherits(conn, 'twsConnection'))
+  if(!is.twsConnection(conn))
     stop('twsConnection object required')
   VERSION <- "1"
   con <- conn[[1]]

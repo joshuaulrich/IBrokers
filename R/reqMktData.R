@@ -1,11 +1,12 @@
 .reqMktData <-
-function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
+function (conn, Contract, 
+          tickGenerics='100,101,104,106,165,221,225,236',
           snapshot = FALSE, tickerId = "1")
 {
-    if (!inherits(conn,"twsConnection") )
+    if (!is.twsConnection(conn))
         stop("tws connection object required")
 
-    if(!inherits(conn,'twsPlayback')) {
+    if(!is.twsPlayback(conn)) {
       if(class(Contract) == "twsContract") Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
@@ -54,11 +55,11 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
           file='', verbose=TRUE,
           eventWrapper=eWrapper(), CALLBACK=twsCALLBACK, ...)
 {
-    if (!inherits(conn,"twsConnection") )
+    if (!is.twsConnection(conn))
         stop("tws connection object required")
 
-    if(!inherits(conn,'twsPlayback')) {
-      if(class(Contract) == "twsContract") Contract <- list(Contract)
+    if(!is.twsPlayback(conn)) {
+      if(is.twsContract(Contract)) Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
         if (class(Contract[[n]]) != "twsContract") 
@@ -168,7 +169,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
-      if(inherits(conn, 'twsPlayback')) {
+      if(is.twsPlayback(conn)) {
         seek(conn[[1]],0)
         stop("CALLBACK=NA is not available for playback")
       }
@@ -187,8 +188,8 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
 }
 
-`cancelMktData` <- function(conn,tickerId) {
-  if( !inherits(conn,"twsConnection") )
+cancelMktData <- function(conn,tickerId) {
+  if( !is.twsConnection(conn)) 
     stop("twsConnection object required")
 
   con <- conn[[1]]
@@ -208,10 +209,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
           eventTickOption,eventTickGeneric,
           eventTickString,eventTickEFP,CALLBACK,...) 
 {
-    if (!inherits(conn,"twsConnection") )
+    if (!is.twsConnection(conn))
         stop("tws connection object required")
 
-    if(!inherits(conn,'twsPlayback')) {
+    if(!is.twsPlayback(conn)) {
       if(class(Contract) == "twsContract") Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
@@ -311,7 +312,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     }
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
-      if(inherits(conn, 'twsPlayback')) {
+      if(is.twsPlayback(conn)) {
         seek(conn[[1]],0)
         stop("CALLBACK=NA is not available for playback")
       }
@@ -321,7 +322,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
     waiting <- TRUE
 
-    msg_length <- ifelse(inherits(conn, 'twsPlayback'), 3, 1)
+    msg_length <- ifelse(is.twsPlayback(conn), 3, 1)
     msg_position <- 0 # where we are in the message - only relevant for playback
     sys.time <- NULL # used for timeStamp interpretation
 

@@ -1,5 +1,6 @@
 \name{twsConnect}
 \alias{twsConnect}
+\alias{twsConnect2}
 \alias{is.twsConnection}
 \alias{is.twsPlayback}
 \alias{isConnected}
