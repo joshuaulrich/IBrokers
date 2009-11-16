@@ -6,8 +6,6 @@
 \alias{twsOrder}
 \alias{placeOrder}
 \alias{cancelOrder}
-\alias{reqIds}
-\alias{.reqIds}
 \alias{twsDEBUG}
 \title{ Internal TWS-API MSG and ERR List }
 \description{

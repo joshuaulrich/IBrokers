@@ -1,10 +1,10 @@
 .placeOrder <-
 function(conn,Contract,Order)
 {
-  if(!inherits(conn,'twsConnection'))
+  if(!is.twsConnection(conn))
     stop('requires twsConnection object')
 
-  if(!inherits(Contract, 'twsContract'))
+  if(!is.twsContract(Contract))
     stop('requires twsContract object for Contract arg')
 
   if(!inherits(Order, 'twsOrder'))
@@ -95,7 +95,7 @@ function(conn,Contract,Order)
   writeBin(order, con)  
 }
 
-`placeOrder` <-
+placeOrder <-
 function(conn,
          Contract,
          Order,
@@ -105,10 +105,10 @@ function(conn,
          eventOrderStatus,
          CALLBACK, ...) {
 
-  if(!inherits(conn,'twsConnection'))
+  if(!is.twsConnection(conn))
     stop('requires twsConnection object')
 
-  if(!inherits(Contract, 'twsContract'))
+  if(!is.twsContract(Contract))
     stop('requires twsContract object for Contract arg')
 
   if(!inherits(Order, 'twsOrder'))
