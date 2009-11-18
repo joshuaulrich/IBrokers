@@ -25,7 +25,7 @@ eWrapper <- function(debug=FALSE) {
     updateAccountValue <- updateAccountTime <- updatePortfolio <- 
     accountDownloadEnd <- nextValidId <-
     contractDetails <- bondContractDetails <-
-    contractDetailsEnd <- execDetails <-
+    contractDetailsEnd <- execDetails <- execDetailsEnd <-
     updateMktDepth <- updateMktDepthL2 <-
     updateNewsBulletin <- managedAccounts <-
     receiveFA <- historicalData <-
@@ -81,6 +81,7 @@ eWrapper <- function(debug=FALSE) {
     bondContractDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     contractDetailsEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     execDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    execDetailsEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updateMktDepth  <- function(curMsg, msg, timestamp, file,  ...) 
     { 
       symbols <- get.Data("symbols")
@@ -116,7 +117,7 @@ eWrapper <- function(debug=FALSE) {
     updateAccountValue <- updateAccountTime <- updatePortfolio <- 
     accountDownloadEnd <- nextValidId <-
     contractDetails <- bondContractDetails <-
-    contractDetailsEnd <- execDetails <-
+    contractDetailsEnd <- execDetails <- execDetailsEnd <-
     updateMktDepth <- updateMktDepthL2 <-
     updateNewsBulletin <- managedAccounts <-
     receiveFA <- historicalData <-
@@ -149,6 +150,7 @@ eWrapper <- function(debug=FALSE) {
   bondContractDetails  =  bondContractDetails  ,
   contractDetailsEnd  =  contractDetailsEnd  ,
   execDetails  =  execDetails  ,
+  execDetailsEnd  =  execDetailsEnd  ,
   updateMktDepth  =  updateMktDepth  ,
   updateMktDepthL2  =  updateMktDepthL2  ,
   updateNewsBulletin  =  updateNewsBulletin  ,

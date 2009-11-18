@@ -252,7 +252,7 @@ file <- file[[1]]  # FIXME
                clientId = contents[10],
                whyHeld  = contents[11]
   )
-  structure(eos)
+  structure(eos,class="eventOrderStatus")
 }
 
 
@@ -361,20 +361,21 @@ file <- file[[1]]  # FIXME
 }
 
 #####  EXECUTION_DATA ##### {{{
-`e_execution_data` <-
-function(msg, contents, ...) {
-
+e_execution_data <- function(curMsg, msg, ...) {
+       # version = msg[1]
+       # reqId   = msg[2]
+       orderId   = msg[3]
        eed <- list(
               contract   = twsContract(
-                            #contract = contents[3], #contractId not yet added :(
-                             symbol  = contents[4],
-                             sectype = contents[5],
-                             expiry  = contents[6],
-                             strike  = contents[7],
-                             right   = contents[8],
-                             exch    = contents[9],
-                             currency= contents[10],
-                             local   = contents[11],
+                             conId   = msg[4],
+                             symbol  = msg[5],
+                             sectype = msg[6],
+                             expiry  = msg[7],
+                             strike  = msg[8],
+                             right   = msg[9],
+                             exch    = msg[10],
+                             currency= msg[11],
+                             local   = msg[12],
                              # the following are required to correctly specify a contract
                              combo_legs_desc = NULL,
                              primary = NULL,
@@ -382,17 +383,19 @@ function(msg, contents, ...) {
                              comboleg = NULL,
                              multiplier = NULL
                            ),
-              execution  = twsExecution(orderId = contents[2],
-                                        execId  = contents[12],
-                                        time    = contents[13],
-                                        acctNumber = contents[14],
-                                        exchange   = contents[15],
-                                        side       = contents[16],
-                                        shares     = contents[17],
-                                        price      = contents[18],
-                                        permId     = contents[19],
-                                        clientId   = contents[20],
-                                        liquidation= contents[21]
+              execution  = twsExecution(orderId = orderId,
+                                        execId  = msg[13],
+                                        time    = msg[14],
+                                        acctNumber = msg[15],
+                                        exchange   = msg[16],
+                                        side       = msg[17],
+                                        shares     = msg[18],
+                                        price      = msg[19],
+                                        permId     = msg[20],
+                                        clientId   = msg[21],
+                                        liquidation= msg[22],
+                                        cumQty     = msg[23],
+                                        avgPrice   = msg[24]
                                        )
               )
   structure(eed, class="eventExecutionData")

@@ -9,11 +9,13 @@ function(orderId,
          shares,
          price,
          permId,
-         liquidation) {
+         liquidation,
+         cumQty,
+         avgPrice) {
 
   # special constructor if called with no args
   if(is.null(names(match.call()[-1])))
-    return(do.call('twsExecution', rep(list(NULL),11)))
+    return(do.call('twsExecution', rep(list(NULL),13)))
 
   structure(list(orderId=orderId,
                  clientId=clientId,
@@ -25,7 +27,9 @@ function(orderId,
                  shares=shares,
                  price=price,
                  permId=permId,
-                 liquidation=liquidation),
+                 liquidation=liquidation,
+                 cumQty=cumQty,
+                 avgPrice=avgPrice),
             class="twsExecution")
 
 }

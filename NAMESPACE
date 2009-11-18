@@ -17,6 +17,9 @@ export(twsConnect,
       .reqAccountUpdates,       # send only
        reqAccountUpdates,
 
+       twsExecutionFilter,
+       reqExecutions,
+
        twsContract,
        is.twsContract,
        as.twsContract,
@@ -44,6 +47,7 @@ export(twsConnect,
        cancelRealTimeBars,
 
        twsOrder,
+      .placeOrder,              # send only
        placeOrder,
        cancelOrder,
     
