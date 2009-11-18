@@ -1,4 +1,4 @@
-.reqContractDetails <- function(conn, Contract, reqId="1", conId="")
+.reqContractDetails <- function(conn, Contract, reqId="1")
 {
     if(!is.twsConnection(conn))
       stop("requires twsConnection object")
@@ -13,7 +13,7 @@
     request <- c(.twsOutgoingMSG$REQ_CONTRACT_DATA,
                  VERSION,
                  reqId,
-                 conId,
+                 Contract$conId,
                  Contract$symbol,
                  Contract$sectype,
                  Contract$expiry,
@@ -28,10 +28,10 @@
 }
 
 reqContractDetails <-
-function(conn, Contract, reqId="1", conId="", verbose=FALSE,
+function(conn, Contract, reqId="1", verbose=FALSE,
          eventWrapper=eWrapper(), CALLBACK=twsCALLBACK, ...) {
 
-    .reqContractDetails(conn, Contract, reqId, conId)
+    .reqContractDetails(conn, Contract, reqId)
 
     if(is.null(CALLBACK))
       invisible(return(NULL))
@@ -43,7 +43,8 @@ function(conn, Contract, reqId="1", conId="", verbose=FALSE,
       # custom contractData function called from processMsg
       twsContractDetails(version=msg[1],
                          #reqId=msg[2],
-                         contract=twsContract(symbol=msg[3],
+                         contract=twsContract(conId=msg[12+1],
+                                              symbol=msg[3],
                                               sectype=msg[4],
                                               expiry=msg[5],  
                                               primary=msg[21],

@@ -25,7 +25,7 @@ function (conn,
           subscribe=TRUE,
           acctCode="1",
           eventWrapper=eWrapper(),
-          CALLBACK=twsCALLBACK, ...)
+          CALLBACK=twsCALLBACK, file="",...)
 {
   if (!is.twsConnection(conn))
       stop("requires twsConnection object")
