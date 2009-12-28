@@ -57,9 +57,6 @@ are identical.
 \value{
 A character representation of the next numeric ID.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Jeffrey A. Ryan
 }

@@ -10,7 +10,6 @@ to a particular IB tradeable product.
 reqContractDetails(conn,
                    Contract,
                    reqId = "1",
-                   conId = "",
                    verbose = FALSE,
                    eventWrapper = eWrapper(),
                    CALLBACK = twsCALLBACK, ...)
@@ -20,7 +19,6 @@ reqContractDetails(conn,
   \item{conn}{ a valid \code{twsConnection} }
   \item{Contract}{ a valid \code{twsContract} }
   \item{reqId}{ a unique ID }
-  \item{conId}{ a contract ID }
   \item{verbose}{ be verbose? }
   \item{eventWrapper}{ event callback closure }
   \item{CALLBACK}{ main callback loop }

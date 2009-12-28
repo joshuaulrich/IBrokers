@@ -132,8 +132,11 @@
   } else
   if(tickType == .twsTickType$SHORTABLE) { #46
     cat('shortable:',string[4],'\n',file=file,append=TRUE)
+  } else
+  if(tickType == .twsTickType$HALTED) { #49
+    cat('Halted:',string[4],'\n',file=file,append=TRUE)
   } else {
-    cat('<default generic> ',file=file,append=TRUE)
+    cat('<default generic>',file=file,append=TRUE)
     cat(paste(string),'\n',file=file,append=TRUE)
   }
 }
@@ -152,8 +155,11 @@
   } else
   if(tickType == .twsTickType$LAST_TIMESTAMP) { #45
     cat('lastTimestamp:',string[4],'\n',file=file,append=TRUE)
+  } else
+  if(tickType == .twsTickType$RT_VOLUME) { #48
+    cat('RTVolume:',string[4],'\n',file=file,append=TRUE)
   } else {
-    cat('<default string> ',file=file,append=TRUE)
+    cat('<default string>',file=file,append=TRUE)
     cat(paste(string),'\n',file=file,append=TRUE)
   }
 }

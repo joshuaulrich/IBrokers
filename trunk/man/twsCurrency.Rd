@@ -14,7 +14,8 @@ twsCurrency(symbol,
             right='',
             local='',
             multiplier='',
-            include_expired='0')
+            include_expired='0',
+            conId=0)
 }
 \arguments{
   \item{symbol}{ the IB symbol requested }
@@ -26,6 +27,7 @@ twsCurrency(symbol,
   \item{local}{ the local security name }
   \item{multiplier}{ the contract multiplier }
   \item{include_expired}{ should expired contracts be included }
+  \item{conId}{ contract ID }
 }
 \details{
 A wrapper to \code{twsContract} to make \sQuote{currency/FX}

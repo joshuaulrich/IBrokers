@@ -7,7 +7,8 @@
 Create, test, and coerce a twsContract for use in API calls.
 }
 \usage{
-twsContract(symbol,
+twsContract(conId,
+            symbol,
             sectype,
             exch,
             primary,
@@ -27,6 +28,7 @@ as.twsContract(x, ...)
 }
 
 \arguments{
+  \item{conId}{ the IB contract ID }
   \item{symbol}{ the IB symbol requested }
   \item{sectype}{ the security type }
   \item{exch}{ the requested exchange }
@@ -58,7 +60,7 @@ A \code{twsContract} object.
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{reqHistoricalData}} }
 \examples{
-contract <- twsContract("AAPL","STK","SMART","ISLAND",
+contract <- twsContract(0,"AAPL","STK","SMART","ISLAND",
                         "","0.0","USD","","","",NULL,NULL,"0")
 }
 \keyword{ utilities }

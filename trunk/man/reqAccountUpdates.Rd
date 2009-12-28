@@ -10,7 +10,8 @@ reqAccountUpdates(conn,
                   subscribe = TRUE,
                   acctCode = "1",
                   eventWrapper = eWrapper(), 
-                  CALLBACK=twsCALLBACK, ...)
+                  CALLBACK=twsCALLBACK, 
+                  file="", ...)
 
 .reqAccountUpdates(conn, subscribe = TRUE, acctCode = "1")
 }
@@ -20,6 +21,7 @@ reqAccountUpdates(conn,
   \item{acctCode}{ an account description - not used for most accounts }
   \item{eventWrapper}{ message-level callback closure }
   \item{CALLBACK}{ main receiver loop, if any }
+  \item{file}{ send output to "file", where file may be any valid connection in R }
   \item{\dots}{ additional args }
 }
 \details{
