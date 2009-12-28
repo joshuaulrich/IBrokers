@@ -68,7 +68,7 @@ eWrapper <- function(debug=FALSE) {
     orderStatus <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     errorMessage <- function(curMsg, msg, timestamp, file, ...)
     {
-      msg
+      cat("TWS Message:",msg,"\n")
     }
     openOrder  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     openOrderEnd <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }

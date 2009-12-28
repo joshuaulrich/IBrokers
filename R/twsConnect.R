@@ -19,8 +19,7 @@ twsConnect2 <- function(clientId=1, host="localhost",
      }
      CLIENT_VERSION <- "45"
 
-     writeBin(CLIENT_VERSION,s)
-     writeBin(as.character(clientId), s)
+     writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
      Sys.sleep(1)
      
      while(TRUE) {
@@ -28,11 +27,11 @@ twsConnect2 <- function(clientId=1, host="localhost",
        if(length(curMsg) > 0) {
          if(curMsg == .twsIncomingMSG$ERR_MSG) {
            if(!errorHandler(s,verbose)) stop() 
-         }
+         } else {
+         SERVER_VERSION <- curMsg
          CONNECTION_TIME <- readBin(s,character(),1)
-         if(curMsg == .twsIncomingMSG$NEXT_VALID_ID) {
-           NEXT_VALID_ID <- readBin(s,character(),2)[2]
-           break
+         NEXT_VALID_ID <- readBin(s,character(),3)[3]
+         break
          }
        }
        if(Sys.time()-start.time > timeout) {
@@ -47,7 +46,7 @@ twsConnect2 <- function(clientId=1, host="localhost",
      twsconn$clientId <- clientId
      twsconn$nextValidId <- NEXT_VALID_ID
      twsconn$port <- port
-     twsconn$server.version <- CLIENT_VERSION
+     twsconn$server.version <- SERVER_VERSION
      twsconn$connected.at <- CONNECTION_TIME
      class(twsconn) <- c("twsconn","environment")
      return(twsconn)
@@ -60,9 +59,7 @@ twsConnect2 <- function(clientId=1, host="localhost",
     tmp <- tempfile()
     fh <- file(tmp, open='ab')
 
-    #writeBin(c(as.character(length(dat)),dat), fh)
     writeBin(dat, fh)
-    #for(i in dat) writeBin(i, fh)
 
     close(fh)
     s <- file(tmp, open='rb')
@@ -101,25 +98,19 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
      }
 
      CLIENT_VERSION <- "45"
-
-     writeBin(CLIENT_VERSION, s)
-     writeBin(as.character(clientId), s)
-
-     waiting <- TRUE
-     while(waiting) {
+     writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
+     Sys.sleep(1)
+     
+     while(TRUE) {
        curMsg <- readBin(s, character(), 1)
        if(length(curMsg) > 0) {
-         if(curMsg == CLIENT_VERSION) {
-           SERVER_VERSION <- curMsg
-           CONNECTION_TIME <- readBin(s,character(),1)
-         }
-         if(curMsg == .twsIncomingMSG$NEXT_VALID_ID) {
-           NEXT_VALID_ID <- readBin(s,character(),2)[2]
-           assign(".tws_nextValidId", NEXT_VALID_ID, .GlobalEnv)
-           waiting <- FALSE
-         }
          if(curMsg == .twsIncomingMSG$ERR_MSG) {
-           if(!errorHandler(s,verbose)) stop()
+           if(!errorHandler(s,verbose)) stop() 
+         } else {
+         SERVER_VERSION <- curMsg
+         CONNECTION_TIME <- readBin(s,character(),1)
+         NEXT_VALID_ID <- readBin(s,character(),3)[3]
+         break
          }
        }
        if(Sys.time()-start.time > timeout) {
@@ -127,6 +118,7 @@ function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
          stop('tws connection timed-out')
        }
      }
+     on.exit() # successful connection
 
      structure(list(s,
                     clientId=clientId,port=port,

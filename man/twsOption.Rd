@@ -15,7 +15,8 @@ twsOption(local,
           currency='USD',
           symbol='',
           multiplier="100",
-          include_expired='0')
+          include_expired='0',
+          conId=0)
 }
 \arguments{
   \item{local}{ the IB symbol requested }
@@ -29,6 +30,7 @@ twsOption(local,
   \item{symbol}{ the security name [optional]}
   \item{multiplier}{ the contract multiplier }
   \item{include_expired}{ should expired contracts be included [defaults to \dQuote{0} (false)] }
+  \item{conId}{ contract ID }
 }
 \details{
 A wrapper to \code{twsContract} to make \sQuote{option}
