@@ -7,10 +7,11 @@ function (conn, Contract,
         stop("tws connection object required")
 
     if(!is.twsPlayback(conn)) {
-      if(class(Contract) == "twsContract") Contract <- list(Contract)
+      Contract <- as.twsContract(Contract)
+      if(is.twsContract(Contract)) Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
-        if (class(Contract[[n]]) != "twsContract") 
+        if (!is.twsContract(Contract[[n]]))
             stop("twsContract required")
       }
     } #else file <- ""
@@ -59,10 +60,11 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         stop("tws connection object required")
 
     if(!is.twsPlayback(conn)) {
+      Contract <- as.twsContract(Contract)
       if(is.twsContract(Contract)) Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
-        if (class(Contract[[n]]) != "twsContract") 
+        if (!is.twsContract(Contract[[n]])) 
             stop("twsContract required")
       }
       

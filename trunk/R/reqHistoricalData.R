@@ -106,6 +106,7 @@ function(conn, Contract,endDateTime,
       if(iter %% 30 == 0) cat('\n')
       flush.console()
       iter <- iter + 1
+      Sys.sleep(0.25)
     }
 
     if(length(curMsg) > 0) {

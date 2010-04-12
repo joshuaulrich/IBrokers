@@ -79,6 +79,7 @@ S3method(close,twsConnection)
 S3method(close,twsconn)
 
 S3method(print,twsContract)
+S3method(as.twsContract, list)
 S3method(as.twsContract, twsContract)
 S3method(as.twsContract, twsContractDetails)
 S3method(print,twsContractDetails)

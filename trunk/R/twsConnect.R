@@ -1,6 +1,6 @@
-twsConnect2 <- function(clientId=1, host="localhost",
-                        port=7496, verbose=TRUE,
-                        timeout=5, filename=NULL) {
+twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
+                                      port=7496, verbose=TRUE,
+                                      timeout=5, filename=NULL) {
    if(is.null(getOption('digits.secs'))) 
      options(digits.secs=6)
 
@@ -76,7 +76,7 @@ twsConnect2 <- function(clientId=1, host="localhost",
   }
 }
                        
-twsConnect <-
+.twsConnect <-
 function (clientId=1, host='localhost', port = 7496, verbose=TRUE,
           timeout=5, filename=NULL,
           blocking=TRUE)

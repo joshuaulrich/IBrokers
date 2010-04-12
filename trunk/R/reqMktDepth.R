@@ -5,10 +5,10 @@ function (conn, Contract, tickerId = "1", numRows="20",
           eventWrapper=eWrapper(),
           CALLBACK=twsCALLBACK,...) 
 {
-    if (!inherits(conn, "twsConnection"))
+    if (!is.twsConnection(conn))
         stop("tws connection object required")
 
-    if(!inherits(conn, 'twsPlayback')) {
+    if(!is.twsPlayback(conn)) {
       # if playback from a file, don't test or require contract
       if(class(Contract) == "twsContract") Contract <- list(Contract)
   
