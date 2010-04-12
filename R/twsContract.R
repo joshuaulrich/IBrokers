@@ -45,6 +45,11 @@ as.twsContract <- function(x, ...)
   UseMethod("as.twsContract")
 }
 
+as.twsContract.list <- function(x, ...)
+{
+  lapply(x, as.twsContract, ...)
+}
+
 as.twsContract.twsContract <- function(x, ...)
 {
   x
