@@ -3,6 +3,7 @@ export(twsConnect,
        twsDisconnect,
 
        is.twsConnection,
+       isConnected,
 
        twsConnectionTime,
        serverVersion,
@@ -30,6 +31,8 @@ export(twsConnect,
        twsSTK,
        twsFuture,
        twsFUT,
+       twsFutureOpt,
+       twsFOP,
        twsOption,
        twsOPT,
 
