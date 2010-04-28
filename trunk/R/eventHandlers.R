@@ -258,7 +258,13 @@ file <- file[[1]]  # FIXME
                clientId = contents[10],
                whyHeld  = contents[11]
   )
-  structure(eos,class="eventOrderStatus")
+  eos <- structure(eos,class="eventOrderStatus")
+  cat("TWS OrderStatus:",
+      paste("orderId=",eos$orderId,sep=""),
+      paste("status=",eos$status,sep=""),
+      paste("filled=",eos$filled,sep=""),
+      paste("remaining=",eos$remaining,sep=""),
+      paste("averageFillPrice=",eos$averageFillPrice,sep=""),"\n")
 }
 
 
@@ -266,7 +272,7 @@ file <- file[[1]]  # FIXME
   eoo <- list(
          # need to add contractId to twsContract...
               contract   = twsContract(
-                            #contract = contents[3], #contractId not yet added :(
+                             conId   = contents[3],
                              symbol  = contents[4],
                              sectype = contents[5],
                              expiry  = contents[6],
@@ -363,13 +369,19 @@ file <- file[[1]]  # FIXME
                              warningText = contents[84]
                            )
          )
-  structure(eoo, class='eventOpenOrder')
+  eoo <- structure(eoo, class='eventOpenOrder')
+  cat("TWS OpenOrder:",
+      paste("orderId=",eoo$order$orderId,sep=""),
+      paste("conId=",eoo$contract$conId,sep=""),
+      paste("symbol=",eoo$contract$symbol,sep=""),
+      paste("status=",eoo$orderstate$status,sep=""),"\n")
+  eoo
 }
 
 #####  EXECUTION_DATA ##### {{{
-e_execution_data <- function(curMsg, msg, ...) {
-       # version = msg[1]
-       # reqId   = msg[2]
+e_execDetails <- e_execution_data <- function(curMsg, msg, file, ...) {
+       version = msg[1]
+       reqId   = msg[2]
        orderId   = msg[3]
        eed <- list(
               contract   = twsContract(
@@ -404,7 +416,16 @@ e_execution_data <- function(curMsg, msg, ...) {
                                         avgPrice   = msg[24]
                                        )
               )
-  structure(eed, class="eventExecutionData")
+  eed <- structure(eed, class="eventExecutionData")
+  cat("TWS Execution:", 
+      paste("orderId=",eed$execution$orderId,sep=""),
+      paste("time=",strptime(eed$execution$time,"%Y%m%d  %H:%M:%S"),sep=""),
+      paste("side=",eed$execution$side,sep=""),
+      paste("shares=",eed$execution$shares,sep=""),
+      paste("symbol=",eed$contract$symbol,sep=""),
+      paste("conId=",eed$contract$conId,sep=""),
+      paste("price=",eed$execution$price,sep=""),"\n")
+  eed
 }
 #####  END EXECUTION_DATA ##### }}}
 
@@ -427,32 +448,45 @@ function(msg, contents, ...) {
 
 ##### PORTFOLIO_VALUE #### {{{
 `e_portfolio_value` <-
-function(msg, contents, ...) {
-  version          <- as.numeric(contents[1])
+function(curMsg, msg, ...) {
+  version          <- as.numeric(msg[1])
 
-  contract         <- twsContract()
-  contract$conId   <- contents[2]
-  contract$symbol  <- contents[3]
-  contract$sectype <- contents[4]
-  contract$expiry  <- contents[5]
-  contract$strike  <- contents[6]
-  contract$right   <- contents[7]
-  contract$multiplier <- contents[8]
-  contract$primary <- contents[9]
-  contract$currency<- contents[10]
-  contract$local   <- contents[11]
+  contract         <- twsContract(conId=msg[2],
+                                  symbol=msg[3],
+                                  sectype=msg[4],
+                                  exch=NULL,
+                                  primary=msg[9],
+                                  expiry=msg[5],
+                                  strike=msg[6],
+                                  currency=msg[10],
+                                  right=msg[7],
+                                  local=msg[11],
+                                  multiplier=msg[8],
+                                  combo_legs_desc=NULL,comboleg=NULL,include_expired=NULL)
+#  contract$conId   <- msg[2]
+#  contract$symbol  <- msg[3]
+#  contract$sectype <- msg[4]
+#  contract$expiry  <- msg[5]
+#  contract$strike  <- msg[6]
+#  contract$right   <- msg[7]
+#  contract$multiplier <- msg[8]
+#  contract$primary <- msg[9]
+#  contract$currency<- msg[10]
+#  contract$local   <- msg[11]
   
   portfolioValue <- list()
-  portfolioValue$position      <- contents[12]
-  portfolioValue$marketPrice   <- contents[13]
-  portfolioValue$marketValue   <- contents[14]
-  portfolioValue$averageCost   <- contents[15]
-  portfolioValue$unrealizedPNL <- contents[16]
-  portfolioValue$realizedPNL   <- contents[17]
-  portfolioValue$accountName   <- contents[18]
+  portfolioValue$position      <- msg[12]
+  portfolioValue$marketPrice   <- msg[13]
+  portfolioValue$marketValue   <- msg[14]
+  portfolioValue$averageCost   <- msg[15]
+  portfolioValue$unrealizedPNL <- msg[16]
+  portfolioValue$realizedPNL   <- msg[17]
+  portfolioValue$accountName   <- msg[18]
 
-  structure(list(contract       = contract,
+  p <- structure(list(contract       = contract,
                  portfolioValue = portfolioValue),
             class="eventPortfolioValue") 
+  str(p)
+  p
 }
 ##### END ACCOUNT_DATA #### }}}

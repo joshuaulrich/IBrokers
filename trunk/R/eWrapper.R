@@ -65,7 +65,10 @@ eWrapper <- function(debug=FALSE) {
       symbols <- get.Data("symbols")
       e_tick_EFP(NULL, msg, timestamp, file, symbols, ...)
     }
-    orderStatus <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    orderStatus <- function(curMsg, msg, timestamp, file,  ...) { 
+      e_order_status(curMsg, msg)
+      c(curMsg, msg)
+    }
     errorMessage <- function(curMsg, msg, timestamp, file, ...)
     {
       cat("TWS Message:",msg,"\n")
@@ -73,14 +76,20 @@ eWrapper <- function(debug=FALSE) {
     openOrder  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     openOrderEnd <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updateAccountValue  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
-    updatePortfolio <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    updatePortfolio <- function(curMsg, msg, timestamp, file,  ...) { 
+      e_portfolio_value(curMsg, msg)
+      c(curMsg, msg)
+    }
     updateAccountTime  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     accountDownloadEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     nextValidId  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     contractDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     bondContractDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     contractDetailsEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
-    execDetails  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    execDetails  <- function(curMsg, msg, timestamp, file,  ...) { 
+      e_execDetails(curMsg, msg, file, ...)
+      #c(curMsg, msg) 
+    }
     execDetailsEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updateMktDepth  <- function(curMsg, msg, timestamp, file,  ...) 
     { 
