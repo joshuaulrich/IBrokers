@@ -13,8 +13,7 @@ Workstation (TWS).
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
            port = 7496, verbose = TRUE, timeout = 5,
-           filename = NULL,
-           blocking = TRUE)
+           filename = NULL)
 
 twsDisconnect(con)
 
@@ -29,7 +28,6 @@ is.twsPlayback(x)
   \item{verbose}{ should the connection attempt be verbose }
   \item{timeout}{ length in seconds before aborting attempt }
   \item{filename}{ file containing recorded TWS data }
-  \item{blocking}{ should the connection be blocking (TRUE) }
   \item{con}{ a valid \code{twsConnection} object }
   \item{x}{ a connection to be checked }
 }
@@ -43,12 +41,6 @@ If \code{filename} is set to a file containing
 data recorded in the standard TWS format - calls
 using this connection will playback the recorded
 data.
-
-By default, on Unix-alike platforms blocking is set
-to TRUE  By using select calls within the process,
-this allows for multiple connections to be
-managed within a single R session (e.g. manage data from
-an external source, and execute with Interactive Brokers).
 }
 \value{
 A \code{twsConnection} object.
