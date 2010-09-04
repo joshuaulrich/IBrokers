@@ -13,6 +13,7 @@ function(conn,Contract,Order)
   con <- conn[[1]]
 
   VERSION <- "28" # Version as of API 9.62
+  VERSION <- "29" # Version as of API 9.63
 
 # write order {{{
   order <- c(.twsOutgoingMSG$PLACE_ORDER,
@@ -28,6 +29,11 @@ function(conn,Contract,Order)
              Contract$primary,
              Contract$currency,
              Contract$local,
+
+             # as of 9.63
+             Contract$secIdType,
+             Contract$secId,
+
              Order$action,
              Order$totalQuantity,
              Order$orderType,
