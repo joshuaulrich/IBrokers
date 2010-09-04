@@ -1,7 +1,7 @@
 twsContract <-
 function(conId,symbol,sectype,exch,primary,expiry,strike,
          currency,right,local,multiplier,combo_legs_desc,
-         comboleg,include_expired)
+         comboleg,include_expired,secIdType="",secId="")
 {
   if(is.null(names(match.call()[-1])))
     return(do.call("twsContract", rep(list(NULL), 14)))
@@ -20,7 +20,10 @@ function(conId,symbol,sectype,exch,primary,expiry,strike,
                  multiplier=multiplier,
                  combo_legs_desc=combo_legs_desc,
                  comboleg=comboleg,
-                 include_expired=include_expired),
+                 include_expired=include_expired,
+                 secIdType=secIdType,
+                 secId=secId
+                ),
             class='twsContract'
            )
 }
@@ -83,7 +86,14 @@ function(version=NULL,
          validExchanges=NULL,
          priceMagnifier=NULL,
          underConId=NULL,
-         longName=NULL
+         longName=NULL,
+         contractMonth=NULL,
+         industry=NULL,
+         category=NULL,
+         subcategory=NULL,
+         timeZoneId=NULL,
+         tradingHours=NULL,
+         liquidHours=NULL
          )
   structure(
             list(version=version,
@@ -96,7 +106,14 @@ function(version=NULL,
                  validExchanges=validExchanges,
                  priceMagnifier=priceMagnifier,
                  underConId=underConId,
-                 longName=longName
+                 longName=longName,
+                 contractMonth=contractMonth,
+                 industry=industry,
+                 category=category,
+                 subcategory=subcategory,
+                 timeZoneId=timeZoneId,
+                 tradingHours=tradingHours,
+                 liquidHours=liquidHours
                 ),
             class='twsContractDetails'
            )

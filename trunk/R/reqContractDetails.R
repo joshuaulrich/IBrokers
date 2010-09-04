@@ -9,6 +9,7 @@
     con <- conn[[1]]
 
     VERSION <- "5"
+    VERSION <- "6"
 
     request <- c(.twsOutgoingMSG$REQ_CONTRACT_DATA,
                  VERSION,
@@ -23,7 +24,9 @@
                  Contract$exch,
                  Contract$currency,
                  Contract$local,
-                 Contract$include_expired)
+                 Contract$include_expired,
+                 Contract$secIdType,
+                 Contract$secId)
     writeBin(as.character(request), con)            
 }
 
@@ -64,7 +67,14 @@ function(conn, Contract, reqId="1", verbose=FALSE,
                          validExchanges=unlist(strsplit(msg[16+1],",")),
                          priceMagnifier=msg[17+1],
                          underConId=msg[18+1],
-                         longName=msg[19+1])
+                         longName=msg[19+1],
+                         contractMonth=msg[22],
+                         industry=msg[23],
+                         category=msg[24],
+                         subcategory=msg[25],
+                         timeZoneId=msg[26],
+                         tradingHours=msg[27],
+                         liquidHours=msg[28])
     }
 
     contracts <- list()

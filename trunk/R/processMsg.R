@@ -123,7 +123,8 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$CONTRACT_DATA) {
     #msg <- readBin(con, character(), 21)
-    msg <- .Internal(readBin(con, "character", 21L, NA_integer_, TRUE, FALSE))
+    #msg <- .Internal(readBin(con, "character", 21L, NA_integer_, TRUE, FALSE))
+    msg <- .Internal(readBin(con, "character", 28L, NA_integer_, TRUE, FALSE))
     eWrapper$contractDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$EXECUTION_DATA) {
