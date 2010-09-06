@@ -3,11 +3,8 @@
 \alias{.twsOutgoingMSG}
 \alias{.twsERR}
 \alias{.lastRequest}
-\alias{twsOrder}
 \alias{reqExecutions}
 \alias{twsExecutionFilter}
-\alias{placeOrder}
-\alias{cancelOrder}
 \alias{twsDEBUG}
 \title{ Internal TWS-API MSG and ERR List }
 \description{
