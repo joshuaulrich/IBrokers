@@ -20,7 +20,10 @@ twsContract(conId,
             multiplier,
             combo_legs_desc,
             comboleg,
-            include_expired)
+            include_expired,
+            secIdType = "",
+            secId = ""
+            )
 
 is.twsContract(x)
 
@@ -42,6 +45,8 @@ as.twsContract(x, ...)
   \item{combo_legs_desc}{ not implemented yet }
   \item{comboleg}{ not implemented yet }
   \item{include_expired}{ should expired contracts be included }
+  \item{secIdType}{ unique identifier for secIdType }
+  \item{secId}{ security identifier: ISIN, CUSIP, SEDOL, RIC }
   \item{x}{ object to test or coerce }
   \item{\dots}{ additional arguments }
 }

@@ -1,4 +1,4 @@
-.placeOrder <-
+placeOrder <- .placeOrder <-
 function(conn,Contract,Order)
 {
   if(!is.twsConnection(conn))
@@ -101,7 +101,7 @@ function(conn,Contract,Order)
   writeBin(order, con)  
 }
 
-placeOrder <-
+..placeOrder <-
 function(conn,
          Contract,
          Order,

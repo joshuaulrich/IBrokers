@@ -129,6 +129,7 @@ function(conn, Contract,endDateTime,
           cat(' done.\n')
           flush.console()
         }
+        on.exit()
       }
     }
   }
