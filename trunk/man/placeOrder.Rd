@@ -9,7 +9,9 @@ TWS Orders
 Place or cancel an order to the TWS.
 }
 \usage{
-.placeOrder(conn, Contract, Order)
+placeOrder(conn, Contract, Order)
+
+cancelOrder(conn, orderId, verbose=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,6 +23,12 @@ A twsContract object.
 }
   \item{Order}{
 A twsOrder object.
+}
+  \item{orderId}{
+A valid order id.
+}
+  \item{verbose}{
+Be verbose?
 }
 }
 \details{
@@ -55,7 +63,10 @@ yours alone.  If you don't like it, write it yourself.
 \examples{
 \dontrun{
 tws <- twsConnect()
-.placeOrder(tws, twsSTK("AAPL"), twsOrder(reqIds(tws)))
+id <- reqIds(tws)
+
+placeOrder(tws, twsSTK("AAPL"), twsOrder(id))
+cancelOrder(id)
 }
 }
 \keyword{ ~kwd1 }
