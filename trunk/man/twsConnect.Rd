@@ -43,7 +43,7 @@ using this connection will playback the recorded
 data.
 }
 \value{
-A \code{twsConnection} object.
+A \code{twsconn} object.
 }
 \references{ Interactive Brokers: \url{www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }
