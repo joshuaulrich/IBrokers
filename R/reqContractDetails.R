@@ -83,9 +83,16 @@ function(conn, Contract, reqId="1", verbose=FALSE,
       socketSelect(list(con), FALSE, NULL) 
       curMsg <- readBin(con, character(), 1)
       if(curMsg != .twsIncomingMSG$CONTRACT_DATA) {
-        processMsg(curMsg, con, eW, timestamp, file)
-        if(curMsg == .twsIncomingMSG$CONTRACT_DATA_END)
-          break      
+        if(curMsg == .twsIncomingMSG$ERR_MSG) {
+          if(!errorHandler(con,verbose,OK=c(165,300,366,2104,2106,2107))){
+            warning("error in contract details")
+            break
+          }
+        } else {
+          processMsg(curMsg, con, eW, timestamp, file)
+          if(curMsg == .twsIncomingMSG$CONTRACT_DATA_END)
+            break      
+        }
       }
       if(curMsg == .twsIncomingMSG$CONTRACT_DATA) {
       contracts[[length(contracts)+1]] <-
