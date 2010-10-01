@@ -1,6 +1,7 @@
 \name{IBrokers-package}
 \alias{IBrokers-package}
 \alias{IBrokers}
+\alias{IBrokersRef}
 \docType{package}
 \title{
 R API to the Interactive Brokers Trader Workstation (TWS).
@@ -93,6 +94,8 @@ Interactive Brokers: \url{www.interactivebrokers.com}
 \keyword{ package }
 \examples{
 \dontrun{
+IBrokersRef()       # IBrokers Reference Card in PDF viewer
+
 tws <- twsConnect() # make a new connection to the TWS
 reqCurrentTime(tws) # check the server's timestamp
 
