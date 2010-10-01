@@ -75,6 +75,8 @@ export(.twsIncomingMSG,
        .twsOrderID
       )
 
+export(IBrokersRef)
+
 S3method(print,twsConnection)
 S3method(print,twsconn)
 S3method("[[", twsconn)
