@@ -25,6 +25,9 @@ export(twsConnect,
        is.twsContract,
        as.twsContract,
 
+       twsBAG,
+       twsComboLeg,
+
        twsCurrency,
        twsCASH,
        twsEquity,
@@ -88,4 +91,7 @@ S3method(as.twsContract, list)
 S3method(as.twsContract, twsContract)
 S3method(as.twsContract, twsContractDetails)
 S3method(print,twsContractDetails)
+
+S3method(print,eventPortfolioValue)
+S3method(print,eventAccountValue)
 
