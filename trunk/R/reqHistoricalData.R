@@ -113,8 +113,10 @@ function(conn, Contract,endDateTime,
       # watch for error messages
       if(curMsg == .twsIncomingMSG$ERR_MSG) {
         if(!errorHandler(con,verbose,OK=c(165,300,366,2104,2106,2107))) {
-          cat('\n')
-          stop('Unable to complete historical data request', call.=FALSE)
+          #cat('\n')
+          #stop('Unable to complete historical data request', call.=FALSE)
+          on.exit()
+          invisible(return())
         }
       }
       # watch for historical data start

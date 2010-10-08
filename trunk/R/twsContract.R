@@ -28,9 +28,12 @@ function(conId,symbol,sectype,exch,primary,expiry,strike,
            )
 }
 
-`print.twsContractDetails` <- `print.twsContract` <-
+print.eventPortfolioValue <- `print.twsContractDetails` <- `print.twsContract` <-
 function(x, ...) {
   str(unclass(x))
+}
+print.eventAccountValue <- function(x, ...) {
+  print(t(as.data.frame(unclass(x))), quote=FALSE)
 }
 
 is.twsContract <- function(x)
