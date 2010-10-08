@@ -1,6 +1,6 @@
 twsComboLeg <- function(conId=0,
                         ratio=0,
-                        action=NULL,
+                        action=c("BUY","SELL","SSHORT"),
                         exchange=NULL,
                         openClose=0,
                         shortSaleSlot=0,
@@ -8,7 +8,7 @@ twsComboLeg <- function(conId=0,
 {
   structure(list(conId=conId,
                  ratio=ratio,
-                 action=action,                 # BUY/SELL/SSHORT
+                 action=action[1],
                  exchange=exchange,
                  openClose=openClose,
                  shortSaleSlot=shortSaleSlot,

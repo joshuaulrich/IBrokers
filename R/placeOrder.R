@@ -52,7 +52,29 @@ function(conn,Contract,Order)
              Order$displaySize,
              Order$triggerMethod,
              Order$outsideRTH,
-             Order$hidden,
+             Order$hidden)
+
+  if(Contract$sectype == "BAG") {
+    if(is.null(Contract$comboleg)) {
+      order <- c(order, 0)
+    } else {
+      comboLeg <- Contract$comboleg
+      order <- c(order, length(comboLeg))
+      for(i in 1:length(comboLeg)) {
+        Leg <- comboLeg[[i]]
+        order <- c(order, 
+                   Leg$conId, 
+                   Leg$ratio, 
+                   Leg$action, 
+                   Leg$exch, 
+                   Leg$openClose,
+                   Leg$shortSaleSlot,
+                   Leg$designatedLocation)
+      }
+    }   
+  }
+
+  order <- c(order,
              "", # DEPRECATED FIELD
              Order$discretionaryAmt,
              Order$goodAfterTime,
