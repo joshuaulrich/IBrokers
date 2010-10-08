@@ -5,6 +5,8 @@
 \alias{.lastRequest}
 \alias{reqExecutions}
 \alias{twsExecutionFilter}
+\alias{twsComboLeg}
+\alias{twsBAG}
 \alias{twsDEBUG}
 \title{ Internal TWS-API MSG and ERR List }
 \description{
