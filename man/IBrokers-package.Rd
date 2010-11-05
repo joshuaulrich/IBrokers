@@ -23,7 +23,7 @@ Possible real-time charting via the \pkg{quantmod}
 package may be incorporated into future
 releases.
 
-Recent changes to move to version 0.1-0
+Changes to move to version 0.1-0
 have made this API implementation much more
 robust on all platforms.
 Many new error-checking calls have been
@@ -59,8 +59,8 @@ a viable alternative for IB-API interaction.  Don't be shy.
 \tabular{ll}{
 Package: \tab IBrokers\cr
 Type: \tab Package\cr
-Version: \tab 0.2-9\cr
-Date: \tab 2010-09-05\cr
+Version: \tab 0.3-0.1\cr
+Date: \tab 2010-10-20\cr
 License: \tab GPL-3\cr
 }
 The current API methods supported are:

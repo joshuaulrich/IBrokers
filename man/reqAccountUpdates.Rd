@@ -1,5 +1,6 @@
 \name{reqAccountUpdates}
 \alias{reqAccountUpdates}
+\alias{twsPortfolioValue}
 \alias{.reqAccountUpdates}
 \title{ Request Account Updates }
 \description{
@@ -11,9 +12,11 @@ reqAccountUpdates(conn,
                   acctCode = "1",
                   eventWrapper = eWrapper(), 
                   CALLBACK=twsCALLBACK, 
-                  file="", ...)
+                  ...)
 
 .reqAccountUpdates(conn, subscribe = TRUE, acctCode = "1")
+
+twsPortfolioValue(x, zero.pos=TRUE, ...)
 }
 \arguments{
   \item{conn}{ A twsConnection object }
@@ -21,20 +24,25 @@ reqAccountUpdates(conn,
   \item{acctCode}{ an account description - not used for most accounts }
   \item{eventWrapper}{ message-level callback closure }
   \item{CALLBACK}{ main receiver loop, if any }
-  \item{file}{ send output to "file", where file may be any valid connection in R }
+  \item{x}{ object to extract PortfolioValue from. See details. }
+  \item{zero.pos}{ should PortfolioValue include zero positions? }
   \item{\dots}{ additional args }
 }
 \details{
 By default, for non-FA accounts, this returns the current login's
 account information.
 
-This main version simply prints to screen the results
+This main version returns a list of objects as
 returned by the TWS.  \code{.reqAccountUpdates} sends
 the request to subscribe or cancel, but returns immediately.
 This is designed to be used within a larger
 custom callback routine, where the \code{eventWrapper} object
 passed to processMsg (see also) keeps trace of the portfolio
 updates in a consistent manner.
+
+\code{twsPortfolioValue} extracts into a data.frame commonly
+used fields from all positions held. There are currently methods
+for the the default returned object of \code{reqAccountUpdates}.
 }
 \references{ Interactive Brokers API: \url{http://www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }

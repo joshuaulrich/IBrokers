@@ -1,18 +1,22 @@
 \name{twsConnect}
 \alias{twsConnect}
+\alias{ibgConnect}
 \alias{twsConnect2}
 \alias{is.twsConnection}
 \alias{is.twsPlayback}
 \alias{isConnected}
 \alias{twsDisconnect}
-\title{ Establish, Check or Terminate a Connection to TWS }
+\title{ Establish, Check or Terminate a Connection to TWS or IBG }
 \description{
 Functions to initiate, check, or disconnect from the Trader
-Workstation (TWS).
+Workstation (TWS) or IB Gateway (IBG).
 }
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
            port = 7496, verbose = TRUE, timeout = 5,
+           filename = NULL)
+ibgConnect(clientId = 1, host = 'localhost', 
+           port = 4001, verbose = TRUE, timeout = 5,
            filename = NULL)
 
 twsDisconnect(con)
