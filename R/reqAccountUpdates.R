@@ -95,7 +95,7 @@ function (conn,
    if (curMsg == .twsIncomingMSG$ACCT_DOWNLOAD_END) 
       break
   }
-  return(list(eW$get.Data("data"), acct))
+  return(structure(list(eW$get.Data("data"), acct), class="AccountUpdate"))
 
 
  # CALLBACK(conn, eventWrapper, NULL, file)
