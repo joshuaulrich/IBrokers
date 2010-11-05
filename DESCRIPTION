@@ -1,7 +1,7 @@
 Package: IBrokers
 Type: Package
 Title: R API to Interactive Brokers Trader Workstation
-Version: 0.3-0
+Version: 0.3-0.1
 Date: 2010-10-07
 Depends: xts
 Author: Jeffrey A. Ryan
