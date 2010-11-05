@@ -1,9 +1,10 @@
-.reqOpenOrders <-
-function(conn) {
-  if(!inherits(conn,'twsConnection'))
+reqOpenOrders <-
+function(twsconn) {
+  #if(!inherits(conn,'twsConnection'))
+  if(!is.twsConnection(twsconn))
     stop('requires twsConnection object')
 
-  con <- conn[[1]]
+  con <- twsconn[[1]]
 
   VERSION <- "1"
 

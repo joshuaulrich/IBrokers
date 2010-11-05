@@ -1,3 +1,9 @@
+ibgConnect <- function(clientId=1, host="localhost",
+                                      port=4001, verbose=TRUE,
+                                      timeout=5, filename=NULL) {
+  twsConnect(clientId, host, port, verbose, timeout, filename)
+}
+
 twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
                                       port=7496, verbose=TRUE,
                                       timeout=5, filename=NULL) {
@@ -30,7 +36,14 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
          } else {
          SERVER_VERSION <- curMsg
          CONNECTION_TIME <- readBin(s,character(),1)
-         NEXT_VALID_ID <- readBin(s,character(),3)[3]
+         curMsg <- readBin(s, character(), 1)
+
+         if(curMsg == .twsIncomingMSG$ERR_MSG) {
+           errMsg <- readBin(s, character(), 4)
+           stop(errMsg[4], call.=FALSE)
+         }
+
+         NEXT_VALID_ID <- readBin(s,character(),2)[2]
          break
          }
        }

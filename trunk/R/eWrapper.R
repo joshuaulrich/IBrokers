@@ -138,7 +138,7 @@ eWrapper <- function(debug=FALSE) {
       }
   }
 
-  return(list(
+  eW <- list(
   .Data = .Data, get.Data = get.Data, assign.Data = assign.Data, remove.Data = remove.Data,
   tickPrice =  tickPrice ,
   tickSize  =  tickSize  ,
@@ -173,5 +173,7 @@ eWrapper <- function(debug=FALSE) {
   currentTime  =  currentTime  ,
   fundamentalData  =  fundamentalData  ,
   deltaNeutralValidation  =  deltaNeutralValidation,
-  tickSnapshotEnd = tickSnapshotEnd))
+  tickSnapshotEnd = tickSnapshotEnd)
+  class(eW) <- "eWrapper"
+  invisible(eW)
 }
