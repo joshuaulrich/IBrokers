@@ -143,11 +143,22 @@ how to accomplish this, but as of this document
 it is simply a matter of \textbf{Configure > API > Enable ActiveX and Sockets}.
 You should also add your machine (127.0.0.1) to the \textbf{Trusted IP Addresses}.
 
+An new option for connecting to Interactive Brokers API is
+now available using the IBGateway client provided by Interactive Brokers. This
+is a low-resource, non-GUI application that can be used in place of the
+TWS.  The only variation to the connection procedure is that the default
+port for the IBGateway application is 4001, which must be changed in
+the {\tt twsConnect} call if used. For the rest of the document, TWS will
+be used but keep in mind all functionality is now available when
+using the IBGateway as well.
+
 From the R prompt, load the package and establish a
 connection. Once connected you can then check some basic connection information.
 Multiple TWS connections are allowed per client, though a distinct
 clientId is required, and given R's single threaded nature it is not
-of much value.
+of much value in a single session.  Multiple R sessions can run
+against a single TWS instance though, and in that case would require
+distinct clientId values.
 If no further queries are required, {\tt twsDisconnect} will disconnect
 the R session from the TWS.
 <<twsconnect, eval=FALSE>>=
@@ -159,9 +170,9 @@ serverVersion(tws)
 twsDisconnect(tws)
 @
 <<twsconnect, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")=="1") {
+if(Sys.getenv("IBCON")=="1") {
 library(IBrokers)
-tws <- twsConnect()
+tws <- twsConnect(999, port=Sys.getenv("IBPORT"))
 tws
 reqCurrentTime(tws)
 serverVersion(tws)
@@ -191,10 +202,12 @@ includes:
 \begin{quote}
 \begin{description}
 \item[twsContract:] create a general Contract object.
-\item[twsEquity:] wrapper to create equity Contract objects
-\item[twsOption:] wrapper to create option Contract objects.
-\item[twsFuture:] wrapper to create futures Contract objects.
-\item[twsCurrency:] wrapper to create currency Contract objects.
+\item[twsEquity/twsSTK:] wrapper to create equity Contract objects
+\item[twsOption/twsOPT:] wrapper to create option Contract objects.
+\item[twsFuture/twsFUT:] wrapper to create futures Contract objects.
+\item[twsFuture/twsFOP:] wrapper to create futures options Contract objects.
+\item[twsCurrency/twsCASH:] wrapper to create currency Contract objects.
+\item[twsBAG:] wrapper to create a combo.
 \end{description}
 \end{quote}
 Using the above functions to request market data from the TWS
@@ -206,8 +219,8 @@ twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
 @
 <<reqmktdata, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")=="1") {
-tws <- twsConnect()
+if(Sys.getenv("IBCON")=="1") {
+tws <- twsConnect(999, port=Sys.getenv("IBPORT"))
 twsFuture("YM","ECBOT","200809")
 reqContractDetails(tws, twsEquity("QQQQ"))
 }
@@ -216,7 +229,7 @@ reqContractDetails(tws, twsEquity("QQQQ"))
 reqMktData(tws, twsEquity("QQQQ"))
 @
 <<reqmktdata3, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")=="1") {
+if(Sys.getenv("IBCON")=="1") {
 IBrokers:::.reqMktData.vignette(tws, twsEquity("QQQQ"))
 twsDisconnect(tws)
 }
@@ -247,8 +260,8 @@ reqMktData(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsp <- twsConnect(filename="SBUX.dat")
 @
 <<playbackmktdata, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")=="1") {
-tws <- twsConnect()
+if(Sys.getenv("IBCON")=="1") {
+tws <- twsConnect(999, port=Sys.getenv("IBPORT"))
 IBrokers:::.reqMktData.vignette(tws, twsEquity("SBUX"), CALLBACK=NULL, file="SBUX.dat")
 twsDisconnect(tws)
 twsp <- twsConnect(filename="SBUX.dat")
@@ -260,13 +273,13 @@ reqMktData(twsp)
 reqMktData(twsp, playback=0)
 @
 <<playback, eval=TRUE, echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")=="1") {
+if(Sys.getenv("IBCON")=="1") {
 reqMktData(twsp)
 reqMktData(twsp, playback=0)
 }
 @
 <<closeplayback, eval=TRUE,echo=FALSE>>=
-if(Sys.getenv("IBrokers_connected")=="1") {
+if(Sys.getenv("IBCON")=="1") {
 twsDisconnect(twsp)
 }
 @
@@ -354,6 +367,6 @@ ISBN 3-900051-07-0, URL http://www.R-project.org
 
 \bibitem{IBrokers} Jeffrey A. Ryan:
 \emph{IBrokers: R API to Interactive Brokers Trader Workstation},
-R package version 0.1-0, 2008
+R package version 0.3-0, 2008
 \end{thebibliography}
 \end{document}
