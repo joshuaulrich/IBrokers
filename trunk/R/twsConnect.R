@@ -29,6 +29,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      Sys.sleep(1)
      
      while(TRUE) {
+       socketSelect(list(s), FALSE, NULL)
        curMsg <- readBin(s, character(), 1)
        if(length(curMsg) > 0) {
          if(curMsg == .twsIncomingMSG$ERR_MSG) {
