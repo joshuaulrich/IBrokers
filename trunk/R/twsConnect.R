@@ -26,7 +26,6 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      CLIENT_VERSION <- "46"
 
      writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
-     Sys.sleep(1)
      
      while(TRUE) {
        socketSelect(list(s), FALSE, NULL)
