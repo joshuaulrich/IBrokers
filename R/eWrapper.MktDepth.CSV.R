@@ -1,10 +1,10 @@
 eWrapper.MktDepth.CSV <- function() {
   # internally updated data
-#  .data. <- character(21)
-#  
-#  get.data <- function() return(.data.)
-#
-stop("eWrapper.MktDepth.CSV is being rewritten. Check back soon :)")
+  .data. <- character(21)
+  
+  get.data <- function() return(.data.)
+
+  stop("eWrapper.MktDepth.CSV is being rewritten. Check back soon :)")
   eW <- eWrapper(NULL)
   eW$assign.Data("data", rep(NA, 21))
 
@@ -108,7 +108,7 @@ stop("eWrapper.MktDepth.CSV is being rewritten. Check back soon :)")
   openOrder  <- openOrderEnd <- updateAccountValue  <-
   updatePortfolio <- updateAccountTime  <- accountDownloadEnd  <-
   nextValidId  <- contractDetails  <- bondContractDetails  <- 
-  contractDetailsEnd  <- execDetails  <- #updateMktDepth  <- 
+  contractDetailsEnd  <- execDetails  <- updateMktDepth  <- 
   updateMktDepthL2  <- updateNewsBulletin  <- managedAccounts  <-
   receiveFA  <- historicalData  <- scannerParameters  <-
   scannerData  <- scannerDataEnd  <- realtimeBars  <-

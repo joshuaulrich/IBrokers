@@ -97,10 +97,9 @@ function(conn, Contract,endDateTime,
     flush.console()
   }
 
-  if(.Platform$OS.type == 'windows') Sys.sleep(.1)
-
   while(waiting) {
-    curMsg <- suppressWarnings(readBin(con,character(),1))
+    socketSelect(list(con), FALSE, NULL)
+    curMsg <- readBin(con,character(),1)
     if(verbose) {
       cat('.')
       if(iter %% 30 == 0) cat('\n')
