@@ -82,7 +82,7 @@ hour data, or all data, respectively.
 \code{whatToShow} can be any one of the following,
 though depending on the overall request it may not succeed.
 \sQuote{TRADES}, \sQuote{MIDPOINT}, \sQuote{BID},
-\sQuote{ASK}, \sQuote{BID/ASK}.
+\sQuote{ASK}, \sQuote{BID_ASK}.
 
 \code{time.format} should simply be left alone. :D
 
@@ -114,34 +114,15 @@ unless \code{callback} or \code{file} is specified.
 \references{ Interactive Brokers \url{www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
 \note{
-As this code is under active development, the interface has changed again.
-The requests now require an valid twsConnection object as the
-first argument.  The most recent release used an internal connection.
-When this caught an error, it became difficult to make further requests. The
-previous change was only made to accomodate a bug in R that has since been
-worked around by this author.
+The rules for historical data requests are somewhat vague. Not all
+symbols have data, and those that do may only be available with specific
+combinations of barSize and duration arguments. At present the only
+way to know is to try the combination in question.
 
-Historical data via the TWS API is at best unreliable. As historical
-data is not a priority of the IB API, outside of regular trading
-hours it may become unresponsive or unavailable.  The only current
-way to handle this is to generally to disconnect from the TWS
-via \code{twsDisconnect} and then reconnect with \code{twsConnect}.
-
-There is a strictly enforced 6 seconds between request pacing rule
+There is a strictly enforced 10 seconds between request pacing rule
 implemented by the TWS. Keep this in mind.
-IBrokers currently does \emph{not} manage this for the user.
-
-The TWS workstation must be running on the same machine
-as \R.
-
-The TWS must also be set up to allow for the API to be connected
-to.  See the associated help on the main Interactive Brokers
-website.
-
-The underlying API is subject to changes on an ongoing basis by
-Interactive Brokers.  All attempts have been made to keep this
-current.  If something should fail, please contact the maintainer
-of this package.
+IBrokers currently does \emph{not} manage this for the user via
+reqHistoricalData, though reqHistory does.
 }
 \seealso{ \code{\link{twsContract}}, \code{\link{twsConnect}} }
 \examples{
@@ -153,6 +134,7 @@ contract <- twsEquity('QQQQ','SMART','ISLAND')
 reqHistoricalData(tws, Contract=contract)
 
 # by default retreives a year of 1 minute bars
+Sys.sleep(10) # mandatory 10s between request to avoid IB pacing violation
 reqHistory(tws, Contract=contract)
 
 }
