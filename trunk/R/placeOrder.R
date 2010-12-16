@@ -121,6 +121,8 @@ function(conn,Contract,Order)
 # }}}
 
   writeBin(order, con)  
+  assign(".Last.orderId", as.integer(Order$orderId), .GlobalEnv)
+  invisible(as.integer(Order$orderId))
 }
 
 ..placeOrder <-

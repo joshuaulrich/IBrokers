@@ -1,4 +1,4 @@
-.cancelOrder <- function(conn, orderId)
+cancelOrder <- .cancelOrder <- function(conn, orderId)
 {
   if(!is.twsConnection(conn))
     stop('requires twsConnection object')
@@ -14,7 +14,7 @@
   writeBin(as.character(orderId),con)
 }
 
-`cancelOrder` <-
+..cancelOrder <-
 function(conn, orderId, verbose=TRUE) {
 
   .cancelOrder(conn, orderId)
