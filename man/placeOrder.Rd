@@ -11,7 +11,7 @@ Place or cancel an order to the TWS.
 \usage{
 placeOrder(conn, Contract, Order)
 
-cancelOrder(conn, orderId, verbose=TRUE)
+cancelOrder(conn, orderId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,15 +27,14 @@ A twsOrder object.
   \item{orderId}{
 A valid order id.
 }
-  \item{verbose}{
-Be verbose?
-}
 }
 \details{
 As described by the official Interactive Brokers (tm) documentation.  Caveat Emptor!!
 }
 \value{
-Called for its side effect of placing or cancelling an order on the TWS.
+Called for its side effect of placing or cancelling an order on the TWS. This also
+returns the orderId used for placeOrder.  An additional side-effect is that
+a variable .Last.orderId will be created or updated in the GlobalEnv as well.
 }
 \references{
 Official Place Order API:

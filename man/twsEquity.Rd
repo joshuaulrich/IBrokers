@@ -1,6 +1,7 @@
 \name{twsEquity}
 \alias{twsEquity}
 \alias{twsSTK}
+\alias{twsCFD}
 \title{ Create a twsEquity }
 \description{
 Create a twsEquity for use in API calls.
