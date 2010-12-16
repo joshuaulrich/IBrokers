@@ -1,10 +1,10 @@
 Package: IBrokers
 Type: Package
 Title: R API to Interactive Brokers Trader Workstation
-Version: 0.3-1
-Date: 2010-12-06
+Version: 0.3-2
+Date: 2010-12-15
 Depends: xts
 Author: Jeffrey A. Ryan
 Maintainer: Jeffrey A. Ryan <jeff.a.ryan@gmail.com>
-Description: Provides native Raccess to Interactive Brokers Trader Workstation API.
+Description: Provides native R access to Interactive Brokers Trader Workstation API.
 License: GPL-3
