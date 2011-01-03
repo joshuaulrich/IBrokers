@@ -179,11 +179,11 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) {
     #msg <- readBin(con, character(), 5)
-    msg <- .Internal(readBin(con, "character", 5L, NA_integer_, TRUE, FALSE))
-    if(msg[3] == .twsTickType$MODEL_OPTION) {
-      #msg <- c(msg, readBin(con, character(), 2))
-      msg <- c(msg,.Internal(readBin(con, "character", 2L, NA_integer_, TRUE, FALSE)))
-    } else msg <- c(msg,NA,NA)
+    msg <- .Internal(readBin(con, "character", 11L, NA_integer_, TRUE, FALSE))
+#    if(msg[3] == .twsTickType$MODEL_OPTION) {
+#      #msg <- c(msg, readBin(con, character(), 2))
+#      msg <- c(msg,.Internal(readBin(con, "character", 6L, NA_integer_, TRUE, FALSE)))
+#    } else msg <- c(msg,NA,NA)
     eWrapper$tickOptionComputation(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_GENERIC) {
