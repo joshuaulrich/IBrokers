@@ -1,6 +1,6 @@
 ibgConnect <- function(clientId=1, host="localhost",
-                                      port=4001, verbose=TRUE,
-                                      timeout=5, filename=NULL) {
+                                   port=4001, verbose=TRUE,
+                                   timeout=5, filename=NULL) {
   twsConnect(clientId, host, port, verbose, timeout, filename)
 }
 
@@ -23,7 +23,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
        close(s)
        stop(paste("couldn't connect to TWS on port",port))
      }
-     CLIENT_VERSION <- "46"
+     CLIENT_VERSION <- "47"
 
      writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
      
@@ -35,7 +35,9 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
            if(!errorHandler(s,verbose)) stop() 
          } else {
          SERVER_VERSION <- curMsg
+         socketSelect(list(s), FALSE, NULL)
          CONNECTION_TIME <- readBin(s,character(),1)
+         socketSelect(list(s), FALSE, NULL)
          curMsg <- readBin(s, character(), 1)
 
          if(curMsg == .twsIncomingMSG$ERR_MSG) {
