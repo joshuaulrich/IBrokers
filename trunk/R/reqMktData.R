@@ -18,7 +18,7 @@ function (conn, Contract,
     con <- conn[[1]]
     if (!isOpen(con)) 
         stop("connection to TWS has been closed")
-    VERSION <- "8"
+    VERSION <- "9"
  
     ticker_id <- as.character(tickerId)
     snapshot <- "0"

@@ -108,7 +108,9 @@
   } else
   if(tickType == .twsTickType$MODEL_OPTION) { #13
     cat('modelOption: impVol: ',string[4],' delta:',string[5],
-        ' modelPrice: ',string[6],' pvDiv: ',string[7],'\n',file=file,append=TRUE)
+        ' modelPrice: ',string[6],' pvDiv: ',string[7],
+        ' gamma: ',string[8],' vega: ',string[9],
+        ' theta: ',string[10],' undPrice: ',string[11],'\n',file=file,append=TRUE)
   } else {
     cat('<default option> ',file=file,append=TRUE)
     cat(paste(string),'\n',file=file,append=TRUE)
