@@ -21,8 +21,17 @@ export(twsConnect,
 
        twsPortfolioValue,
 
+       # FA accounts only - untested as there is a missing EWrapper method here
+       reqManagedAccts,
+       requestFA,
+       replaceFA,
+
        twsExecutionFilter,
        reqExecutions,
+
+       reqScannerParameters,
+       twsScannerSubscription,
+       reqScannerSubscription,
 
        twsContract,
        is.twsContract,
@@ -49,6 +58,11 @@ export(twsConnect,
 
        reqMktData,
        cancelMktData,
+      .calculateImpliedVolatility,
+       calculateImpliedVolatility,
+      .calculateOptionPrice,
+       calculateOptionPrice,
+     
 
        reqMktDepth,
        cancelMktDepth,
@@ -60,13 +74,20 @@ export(twsConnect,
       .placeOrder,              # send only
        placeOrder,
        cancelOrder,
+
+      .reqOpenOrders,
+       reqOpenOrders,
+      .reqAllOpenOrders,
+      .reqAutoOpenOrders,
+       exerciseOptions,
+
+       reqNewsBulletins,
+       cancelNewsBulletins,
     
        twsCALLBACK,
        twsDEBUG,
        processMsg,
 
-       calculateImpliedVolatility,
-     
        eWrapper,
 
        eWrapper.data,
@@ -98,6 +119,7 @@ S3method(as.twsContract, twsContract)
 S3method(as.twsContract, twsContractDetails)
 S3method(print,twsContractDetails)
 
+S3method(print,twsScannerSubscription)
 S3method(print,eventPortfolioValue)
 S3method(print,eventAccountValue)
 

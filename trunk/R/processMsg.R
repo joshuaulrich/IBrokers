@@ -170,15 +170,38 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
     eWrapper$bondContractDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$SCANNER_PARAMETERS) {
-    stop("unimplemented as of yet")
+    version <- readBin(con, character(), 1L) 
+    msg <- readBin(con, raw(), 1e6L)
     eWrapper$scannerParameters(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$SCANNER_DATA) {
-    stop("unimplemented as of yet")
-    eWrapper$scannerData(curMsg, msg, timestamp, file, ...)
+    cD <- twsContractDetails()
+    version <- readBin(con, character(), 1L)
+    tickerId <- readBin(con, character(), 1L)
+    numberOfElements <- as.integer( readBin(con, character(), 1L) )
+    for(i in 1:numberOfElements) {
+      msg <- readBin(con, character(), 16L)
+      rank <- msg[1]
+        cD$contract$conId <- msg[2]
+        cD$contract$symbol <- msg[3]
+        cD$contract$sectype <- msg[4]
+        cD$contract$expiry <- msg[5]
+        cD$contract$strike <- msg[6]
+        cD$contract$right  <- msg[7]
+        cD$contract$exch  <- msg[8]
+        cD$contract$currency  <- msg[9]
+        cD$contract$local  <- msg[10]
+      cD$marketName  <- msg[11]
+      cD$tradingClass  <- msg[12]
+      distance <- msg[13]
+      benchmark <- msg[14]
+      projection <- msg[15]
+      legsStr <- msg[16]
+      eWrapper$scannerData(curMsg, tickerId, rank, cD, distance,
+                           benchmark, projection, legsStr)
+    }
   } else
   if(curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) {
-    #msg <- readBin(con, character(), 5)
     msg <- .Internal(readBin(con, "character", 11L, NA_integer_, TRUE, FALSE))
 #    if(msg[3] == .twsTickType$MODEL_OPTION) {
 #      #msg <- c(msg, readBin(con, character(), 2))
@@ -187,57 +210,46 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
     eWrapper$tickOptionComputation(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_GENERIC) {
-    #msg <- readBin(con, character(), 4)
     msg <- .Internal(readBin(con, "character", 4L, NA_integer_, TRUE, FALSE))
     eWrapper$tickGeneric(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_STRING) {
-    #msg <- readBin(con, character(), 4)
     msg <- .Internal(readBin(con, "character", 4L, NA_integer_, TRUE, FALSE))
     eWrapper$tickString(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_EFP) {
-    #msg <- readBin(con, character(), 10)
     msg <- .Internal(readBin(con, "character", 10L, NA_integer_, TRUE, FALSE))
     eWrapper$tickEFP(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$CURRENT_TIME) {
-    #msg <- readBin(con, character(), 2)
     msg <- .Internal(readBin(con, "character", 2L, NA_integer_, TRUE, FALSE))
     eWrapper$currentTime(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$REAL_TIME_BARS) {
-    #msg <- readBin(con, character(), 10)
     msg <- .Internal(readBin(con, "character", 10L, NA_integer_, TRUE, FALSE))
     eWrapper$realtimeBars(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$FUNDAMENTAL_DATA) {
-    #msg <- readBin(con, character(), 3)
     msg <- .Internal(readBin(con, "character", 3L, NA_integer_, TRUE, FALSE))
     eWrapper$fundamentalData(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$CONTRACT_DATA_END) {
-    #msg <- readBin(con, character(), 2)
     msg <- .Internal(readBin(con, "character", 2L, NA_integer_, TRUE, FALSE))
     eWrapper$contractDetailsEnd(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$OPEN_ORDER_END) {
-    #msg <- readBin(con, character(), 1)
     msg <- .Internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
     eWrapper$openOrderEnd(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_DOWNLOAD_END) {
-    #msg <- readBin(con, character(), 2)
     msg <- .Internal(readBin(con, "character", 2L, NA_integer_, TRUE, FALSE))
     eWrapper$accountDownloadEnd(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$EXECUTION_DATA_END) {
-    #msg <- readBin(con, character(), 2)
     msg <- .Internal(readBin(con, "character", 2L, NA_integer_, TRUE, FALSE))
     eWrapper$execDetailsEnd(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$DELTA_NEUTRAL_VALIDATION) {
-    #msg <- readBin(con, character(), 5)
     msg <- .Internal(readBin(con, "character", 5L, NA_integer_, TRUE, FALSE))
     eWrapper$deltaNeutralValidation(curMsg, msg, timestamp, file, ...)
   } else
