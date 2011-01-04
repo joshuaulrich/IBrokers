@@ -29,6 +29,7 @@ twsScannerSubscription(numberOfRows = -1,
                        excludeConvertible = "", 
                        scannerSettingPairs = "", 
                        stockTypeFilter = "")
+}
 \arguments{
   \item{numberOfRows}{
 Number of rows of scanner results returned
