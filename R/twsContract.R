@@ -79,7 +79,7 @@ as.twsContract.twsContractDetails <- function(x, ...)
 
 twsContractDetails <-
 function(version=NULL,
-         contract=do.call('twsContract',rep(list(NULL),13)),
+         contract=twsContract(),
          marketName=NULL,
          tradingClass=NULL,
          conId=NULL,
