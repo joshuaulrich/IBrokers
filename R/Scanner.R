@@ -51,7 +51,7 @@ reqScannerParameters <- function(twsconn) {
            subscription$couponRateAbove,
            subscription$couponRateBelow,
            subscription$excludeConvertible,
-           subscription$averageOptionVolume,
+           subscription$averageOptionVolumeAbove,
            subscription$scannerSettingPairs,
            subscription$stockTypeFilter)
 
@@ -75,6 +75,7 @@ reqScannerSubscription <- function(twsconn, subscription, tickerId=1) {
                          projection=NULL,
                          legsStr=NULL)
   .reqScannerSubscription(twsconn, subscription, tickerId)
+  on.exit(cancelScannerSubscription(twsconn, tickerId))
 
   con <- twsconn[[1]]
   while(TRUE) {
@@ -105,12 +106,15 @@ reqScannerSubscription <- function(twsconn, subscription, tickerId=1) {
             legsStr <- msg[16]
             ctr <- cD$contract
             scanner <- rbind(scanner, 
-                        data.frame(reqId,rank,ctr$symbol,ctr$expiry,ctr$strike,ctr$right,
-                                   ctr$exch,ctr$currency,ctr$local,cD$marketName,
-                                   cD$tradingClass,distance,benchmark,projection,legsStr))
+                        data.frame(reqId,rank,symbol=ctr$symbol,
+                                   expiry=ctr$expiry,strike=ctr$strike,
+                                   right=ctr$right,exch=ctr$exch,
+                                   currency=ctr$currency,local=ctr$local,
+                                   marketName=cD$marketName,tradingClass=cD$tradingClass,
+                                   distance,benchmark,projection,
+                                   legsStr,stringsAsFactors=FALSE))
 
       }
-      cancelScannerSubscription(twsconn, tickerId)
       return(scanner)
     } else processMsg(curMsg, con, eWrapper(NULL))
   } 

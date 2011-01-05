@@ -69,8 +69,12 @@ eWrapper <- function(debug=FALSE) {
       e_order_status(curMsg, msg)
       c(curMsg, msg)
     }
-    errorMessage <- function(curMsg, msg, timestamp, file, ...)
+    errorMessage <- function(curMsg, msg, timestamp, file, twsconn, ...)
     {
+      if(msg[3] == "1100")
+        twsconn$connected <- FALSE
+      if(msg[3] %in% c("1101","1102"))
+        twsconn$connected <- TRUE
       cat("TWS Message:",msg,"\n")
     }
     openOrder  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }

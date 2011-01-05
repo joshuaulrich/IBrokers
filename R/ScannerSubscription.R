@@ -4,8 +4,8 @@ twsScannerSubscription <- function(numberOfRows=-1,
                                    scanCode="",
                                    abovePrice="",
                                    belowPrice="",
-                                   aboveVolume=.Machine$integer.max,
-                                   averageOptionVolume=.Machine$integer.max,
+                                   aboveVolume="",
+                                   averageOptionVolumeAbove="",
                                    marketCapAbove="",
                                    marketCapBelow="",
                                    moodyRatingAbove="",
@@ -20,6 +20,9 @@ twsScannerSubscription <- function(numberOfRows=-1,
                                    scannerSettingPairs="",
                                    stockTypeFilter="")
 {
+  if(missing(scanCode))
+    warning("'scanCode' needs to be specified")
+ 
   structure(
        list(numberOfRows=numberOfRows,
        instrument=instrument,
@@ -28,7 +31,7 @@ twsScannerSubscription <- function(numberOfRows=-1,
        abovePrice=abovePrice,
        belowPrice=belowPrice,
        aboveVolume=aboveVolume,
-       averageOptionVolume=averageOptionVolume,
+       averageOptionVolumeAbove=averageOptionVolumeAbove,
        marketCapAbove=marketCapAbove,
        marketCapBelow=marketCapBelow,
        moodyRatingAbove=moodyRatingAbove,
@@ -41,7 +44,8 @@ twsScannerSubscription <- function(numberOfRows=-1,
        couponRateBelow=couponRateBelow,
        excludeConvertible=excludeConvertible,
        scannerSettingPairs=scannerSettingPairs,
-       stockTypeFilter=stockTypeFilter), class="twsScannerSubscription")
+       stockTypeFilter=stockTypeFilter), 
+   class="twsScannerSubscription")
 }                                    
 
 print.twsScannerSubscription <- function(x, ...) {

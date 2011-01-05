@@ -51,63 +51,41 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
       #curMsg <- readBin(con, character(), 1)
       curMsg <- .Internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
       if(!is.null(timestamp)) {
-        processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, ...)
+        processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, twsCon, ...)
       } else {
-        processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+        processMsg(curMsg, con, eWrapper, timestamp, file, twsCon, ...)
       }
-      # data processing
-      # depending on the data provider, processMsg will be replaced with the message processing
-      # loop required.
-#      if(length(curMsg2) < 1) {
-#        p <- min(p*1.01, 0.01)
-#        Sys.sleep(p)
-#      } else {
-#        p <- 0.001
-#        if(!is.null(timestamp)) {
-#          processMsg(curMsg2, dataCON, eWrapper, format(Sys.time(), timestamp), file, ...)
-#        } else {
-#          processMsg(curMsg2, dataCON, eWrapper, timestamp, file, ...)
-#        }
-#     }
-      # INSERT TRADE LOGIC HERE
     }
   }
 }
 
-processMsg <- function(curMsg, con, eWrapper, timestamp, file, ...)
+processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
 {
   if(curMsg == .twsIncomingMSG$TICK_PRICE) {
-    #msg <- readBin(con, character(), 6)
     msg <- .Internal(readBin(con, "character", 6L, NA_integer_, TRUE, FALSE))
     eWrapper$tickPrice(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_SIZE) {
-    #msg <- readBin(con, character(), 4)
     msg <- .Internal(readBin(con, "character", 4L, NA_integer_, TRUE, FALSE))
     eWrapper$tickSize(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ORDER_STATUS) {
-    #msg <- readBin(con, character(), 11)
     msg <- .Internal(readBin(con, "character", 11L, NA_integer_, TRUE, FALSE))
     eWrapper$orderStatus(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ERR_MSG) {
-    #msg <- readBin(con, character(), 4)
     msg <- .Internal(readBin(con, "character", 4L, NA_integer_, TRUE, FALSE))
-    eWrapper$errorMessage(curMsg, msg, timestamp, file, ...)
+    eWrapper$errorMessage(curMsg, msg, timestamp, file, twsconn, ...)
   } else
   if(curMsg == .twsIncomingMSG$OPEN_ORDER) {
-    #msg <- readBin(con, character(), 84)
     msg <- .Internal(readBin(con, "character", 84L, NA_integer_, TRUE, FALSE))
     eWrapper$openOrder(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_VALUE) {
-    #msg <- readBin(con, character(), 5)
     msg <- .Internal(readBin(con, "character", 5L, NA_integer_, TRUE, FALSE))
     eWrapper$updateAccountValue(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) {
-    #msg <- readBin(con, character(), 18)
     msg <- .Internal(readBin(con, "character", 18L, NA_integer_, TRUE, FALSE))
     eWrapper$updatePortfolio(curMsg, msg, timestamp, file, ...)
   } else
