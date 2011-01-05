@@ -63,6 +63,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      twsconn$port <- port
      twsconn$server.version <- SERVER_VERSION
      twsconn$connected.at <- CONNECTION_TIME
+     twsconn$connected <- NULL # not yet used
      class(twsconn) <- c("twsconn","environment")
      return(twsconn)
   } else { 
@@ -175,11 +176,25 @@ is.twsPlayback <- function(x)
   inherits(x, "twsPlayback") || inherits(x, "twsplay")
 }
 
-isConnected <- function(x)
+isConnected <- function(twsconn)
 {
-  if(is.twsConnection(x)) {
-    if(inherits(try(isOpen(x[[1]]), silent=TRUE), 'try-error')) {
+  is_open <- function(con) {
+    if(inherits(try(isOpen(con), silent=TRUE), 'try-error')) {
       FALSE
     } else TRUE 
-  } else isOpen(x)
+  }
+  if( !is.twsConnection(twsconn))
+    stop("isConnected requires a twsconn object")
+
+  if( !is.null(twsconn$connected)) {
+    return( is_open(twsconn[[1]]) && twsconn$connected )
+  } else {
+    is_open(twsconn[[1]])
+  }
+
+#  if(is.twsConnection(x)) {
+#    if(inherits(try(isOpen(x[[1]]), silent=TRUE), 'try-error')) {
+#      FALSE
+#    } else TRUE 
+#  } else isOpen(x)
 } 
