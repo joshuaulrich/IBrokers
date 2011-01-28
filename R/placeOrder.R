@@ -1,7 +1,7 @@
 placeOrder <- .placeOrder <-
-function(conn,Contract,Order)
+function(twsconn,Contract,Order)
 {
-  if(!is.twsConnection(conn))
+  if(!is.twsConnection(twsconn))
     stop('requires twsConnection object')
 
   if(!is.twsContract(Contract))
@@ -10,10 +10,11 @@ function(conn,Contract,Order)
   if(!inherits(Order, 'twsOrder'))
     stop('requires twsOrder object for Order arg')
 
-  con <- conn[[1]]
+  con <- twsconn[[1]]
 
-  VERSION <- "28" # Version as of API 9.62
+ #VERSION <- "28" # Version as of API 9.62
   VERSION <- "29" # Version as of API 9.63
+ #VERSION <- "30" # Version as of API 9.64
 
 # write order {{{
   order <- c(.twsOutgoingMSG$PLACE_ORDER,

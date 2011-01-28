@@ -2,13 +2,9 @@
 function(con, verbose, OK=NULL) {
   err <- readBin(con,character(),4)
 
-print(paste("error number:",err))
-
   if(as.numeric(err[3]) %in% OK || as.numeric(err[3]) > 1000) {
     if(as.numeric(err[3]) == 1100) {
 
-warning("disconnected!!")
-      
       #close(con)  # instead of closing connection, we'll 
       warning(err[4])
     }

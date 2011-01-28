@@ -22,3 +22,16 @@ reqFundamentalData <- function(twsconn, reqId, contract, reportType) {
 
   writeBin( as.character(msg), twsconn[[1]])
 }
+
+cancelFundamentalData <- function(twsconn, reqId) {
+  if( !is.twsConnection(twsconn))
+    stop('invalid twsConnection')
+
+  VERSION <- "1"
+
+  msg <- c( .twsOutgoingMSG$CANCEL_FUNDAMENTAL_DATA,
+            VERSION,
+            reqId)
+
+  writeBin( as.character(msg), twsconn[[1]])
+}

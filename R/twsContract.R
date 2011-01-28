@@ -4,7 +4,7 @@ function(conId,symbol,sectype,exch,primary,expiry,strike,
          comboleg,include_expired,secIdType="",secId="")
 {
   if(is.null(names(match.call()[-1])))
-    return(do.call("twsContract", rep(list(NULL), 14)))
+    return(do.call("twsContract", rep(list(""), 14)))
 
   structure(
             list(conId=conId,

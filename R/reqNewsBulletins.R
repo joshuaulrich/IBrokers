@@ -1,4 +1,4 @@
-reqNewsBulletins <- function(twsconn, allMsgs) {
+reqNewsBulletins <- function(twsconn, allMsgs=TRUE) {
   if( !is.twsConnection(twsconn))
     stop('requires twsConnection object')
 
