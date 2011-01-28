@@ -18,6 +18,7 @@ export(twsConnect,
 
       .reqAccountUpdates,       # send only
        reqAccountUpdates,
+       cancelAccountUpdates,
 
        twsPortfolioValue,
 
@@ -44,6 +45,8 @@ export(twsConnect,
        twsCASH,
        twsEquity,
        twsSTK,
+       twsIndex,
+       twsIND,
        twsCFD,
        twsFuture,
        twsFUT,

@@ -14,8 +14,8 @@ twsScannerSubscription(numberOfRows = -1,
                        scanCode = "", 
                        abovePrice = "", 
                        belowPrice = "", 
-                       aboveVolume = .Machine$integer.max, 
-                       averageOptionVolume = .Machine$integer.max, 
+                       aboveVolume = "",
+                       averageOptionVolumeAbove = "",
                        marketCapAbove = "", 
                        marketCapBelow = "", 
                        moodyRatingAbove = "", 
@@ -52,8 +52,8 @@ Price to filter below
   \item{aboveVolume}{
 Volume to filter above
 }
-  \item{averageOptionVolume}{
-Average option volume (?)
+  \item{averageOptionVolumeAbove}{
+Average option volume above this
 }
   \item{marketCapAbove}{
 Market cap to filter above
@@ -125,11 +125,11 @@ to make for better documentation.
 scnr <- twsScannerSubscription(numberOfRows=10,
                                instrument="STK",
                                locationCode="STK.US.MAJOR",
+                               scanCode="TOP_PERC_GAIN",
                                aboveVolume=0,
                                marketCapAbove=1e8,
                                scannerSettingPairs="Annual,true",
-                               stockFilterType="ALL",
-                               averageOptionVolumeAbove=0)
+                               stockTypeFilter="ALL")
 scnr
 }
 \keyword{ class }
