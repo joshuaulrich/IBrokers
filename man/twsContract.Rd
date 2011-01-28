@@ -1,5 +1,7 @@
 \name{twsContract}
 \alias{twsContract}
+\alias{twsIND}
+\alias{twsIndex}
 \alias{is.twsContract}
 \alias{as.twsContract}
 \title{ Create a twsContract }

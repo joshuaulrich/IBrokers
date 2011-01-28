@@ -8,14 +8,9 @@
 \alias{twsComboLeg}
 \alias{twsBAG}
 \alias{twsDEBUG}
-\alias{calculateImpliedVolatility}
-\alias{calculateOptionPrice}
-\alias{exerciseOptions}
 \alias{reqManagedAccts}
 \alias{requestFA}
 \alias{replaceFA}
-\alias{reqNewsBulletins}
-\alias{cancelNewsBulletins}
 \alias{reqOpenOrders}
 \alias{reqScannerParameters}
 \alias{reqScannerSubscription}

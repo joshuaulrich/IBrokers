@@ -11,7 +11,7 @@ for custom processing by message type
 via the eWrapper argument.
 }
 \usage{
-processMsg(curMsg, con, eWrapper, timestamp, file, ...)
+processMsg(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
 }
 \arguments{
   \item{curMsg}{ The current incoming message }
@@ -19,6 +19,7 @@ processMsg(curMsg, con, eWrapper, timestamp, file, ...)
   \item{eWrapper}{ a functional closure with methods for each message }
   \item{timestamp}{ the timestamp format needed }
   \item{file}{ the file or connection to write to }
+  \item{twsconn}{ the twsConnection object }
   \item{\dots}{ additional arguments to internal calls }
 }
 \details{

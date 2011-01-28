@@ -9,13 +9,13 @@ TWS Orders
 Place or cancel an order to the TWS.
 }
 \usage{
-placeOrder(conn, Contract, Order)
+placeOrder(twsconn, Contract, Order)
 
-cancelOrder(conn, orderId)
+cancelOrder(twsconn, orderId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{
+  \item{twsconn}{
 A twsConnection object.
 }
   \item{Contract}{

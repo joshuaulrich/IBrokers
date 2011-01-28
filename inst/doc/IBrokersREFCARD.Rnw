@@ -24,7 +24,9 @@
 
 \usepackage{multicol}
 \usepackage{color}
-\definecolor{eWrapper}{rgb}{0.3,0.3,0.3}
+%\definecolor{eWrapper}{rgb}{0.3,0.3,0.3}
+%\definecolor{eWrapper}{rgb}{0.882,0.329,0.09}
+\definecolor{eWrapper}{rgb}{1,0.49,0.13}
 \definecolor{func}{rgb}{0,0,0.6}
 
 \setlength{\textheight}{7.5 in}
@@ -57,8 +59,11 @@
 \newcommand{\Rfunc}[1]{\mbox{\texttt{#1}}}
 
 \begin{multicols}{3}
+<<setup, echo=FALSE>>=
+options(continue="  ")
+@
 {\Large IBrokers Reference Card}\\
-{\small IBrokers 0.2-7; TWS API 9.62}
+{\small IBrokers 0.9-0; TWS API 9.64}
 
 \vskip 15pt
 
@@ -86,9 +91,9 @@ setting connection parameters external to IBrokers. Once
 enabled, the following commands can be used for connections
 and details.
 \vskip 5pt
-\key{connect}{twsConnect}
+\key{connect}{twsConnect, ibgConnect}
 \key{disconnect}{twsDisconnect, close}
-\key{is a tws connection}{is.twsConnection}
+\key{check connection}{is.twsConnection, isConnected}
 \key{set logging level}{setServerLogLevel}
 \key{check server version}{serverVersion}
 \key{request current time}{reqCurrentTime}
@@ -111,6 +116,8 @@ the constructors may need more or less detail.
 \key{create future contract}{twsFuture, twsFUT}
 \key{create future option contract}{twsFutureOpt, twsFOP}
 \key{create currency contract}{twsCurrency, twsCASH}
+\key{create combo}{twsBAG, twsComboLeg}
+\key{create contract for difference}{twsCFD}
 }
 
 \vskip 10pt
@@ -125,6 +132,8 @@ IBrokers calls will accept \texttt{Contract} arguments of
 \vskip 5pt
 \key{request contract(s) description}{reqContractDetails}
 \key{extract \Rclass{twsContract} from details}{as.twsContract}
+\vskip 5pt
+\ewrappers{contractDetails, bondContractDetails, contractDetailsEnd}
 }
 
 \vskip 10pt
@@ -201,6 +210,41 @@ Year requests are limited to 1 year.
 
 \vskip 10pt
 
+\vbox{\head{Fundamental Data}
+Reuters fundamental data
+\vskip 5pt
+\key{request fundamental data}{reqFundamentalData}
+\key{cancel fundamental data}{cancelFundamentalData}
+\vskip 5pt
+\ewrappers{fundamentalData}
+}
+
+\vskip 10pt
+
+\vbox{\head{News Bulletins}
+Subscribe to news bulletins from Interactive Brokers.
+\vskip 5pt
+\key{subscribe}{reqNewsBulletins}
+\key{unsubscribe}{cancelNewsBulletins}
+\vskip 5pt
+\ewrappers{newsBulletins}
+}
+
+\vskip 10pt
+
+\vbox{\head{Pricing}
+Calculate option values, price and implied volatility,
+via the TWS engine.
+\vskip 5pt
+\key{calculate option price}{calculateOptionPrice}
+\key{calculate option volatility}{calculateImpliedVolatility}
+\vskip 5pt
+\ewrappers{tickOptionCalculation}
+}
+
+%\newpage
+\vskip 10pt
+
 \vbox{\head{Orders}
 Orders via the IB API, and the IBrokers API, require
 three primary components: A \Rclass{twsContract} object,
@@ -214,11 +258,24 @@ order id in the connection object.\par
 \key{next valid order id}{reqIds}
 \key{create order object}{twsOrder}
 \vskip 5pt
-\key{place order and process}{placeOrder}
-\key{place order (only)}{.placeOrder}
+\key{place order}{placeOrder}
 \key{cancel order}{cancelOrder}
 \vskip 5pt
+\key{exercise options}{exerciseOptions}
+\vskip 5pt
+\key{open orders}{reqOpenOrders}
+\key{all open orders}{reqAllOpenOrders, reqAutoOpenOrders}
+\vskip 5pt
 \ewrappers{orderStatus, openOrder, nextValidId, execDetails}
+\vskip 5pt
+<<orders, eval=FALSE, keep.source=TRUE>>=
+placeOrder(twsconn=tws,
+           Contract=twsSTK("AAPL"), 
+           Order=twsOrder(reqIds(tws),
+                          "BUY", 
+                          10, 
+                          "MKT"))
+@
 }
 
 \vskip 10pt
@@ -228,11 +285,22 @@ Account data is requested on a subscription basis. The user
 subscribes to a continuously updated feed from the TWS
 by passing the connection object and the \texttt{subscribe}
 argument set to \texttt{TRUE}; unsubscribe with \texttt{FALSE}.
+The \texttt{.reqAccountUpdates} function will return
+immediately and will begin or end a subscription; account
+messages must be handled by the user. \texttt{reqAccountUpdates}
+(without the prepended `dot') will subscribe,
+collect data, and unsubscribe -- returning an
+\texttt{AccountUpdate} object which may be processed
+with \texttt{twsPortfolioValue}.
 \vskip 5pt
-\key{subscribe and process}{reqAccountUpdates}
-\key{subscribe (only)}{.reqAccountUpdates}
+\key{get account data}{reqAccountUpdates}
+\key{subscribe account updates (only)}{.reqAccountUpdates}
+\key{cancel account updates}{cancelAccountUpdates}
 \vskip 5pt
-\ewrappers{updateAccountValue, updatePortfolio, \mbox{updateAccountTime}}
+\key{view portfolio}{twsPortfolioValue}
+\vskip 5pt
+\ewrappers{updateAccountValue, updatePortfolio, \mbox{updateAccountTime},
+           accountDownloadEnd}
 }
 
 \vskip 10pt
@@ -248,6 +316,49 @@ it being discarded.
 \vskip 5pt
 \ewrappers{execDetails, execDetailsEnd}
 }
+
+\vskip 10pt
+
+\vbox{\head{Financial Advisors}
+Funtions for FA-enabled accounts
+\vskip 5pt
+\key{request list of accounts}{reqManagedAccts}
+\key{request FA configuration (XML)}{requestFA}
+\key{change FA configuration}{replaceFA}
+\vskip 5pt
+\ewrappers{managedAccts, receiveFA}
+}
+
+\vskip 10pt
+
+\vbox{\head{Scanner}
+Interactive Brokers scanner data ...
+\vskip 5pt
+\key{scanner params (XML)}{reqScannerParameters}
+\key{scanner subscription object}{twsScannerSubscription}
+\key{return scanner results}{reqScannerSubscription}
+\vskip 5pt
+\key{subscribe to scanner}{.reqScannerSubscription}
+\key{unsubscribe to scanner}{cancelScannerSubscription}
+\vskip 5pt
+\ewrappers{scannerParameters, scannerData}
+}
+
+\vskip 10pt
+
+\vbox{\head{eWrapper}
+eWrappers contain the callback methods
+for all incoming message types. These are closures
+in R that contain functions and data. These functions
+are called based on incoming message types from the
+TWS.
+\vskip 5pt
+\key{new eWrapper}{eWrapper}
+\key{market data to vector(s)}{eWrapper.data}
+\key{market data to csv}{eWrapper.MktData.CSV}
+\vskip 5pt
+}
+
 
 \vskip 10pt
 

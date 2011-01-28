@@ -51,10 +51,10 @@ for the the default returned object of \code{reqAccountUpdates}.
 \dontrun{
   tws <- twsConnect()
 
-  reqAccountUpdates(tws)        # this will require a user interrupt
+  reqAccountUpdates(tws)        # this will return a AccountUpdate object
   .reqAccountUpdates(tws)       # this will return immediately
 
-  .reqAccountUpdates(tws, "0")  # cancel the request
+  .reqAccountUpdates(tws, FALSE)  # cancel the request
   cancelAccountUpdates(tws)     # the same
 
   twsDisconnect(tes)

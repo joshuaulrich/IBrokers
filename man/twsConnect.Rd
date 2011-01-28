@@ -19,9 +19,9 @@ ibgConnect(clientId = 1, host = 'localhost',
            port = 4001, verbose = TRUE, timeout = 5,
            filename = NULL)
 
-twsDisconnect(con)
+twsDisconnect(twsconn)
 
-isConnected(x)
+isConnected(twsconn)
 is.twsConnection(x)
 is.twsPlayback(x)
 }
@@ -32,7 +32,7 @@ is.twsPlayback(x)
   \item{verbose}{ should the connection attempt be verbose }
   \item{timeout}{ length in seconds before aborting attempt }
   \item{filename}{ file containing recorded TWS data }
-  \item{con}{ a valid \code{twsConnection} object }
+  \item{twsconn}{ a valid \code{twsConnection} object }
   \item{x}{ a connection to be checked }
 }
 \details{
