@@ -92,7 +92,7 @@ function(conn, Contract,endDateTime,
   response <- character(0)  # currently read response
 
   if(verbose) {
-    cat('waiting for TWS reply ...')
+    cat('waiting for TWS reply on',Contract$symbol,'...')
     iter <- 1
     flush.console()
   }
@@ -194,9 +194,9 @@ reqHistory <- function(conn, Contract, barSize="1 min", ...)
     endDateTime <- Sys.Date()-seq(360, 0, -5)
     duration <- "5 D"
   } else
-  if(barSize == "15 min") {
+  if(barSize == "15 mins") {
     endDateTime <- Sys.Date()-seq(360, 0, -10)
     duration <- "10 D"
   }
-  reqHistoricalData(conn, Contract, barSize=barSize, duration=duration, endDateTime=endDateTime)
+  reqHistoricalData(conn, Contract, barSize=barSize, duration=duration, endDateTime=endDateTime, ...)
 }

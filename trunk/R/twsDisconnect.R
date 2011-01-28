@@ -1,7 +1,7 @@
-twsDisconnect <- function(con) {
-  if(!is.twsConnection(con))
+twsDisconnect <- function(twsconn) {
+  if(!is.twsConnection(twsconn))
     stop("not a 'tws' connection")
-  close(con[[1]])
+  close(twsconn)
 }
 
 close.twsConnection <- function(con, ...)
@@ -11,5 +11,6 @@ close.twsConnection <- function(con, ...)
 
 close.twsconn <- function(con, ...)
 {
+  con$connected <- FALSE
   close(con$conn)
 } 

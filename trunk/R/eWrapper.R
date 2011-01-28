@@ -13,7 +13,7 @@ eWrapper <- function(debug=FALSE) {
   #   the third is the debug version (raw data console output)
 
   if(is.null(debug)) {
-    errorMessage <- function(curMsg, msg, timestamp, file, ...)
+    errorMessage <- function(curMsg, msg, timestamp, file, twsconn, ...)
     {
       cat(msg,"\n")
       #c(curMsg, msg)
@@ -143,7 +143,7 @@ eWrapper <- function(debug=FALSE) {
     tickPrice <- tickSize <-
     tickOptionComputation <- tickGeneric <-
     tickString <- tickEFP <-
-    orderStatus <- errorMessage <- openOrder <- openOrderEnd <-
+    orderStatus <- openOrder <- openOrderEnd <-
     updateAccountValue <- updateAccountTime <- updatePortfolio <- 
     accountDownloadEnd <- nextValidId <-
     contractDetails <- bondContractDetails <-
@@ -157,6 +157,9 @@ eWrapper <- function(debug=FALSE) {
       function(curMsg, msg, timestamp, file, ...) {
         cat(as.character(timestamp),curMsg, msg,"\n",file=file[[1]], append=TRUE,...) 
       }
+    errorMessage <- function(curMsg, msg, timestamp, file, twsconn, ...) {
+      cat(as.character(timestamp),curMsg, msg,"\n",file=file[[1]], append=TRUE,...) 
+    }
   }
 
   eW <- list(
