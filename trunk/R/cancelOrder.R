@@ -1,12 +1,12 @@
-cancelOrder <- .cancelOrder <- function(conn, orderId)
+cancelOrder <- .cancelOrder <- function(twsconn, orderId)
 {
-  if(!is.twsConnection(conn))
+  if(!is.twsConnection(twsconn))
     stop('requires twsConnection object')
 
   if(missing(orderId))
     stop('valid "orderId" required')
 
-  con <- conn[[1]]
+  con <- twsconn[[1]]
   VERSION <- "1"
 
   writeBin(.twsOutgoingMSG$CANCEL_ORDER, con)

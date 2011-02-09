@@ -1,5 +1,6 @@
 \name{reqAccountUpdates}
 \alias{reqAccountUpdates}
+\alias{cancelAccountUpdates}
 \alias{twsPortfolioValue}
 \alias{.reqAccountUpdates}
 \title{ Request Account Updates }
