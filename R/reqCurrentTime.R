@@ -12,11 +12,11 @@ function(conn) {
 }
 
 reqCurrentTime <-
-function(conn) {
-  if(!is.twsConnection(conn))
+function(twsconn) {
+  if(!is.twsConnection(twsconn))
     stop('requires twsConnection object')
 
-  con <- conn[[1]]
+  con <- twsconn[[1]]
 
   writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
   writeBin('1',con)
@@ -29,6 +29,7 @@ function(conn) {
     currentTime <- processMsg(curMsg,
                               con,
                               eWrapper=e_current_time,
+                              twsconn=twsconn,
                               timestamp=NULL, file="")
     if(curMsg == .twsIncomingMSG$CURRENT_TIME)
       break

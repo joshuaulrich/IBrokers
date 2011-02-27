@@ -98,14 +98,15 @@ function(conn, Contract,endDateTime,
   }
 
   while(waiting) {
-    socketSelect(list(con), FALSE, NULL)
+    if( !socketSelect(list(con), FALSE, 0.25))
+      next
     curMsg <- readBin(con,character(),1)
     if(verbose) {
       cat('.')
       if(iter %% 30 == 0) cat('\n')
       flush.console()
       iter <- iter + 1
-      Sys.sleep(0.25)
+      #Sys.sleep(0.25)
     }
 
     if(length(curMsg) > 0) {
