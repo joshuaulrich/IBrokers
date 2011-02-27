@@ -1,12 +1,14 @@
 ibgConnect <- function(clientId=1, host="localhost",
                                    port=4001, verbose=TRUE,
-                                   timeout=5, filename=NULL) {
+                                   timeout=5, filename=NULL,
+                                   blocking=FALSE) {
   twsConnect(clientId, host, port, verbose, timeout, filename)
 }
 
 twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
                                       port=7496, verbose=TRUE,
-                                      timeout=5, filename=NULL) {
+                                      timeout=5, filename=NULL,
+                                      blocking=FALSE) {
    if(is.null(getOption('digits.secs'))) 
      options(digits.secs=6)
 
@@ -16,7 +18,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
    if(is.null(filename)) {
      start.time <- Sys.time()
      s <- socketConnection(host = host, port = port,
-                           open='ab')
+                           open='ab', blocking=blocking)
 
      on.exit(close(s))
      if(!isOpen(s)) { 
@@ -28,7 +30,8 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
      
      while(TRUE) {
-       socketSelect(list(s), FALSE, NULL)
+       if( !socketSelect(list(s), FALSE, 0.1))
+         next
        curMsg <- readBin(s, character(), 1)
        if(length(curMsg) > 0) {
          if(curMsg == .twsIncomingMSG$ERR_MSG) {

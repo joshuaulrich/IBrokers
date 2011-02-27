@@ -14,10 +14,10 @@ Workstation (TWS) or IB Gateway (IBG).
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
            port = 7496, verbose = TRUE, timeout = 5,
-           filename = NULL)
+           filename = NULL, blocking=FALSE)
 ibgConnect(clientId = 1, host = 'localhost', 
            port = 4001, verbose = TRUE, timeout = 5,
-           filename = NULL)
+           filename = NULL, blocking=FALSE)
 
 twsDisconnect(twsconn)
 
