@@ -14,10 +14,10 @@ Workstation (TWS) or IB Gateway (IBG).
 \usage{
 twsConnect(clientId = 1, host = 'localhost', 
            port = 7496, verbose = TRUE, timeout = 5,
-           filename = NULL, blocking=FALSE)
+           filename = NULL, blocking=.Platform$OS.type=="windows")
 ibgConnect(clientId = 1, host = 'localhost', 
            port = 4001, verbose = TRUE, timeout = 5,
-           filename = NULL, blocking=FALSE)
+           filename = NULL, blocking=.Platform$OS.type=="windows")
 
 twsDisconnect(twsconn)
 
@@ -32,6 +32,7 @@ is.twsPlayback(x)
   \item{verbose}{ should the connection attempt be verbose }
   \item{timeout}{ length in seconds before aborting attempt }
   \item{filename}{ file containing recorded TWS data }
+  \item{blocking}{ should a blocking connection be established. See details. }
   \item{twsconn}{ a valid \code{twsConnection} object }
   \item{x}{ a connection to be checked }
 }
@@ -45,6 +46,14 @@ If \code{filename} is set to a file containing
 data recorded in the standard TWS format - calls
 using this connection will playback the recorded
 data.
+
+While the \pkg{IBrokers} package is fully cross-platform,
+the behavior of sockets varies by operating system implementation.
+In general, setting \code{blocking=TRUE} on Windows (the default on
+Windows) results in more consistent and reliable connections.
+This option is only exposed to enable debugging of platform differences
+and optimization - and is not intended to be altered except in
+those cases.
 }
 \value{
 A \code{twsconn} object.

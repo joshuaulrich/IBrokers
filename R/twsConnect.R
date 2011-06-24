@@ -1,14 +1,14 @@
 ibgConnect <- function(clientId=1, host="localhost",
                                    port=4001, verbose=TRUE,
                                    timeout=5, filename=NULL,
-                                   blocking=FALSE) {
+                                   blocking=.Platform$OS.type=="windows") {
   twsConnect(clientId, host, port, verbose, timeout, filename)
 }
 
 twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
                                       port=7496, verbose=TRUE,
                                       timeout=5, filename=NULL,
-                                      blocking=FALSE) {
+                                      blocking=.Platform$OS.type=="windows") {
    if(is.null(getOption('digits.secs'))) 
      options(digits.secs=6)
 
@@ -186,8 +186,10 @@ isConnected <- function(twsconn)
       FALSE
     } else TRUE 
   }
-  if( !is.twsConnection(twsconn))
-    stop("isConnected requires a twsconn object")
+  if( !is.twsConnection(twsconn)) {
+    warning("isConnected requires a twsconn object")
+    return(FALSE)
+  }
 
   if( !is.null(twsconn$connected)) {
     return( is_open(twsconn[[1]]) && twsconn$connected )

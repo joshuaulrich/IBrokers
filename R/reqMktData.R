@@ -29,6 +29,7 @@ function (conn, Contract,
         signals <- c(.twsOutgoingMSG$REQ_MKT_DATA,
                      VERSION,
                      ticker_id,  # why?
+                     Contract[[n]]$conId,
                      Contract[[n]]$symbol,
                      Contract[[n]]$sectype,
                      Contract[[n]]$expiry,
@@ -96,7 +97,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
     if(snapshot == '1' && missing(tickGenerics)) tickGenerics <- ''
   
-    VERSION <- "8"
+    VERSION <- "9"
  
     fullSnapshot <- data.frame()
     symbols. <- NULL
@@ -117,6 +118,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         signals <- c(.twsOutgoingMSG$REQ_MKT_DATA,
                      VERSION,
                      ticker_id,  # why?
+                     Contract[[n]]$conId,
                      Contract[[n]]$symbol,
                      Contract[[n]]$sectype,
                      Contract[[n]]$expiry,

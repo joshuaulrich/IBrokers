@@ -129,3 +129,5 @@ S3method(print,eventAccountValue)
 S3method(twsPortfolioValue, eWrapper)
 S3method(twsPortfolioValue, AccountUpdate)
 
+S3method(summary, AccountUpdate)
+
