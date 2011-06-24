@@ -17,7 +17,8 @@ reqHistoricalData(conn,
                   duration = "1 M",
                   useRTH = "1",
                   whatToShow = "TRADES", 
-                  time.format = "1",
+                  timeFormat = "1",
+                  tzone = "",
                   verbose = TRUE,
                   tickerId = "1",
                   eventHistoricalData,
@@ -35,7 +36,8 @@ reqHistory(conn, Contract, barSize, ...)
   \item{duration}{ time span the request will cover }
   \item{useRTH}{ limited to regular trading hours }
   \item{whatToShow}{ type of data to be extracted }
-  \item{time.format}{ POSIX style or seconds from 1970-01-01 }
+  \item{timeFormat}{ POSIX style or seconds from 1970-01-01 }
+  \item{tzone}{ time zone of the resulting intraday series (if applicable) }
   \item{verbose}{ should progress be documented }
   \item{tickerId}{ a unique id to associte with the request }
   \item{eventHistoricalData}{ callback function to process data }

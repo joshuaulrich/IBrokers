@@ -24,3 +24,7 @@ twsPortfolioValue.AccountUpdate <- function(x, zero.pos=TRUE, ...) {
     portf
 }
 
+summary.AccountUpdate <- function(object, ...) {
+  twsPortfolioValue.AccountUpdate(object, ...)
+}
+

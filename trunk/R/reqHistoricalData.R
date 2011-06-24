@@ -1,7 +1,7 @@
 reqHistoricalData <-
 function(conn, Contract,endDateTime,
          barSize='1 day',duration='1 M',
-         useRTH='1',whatToShow='TRADES',time.format='1',
+         useRTH='1',whatToShow='TRADES',timeFormat='1',tzone="",
          verbose=TRUE, tickerId='1',
          eventHistoricalData, file)
 {
@@ -12,7 +12,7 @@ function(conn, Contract,endDateTime,
     rHDargs <- list(conn=conn,Contract=Contract,
                     barSize=barSize, duration=duration,
                     useRTH=useRTH, whatToShow=whatToShow,
-                    time.format=time.format, verbose=verbose, tickerId=tickerId)
+                    timeFormat=timeFormat, tzone=tzone, verbose=verbose, tickerId=tickerId)
     if(!missing(eventHistoricalData)) 
       rHDargs$eventHistoricalData <- eventHistoricalData
     if(!missing(file))
@@ -77,7 +77,7 @@ function(conn, Contract,endDateTime,
                Contract$currency, Contract$local,
                Contract$include_expired,
                endDateTime, barSize, duration, useRTH,
-               whatToShow, time.format)
+               whatToShow, timeFormat)
 #  signals <- c('20','4','1',
 #               'QQQQ','STK','',
 #               '0.0','','',
@@ -125,6 +125,7 @@ function(conn, Contract,endDateTime,
         nbin <- as.numeric(header[5])*9
         req.from <- header[3]
         req.to   <- header[4]
+        Sys.sleep(2) # add delay for Windows issues - readBin on M$ is bad, bad, bad...
         response <- readBin(con,character(),nbin)
         waiting <- FALSE
         if(verbose) {
@@ -140,7 +141,12 @@ function(conn, Contract,endDateTime,
     # the default: return an xts object
     cm <- matrix(response,nc=9,byrow=TRUE)
     cm[,8] <- ifelse(cm[,8]=='false',0,1)
-    dts <- gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE)
+    if(timeFormat==2 && !nchar(cm[1,1]) > 8) {  # IB ignores the timeFormat if daily returns
+      dts <- structure(as.numeric(cm[,1]), class=c("POSIXct","POSIXt"), tzone=tzone)
+    } else {
+      dts <- structure(as.numeric(as.POSIXlt(gsub('(\\d{4})(\\d{2})(\\d{2})','\\1-\\2-\\3',cm[,1],perl=TRUE))),
+                       class=c("POSIXct","POSIXt"), tzone=tzone)
+    }
 
     # if file is specified - dump to file instead
     if(!missing(file)) {
@@ -154,7 +160,8 @@ function(conn, Contract,endDateTime,
       invisible(return())
     }
 
-    x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=structure(as.numeric(as.POSIXlt(dts)), class=c("POSIXt", "POSIXct")))
+    #x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=structure(as.numeric(as.POSIXlt(dts)), class=c("POSIXt", "POSIXct")))
+    x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=dts, tzone=tzone)
     localsymbol <- reqContractDetails(conn, Contract)[[1]]$contract$local
     colnames(x) <- paste(localsymbol, c('Open','High','Low','Close','Volume',
                      'WAP','hasGaps','Count'), sep='.')
