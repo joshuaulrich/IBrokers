@@ -1,4 +1,4 @@
-eWrapper <- function(debug=FALSE) {
+eWrapper <- function(debug=FALSE, errfile=stderr()) {
   # environment for data to be stored/accessed between messages
   # an example of this functionality is for the "symbols" variable
   # that can be set (by default) to display contract names
@@ -15,7 +15,7 @@ eWrapper <- function(debug=FALSE) {
   if(is.null(debug)) {
     errorMessage <- function(curMsg, msg, timestamp, file, twsconn, ...)
     {
-      cat(msg,"\n")
+      cat(msg,"\n", file=errfile)
       #c(curMsg, msg)
     }
     tickPrice <- tickSize <-
