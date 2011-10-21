@@ -1,5 +1,5 @@
 twsIND <- twsIndex <-
-function(symbol, exch="")
+function(symbol, exch="", currency="", local="")
 {
   twsContract(conId="",
               symbol,
@@ -8,9 +8,9 @@ function(symbol, exch="")
               primary="",
               expiry="",
               strike="",
-              currency="",
+              currency=currency,
               right="",
-              local="",
+              local=local,
               multiplier="",
               NULL,NULL,
               include_expired="")
