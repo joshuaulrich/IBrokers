@@ -1,6 +1,5 @@
 `.onLoad` <- function(libname,pkgname) {
-  message("IBrokers version 0.9-4:")
-  message("Implementing API Version 9.64")
-  cat("This software comes with NO WARRANTY.  Not intended for production use!\n")
-  message("See ?IBrokers for details")
+  packageStartupMessage("IBrokers version 0.9-5.  Implementing API Version 9.64")
+  do.call("cat",list("\nIBrokers comes with NO WARRANTY.  Not intended for production use!\n\n"))
+  packageStartupMessage("See ?IBrokers for details.")
 }

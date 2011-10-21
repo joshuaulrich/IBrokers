@@ -11,7 +11,7 @@ Create an eWrapper closure to allow for custom
 incoming message management.
 }
 \usage{
-eWrapper(debug = FALSE)
+eWrapper(debug = FALSE, errfile=stderr())
 
 eWrapper.data(n)
 
@@ -20,6 +20,7 @@ eWrapper.RealTimeBars.CSV(n=1)
 }
 \arguments{
   \item{debug}{ should debugging be enabled }
+  \item{errfile}{ where error messages are directed (stderr) }
   \item{n}{ number of contracts being watched }
 }
 \details{
