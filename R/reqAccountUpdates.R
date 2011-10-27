@@ -45,8 +45,8 @@ function (conn,
     contract <- twsContract(conId = msg[2], symbol = msg[3], 
       sectype = msg[4], exch = msg[9], primary = msg[9], expiry = msg[5], 
       strike = msg[6], currency = msg[10], right = msg[7], 
-      local = msg[11], multiplier = msg[8], combo_legs_desc = NULL, 
-      comboleg = NULL, include_expired = NULL)
+      local = msg[11], multiplier = msg[8], combo_legs_desc = "", 
+      comboleg = "", include_expired = "")
     portfolioValue <- list()
     portfolioValue$position <- as.numeric(msg[12])
     portfolioValue$marketPrice <- as.numeric(msg[13])
