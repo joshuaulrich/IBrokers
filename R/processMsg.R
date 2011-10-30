@@ -46,17 +46,18 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
   } 
   else { 
     #dataCON <- get("DATACON", .GlobalEnv)[[1]]
-    while(TRUE) {
+    tryCatch(
+    while(isConnected(twsCon)) {
       if( !socketSelect(list(con), FALSE, 0.25))
         next
-      #curMsg <- readBin(con, character(), 1)
       curMsg <- .Internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
       if(!is.null(timestamp)) {
         processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, twsCon, ...)
       } else {
         processMsg(curMsg, con, eWrapper, timestamp, file, twsCon, ...)
       }
-    }
+    }, error=function(e) { close(twsCon); stop("IB connection error. Connection closed", call.=FALSE) }
+    )
   }
 }
 

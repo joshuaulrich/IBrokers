@@ -13,7 +13,8 @@ structure(list(CUSTOMER=0, FIRM=1,
                'EMPTY_STR'))
 
 `twsOrder` <-
-function(orderId,action="BUY",
+function(orderId,
+         action="BUY",
          totalQuantity="10",
          orderType="LMT",
          lmtPrice="0.0",
@@ -74,6 +75,8 @@ function(orderId,action="BUY",
          clientId="", permId=""
         )
 {
+  if(missing(orderId))
+    orderId <- ""
   structure(
                  # main order fields
             list(orderId=orderId,

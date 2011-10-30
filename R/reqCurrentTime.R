@@ -1,6 +1,7 @@
 .reqCurrentTime <-
 function(conn) {
-
+  if(!isConnected(conn))
+    stop('peer has gone away. check your IB connection',call.=FALSE)
   if(!is.twsConnection(conn))
     stop('requires twsConnection object')
 
@@ -13,17 +14,11 @@ function(conn) {
 
 reqCurrentTime <-
 function(twsconn) {
-  if(!is.twsConnection(twsconn))
-    stop('requires twsConnection object')
-
+  .reqCurrentTime(twsconn)
   con <- twsconn[[1]]
-
-  writeBin(.twsOutgoingMSG$REQ_CURRENT_TIME,con)
-  writeBin('1',con)
-
   e_current_time <- eWrapper()
   e_current_time$currentTime <- function(curMsg, msg, timestamp, file, ...) { msg[2] }
-  while (TRUE) {
+  while (isConnected(twsconn)) {
     socketSelect(list(con), FALSE, NULL)
     curMsg <- readBin(con, character(), 1)
     currentTime <- processMsg(curMsg,

@@ -15,6 +15,8 @@ function(twsconn,Contract,Order)
  #VERSION <- "28" # Version as of API 9.62
   VERSION <- "29" # Version as of API 9.63
  #VERSION <- "30" # Version as of API 9.64
+  if(Order$orderId == "")
+    Order$orderId <- reqIds(twsconn)
 
 # write order {{{
   order <- c(.twsOutgoingMSG$PLACE_ORDER,

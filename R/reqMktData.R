@@ -180,7 +180,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
       return(as.character(as.numeric(tickerId):length(Contract)))
     }
     if(snapshot=="0")
-      on.exit(cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
+      on.exit(if(isOpen(con[[1]])) cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
 
     if(!is.list(file))
       file <- list(file)
