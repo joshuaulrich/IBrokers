@@ -35,7 +35,10 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
        curMsg <- readBin(s, character(), 1)
        if(length(curMsg) > 0) {
          if(curMsg == .twsIncomingMSG$ERR_MSG) {
-           if(!errorHandler(s,verbose)) stop() 
+           close(s)
+           on.exit()
+           return( twsConnect(clientId+1, host, port, verbose, timeout, filename, blocking) )
+           #if(!errorHandler(s,verbose)) stop() 
          } else {
          SERVER_VERSION <- curMsg
          socketSelect(list(s), FALSE, NULL)
@@ -45,7 +48,10 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
 
          if(curMsg == .twsIncomingMSG$ERR_MSG) {
            errMsg <- readBin(s, character(), 4)
-           stop(errMsg[4], call.=FALSE)
+           close(s)
+           on.exit()
+           return( twsConnect(clientId+1, host, port, verbose, timeout, filename, blocking) )
+           #stop(errMsg[4], call.=FALSE)
          }
 
          NEXT_VALID_ID <- readBin(s,character(),2)[2]
