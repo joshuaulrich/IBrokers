@@ -181,6 +181,9 @@ is.twsPlayback <- function(x)
 
 isConnected <- function(twsconn)
 {
+#  if( !.Call("still_alive", twsconn[[1]]))
+#    return(FALSE)
+
   is_open <- function(con) {
     if(inherits(try(isOpen(con), silent=TRUE), 'try-error')) {
       FALSE

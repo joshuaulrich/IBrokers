@@ -1,3 +1,5 @@
+#useDynLib(IBrokers)
+
 export(twsConnect,
        twsConnect2,             # experimental connection object
        ibgConnect,
