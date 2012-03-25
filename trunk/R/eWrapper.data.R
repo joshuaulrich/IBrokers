@@ -13,7 +13,7 @@ eWrapper.data <- function(n) {
 #  get.data <- function() return(.data.)
 #
   eW <- eWrapper(NULL)  # use basic template
-  eW$assign.Data("data", rep(list(structure(.xts(matrix(rep(NA_real_,7),nc=7),0),
+  eW$assign.Data("data", rep(list(structure(.xts(matrix(rep(NA_real_,7),ncol=7),0),
                                       .Dimnames=list(NULL,
                                                      c("BidSize","BidPrice",
                                                        "AskPrice","AskSize",

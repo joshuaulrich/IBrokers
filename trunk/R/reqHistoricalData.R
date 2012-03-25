@@ -63,7 +63,7 @@ function(conn, Contract,endDateTime,
     endDateTime <- strftime(
                      as.POSIXlt(as.POSIXct('1970-01-01')+
                      as.numeric(reqCurrentTime(conn))),
-                     format='%Y%m%d %H:%M:%S',use=FALSE)
+                     format='%Y%m%d %H:%M:%S',usetz=FALSE)
 
   VERSION <- "4"
 
@@ -139,7 +139,7 @@ function(conn, Contract,endDateTime,
   
   if(missing(eventHistoricalData)) {
     # the default: return an xts object
-    cm <- matrix(response,nc=9,byrow=TRUE)
+    cm <- matrix(response,ncol=9,byrow=TRUE)
     cm[,8] <- ifelse(cm[,8]=='false',0,1)
     if(timeFormat==2 && !nchar(cm[1,1]) > 8) {  # IB ignores the timeFormat if daily returns
       dts <- structure(as.numeric(cm[,1]), class=c("POSIXct","POSIXt"), tzone=tzone)
@@ -161,7 +161,7 @@ function(conn, Contract,endDateTime,
     }
 
     #x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=structure(as.numeric(as.POSIXlt(dts)), class=c("POSIXt", "POSIXct")))
-    x <- xts(matrix(as.numeric(cm[,-1]),nc=8),order.by=dts, tzone=tzone)
+    x <- xts(matrix(as.numeric(cm[,-1]),ncol=8),order.by=dts, tzone=tzone)
     localsymbol <- reqContractDetails(conn, Contract)[[1]]$contract$local
     colnames(x) <- paste(localsymbol, c('Open','High','Low','Close','Volume',
                      'WAP','hasGaps','Count'), sep='.')

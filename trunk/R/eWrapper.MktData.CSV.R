@@ -1,7 +1,7 @@
 eWrapper.RealTimeBars.CSV <- function(n=1) {
   eW <- eWrapper(NULL)
   eW$assign.Data("data", 
-                 rep(list(structure(.xts(matrix(rep(NA_real_,7),nc=7),0),
+                 rep(list(structure(.xts(matrix(rep(NA_real_,7),ncol=7),0),
                                     .Dimnames=list(NULL,
                                                   c("Open","High",
                                                     "Low","Close",
@@ -32,7 +32,7 @@ eWrapper.RealTimeBars.CSV <- function(n=1) {
 
 eWrapper.MktData.CSV <- function(n=1) {
   eW <- eWrapper(NULL)  # use basic template
-  eW$assign.Data("data", rep(list(structure(.xts(matrix(rep(NA_real_,7),nc=7),0),
+  eW$assign.Data("data", rep(list(structure(.xts(matrix(rep(NA_real_,7),ncol=7),0),
                                       .Dimnames=list(NULL,
                                                      c("BidSize","BidPrice",
                                                        "AskPrice","AskSize",
