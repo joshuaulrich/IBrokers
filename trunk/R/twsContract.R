@@ -77,6 +77,13 @@ as.twsContract.twsContractDetails <- function(x, ...)
   x$contract
 }
 
+as.twsContract.twsComboLeg <- function(x) {
+  con <- twsContract()
+  con$conId <- x$conId
+  con$include_expired <- "1"
+  con
+}
+
 twsContractDetails <-
 function(version=NULL,
          contract=twsContract(),
