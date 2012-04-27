@@ -1,6 +1,6 @@
 ** WISHLIST for IBrokers **
 **                       **
-** July 14, 2008         **
+** As of 2012-04-27      **
 **                       **
 ***************************
 
@@ -18,4 +18,5 @@
   4.  reqBook
   5.  reqVolatility ???
 
+* add Bond data support
 

@@ -59,8 +59,8 @@ a viable alternative for IB-API interaction.  Don't be shy.
 \tabular{ll}{
 Package: \tab IBrokers\cr
 Type: \tab Package\cr
-Version: \tab 0.9-6\cr
-Date: \tab 2011-10-29\cr
+Version: \tab 0.9-7\cr
+Date: \tab 2012-04-27\cr
 License: \tab GPL-3\cr
 }
 The current API methods supported are:
