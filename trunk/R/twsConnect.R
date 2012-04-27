@@ -28,36 +28,36 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      CLIENT_VERSION <- "47"
 
      writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
+
+     eW <- eWrapper(NULL)
+     eW$.Data <- environment()
+     SERVER_VERSION <- NEXT_VALID_ID <- NULL
+     eW$nextValidId <- function(curMsg, msg, timestamp, file, ...) {
+       eW$.Data$NEXT_VALID_ID <- msg[1]
+     }
      
      while(TRUE) {
+       if( !is.null(NEXT_VALID_ID))
+         break
        if( !socketSelect(list(s), FALSE, 0.1))
          next
        curMsg <- readBin(s, character(), 1)
-       if(length(curMsg) > 0) {
-         if(curMsg == .twsIncomingMSG$ERR_MSG) {
-           close(s)
-           on.exit()
-           return( twsConnect(clientId+1, host, port, verbose, timeout, filename, blocking) )
-           #if(!errorHandler(s,verbose)) stop() 
-         } else {
-         SERVER_VERSION <- curMsg
-         socketSelect(list(s), FALSE, NULL)
-         CONNECTION_TIME <- readBin(s,character(),1)
-         socketSelect(list(s), FALSE, NULL)
-         curMsg <- readBin(s, character(), 1)
 
-         if(curMsg == .twsIncomingMSG$ERR_MSG) {
-           errMsg <- readBin(s, character(), 4)
-           close(s)
-           on.exit()
-           return( twsConnect(clientId+1, host, port, verbose, timeout, filename, blocking) )
-           #stop(errMsg[4], call.=FALSE)
-         }
-
-         NEXT_VALID_ID <- readBin(s,character(),2)[2]
-         break
-         }
+       if(is.null(SERVER_VERSION)) {
+         SERVER_VERSION <- curMsg[1]
+         CONNECTION_TIME <- readBin(s, character(), 1)
+         next
        }
+
+       if(curMsg == .twsIncomingMSG$ERR_MSG) {
+         errMsg <- readBin(s, character(), 4)
+         close(s)
+         on.exit()
+         return( twsConnect(clientId+1, host, port, verbose, timeout, filename, blocking) )
+       }
+
+       processMsg(curMsg, s, eW, NULL, "")
+
        if(Sys.time()-start.time > timeout) {
          close(s)
          stop('tws connection timed-out')
