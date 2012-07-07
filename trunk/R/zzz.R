@@ -3,3 +3,5 @@
   do.call("cat",list("\nIBrokers comes with NO WARRANTY.  Not intended for production use!\n\n"))
   packageStartupMessage("See ?IBrokers for details.")
 }
+
+.internal <- eval(parse(text=".Internal"))
