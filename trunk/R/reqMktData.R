@@ -26,6 +26,15 @@ function (conn, Contract,
     if(inherits(con, 'sockconn')) {
       # write to TWS connection
       for(n in 1:length(Contract)) {
+        if(Contract[[n]]$sectype=="BAG") {
+          bag <- length(Contract[[n]]$comboleg)
+          for(leg in 1:bag) {
+          bag <- c(bag,Contract[[n]]$comboleg[[leg]]$conId,
+                   Contract[[n]]$comboleg[[leg]]$ratio,
+                   Contract[[n]]$comboleg[[leg]]$action,
+                   Contract[[n]]$comboleg[[leg]]$exchange)
+          }
+        } else bag <- "0"
         signals <- c(.twsOutgoingMSG$REQ_MKT_DATA,
                      VERSION,
                      ticker_id,  # why?
@@ -40,7 +49,7 @@ function (conn, Contract,
                      Contract[[n]]$primary, 
                      Contract[[n]]$currency,
                      Contract[[n]]$local,
-                     "0",
+                     bag,
                      tickGenerics,
                      snapshot)
     
@@ -115,6 +124,15 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     if(inherits(con, 'sockconn')) {
       # write to TWS connection
       for(n in 1:length(Contract)) {
+        if(Contract[[n]]$sectype=="BAG") {
+          bag <- length(Contract[[n]]$comboleg)
+          for(leg in 1:bag) {
+          bag <- c(bag,Contract[[n]]$comboleg[[leg]]$conId,
+                   Contract[[n]]$comboleg[[leg]]$ratio,
+                   Contract[[n]]$comboleg[[leg]]$action,
+                   Contract[[n]]$comboleg[[leg]]$exchange)
+          }
+        } else bag <- "0"
         signals <- c(.twsOutgoingMSG$REQ_MKT_DATA,
                      VERSION,
                      ticker_id,  # why?
@@ -129,7 +147,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
                      Contract[[n]]$primary, 
                      Contract[[n]]$currency,
                      Contract[[n]]$local,
-                     "0",
+                     bag,
                      tickGenerics,
                      snapshot)
     
