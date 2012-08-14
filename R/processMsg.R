@@ -146,7 +146,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     eWrapper$historicalData(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$BOND_CONTRACT_DATA) {
-    stop("unimplemented as of yet")
+    warning("BOND_CONTRACT_DATA unimplemented as of yet")
     eWrapper$bondContractDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$SCANNER_PARAMETERS) {
