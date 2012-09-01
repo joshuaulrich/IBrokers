@@ -42,7 +42,7 @@ function (twsconn, Contract, optionPrice, underPrice, reqId = 1)
   con <- twsconn[[1]]
   while (TRUE) {
     socketSelect(list(con), FALSE, NULL)
-    curMsg <- .internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
+    curMsg <- readBin(con, "character", 1)
     msg <- processMsg(curMsg, con, eW, NULL, "") 
     if (curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) {
         return(msg)
