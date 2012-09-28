@@ -102,7 +102,6 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
   } else
   if(curMsg == .twsIncomingMSG$CONTRACT_DATA) {
     #msg <- readBin(con, character(), 21)
-    #msg <- .Internal(readBin(con, "character", 21L, NA_integer_, TRUE, FALSE))
     msg <- readBin(con, "character", 28)
     eWrapper$contractDetails(curMsg, msg, timestamp, file, ...)
   } else
@@ -183,7 +182,6 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     msg <- readBin(con, "character", 11)
 #    if(msg[3] == .twsTickType$MODEL_OPTION) {
 #      #msg <- c(msg, readBin(con, character(), 2))
-#      msg <- c(msg,.Internal(readBin(con, "character", 6L, NA_integer_, TRUE, FALSE)))
 #    } else msg <- c(msg,NA,NA)
     eWrapper$tickOptionComputation(curMsg, msg, timestamp, file, ...)
   } else

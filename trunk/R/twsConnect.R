@@ -33,7 +33,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      eW$.Data <- environment()
      SERVER_VERSION <- NEXT_VALID_ID <- NULL
      eW$nextValidId <- function(curMsg, msg, timestamp, file, ...) {
-       eW$.Data$NEXT_VALID_ID <- msg[1]
+       eW$.Data$NEXT_VALID_ID <- msg[2]
      }
      
      while(TRUE) {
