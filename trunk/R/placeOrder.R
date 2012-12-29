@@ -124,7 +124,7 @@ function(twsconn,Contract,Order)
 # }}}
 
   writeBin(order, con)  
-  assign(".Last.orderId", as.integer(Order$orderId), .GlobalEnv)
+  assign(".Last.orderId", as.integer(Order$orderId), .IBrokersEnv)
   invisible(as.integer(Order$orderId))
 }
 
