@@ -85,7 +85,7 @@ The current API methods supported are:
 \author{
 Jeffrey A. Ryan
 
-Maintainer: Jeffrey A. Ryan <jeff.a.ryan@gmail.com>
+Maintainer: Joshua M. Ulrich <josh.m.ulrich@gmail.com>
 
 }
 \references{

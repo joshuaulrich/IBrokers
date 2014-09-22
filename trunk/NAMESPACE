@@ -1,4 +1,5 @@
 #useDynLib(IBrokers)
+import(zoo, xts)
 
 export(twsConnect,
        twsConnect2,             # experimental connection object
