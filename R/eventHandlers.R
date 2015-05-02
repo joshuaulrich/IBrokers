@@ -248,188 +248,332 @@ file <- file[[1]]  # FIXME
 #
 ######################################################################
 
-`e_order_status` <- function(msg, contents, ...) {
-   eos <- list(orderId = contents[2],
-               status  = contents[3],
-               filled  = contents[4],
-               remaining = contents[5],
-               averageFillPrice = contents[6],
-               permId = contents[7],
-               parentId = contents[8],
-               lastFillPrice = contents[9],
-               clientId = contents[10],
-               whyHeld  = contents[11]
-  )
-  eos <- structure(eos,class="eventOrderStatus")
-  cat("TWS OrderStatus:",
-      paste("orderId=",eos$orderId,sep=""),
-      paste("status=",eos$status,sep=""),
-      paste("filled=",eos$filled,sep=""),
-      paste("remaining=",eos$remaining,sep=""),
-      paste("averageFillPrice=",eos$averageFillPrice,sep=""),"\n")
+e_order_status <- function (msg, contents, ...) 
+{
+    eos <- list(orderId = contents[2], status = contents[3], 
+        filled = contents[4], remaining = contents[5], averageFillPrice = contents[6], 
+        permId = contents[7], parentId = contents[8], lastFillPrice = contents[9], 
+        clientId = contents[10], whyHeld = contents[11])
+    eos <- structure(eos, class = "eventOrderStatus")
+    cat("TWS OrderStatus:", paste("orderId=", eos$orderId, sep = ""), 
+        paste("status=", eos$status, sep = ""), paste("filled=", 
+            eos$filled, sep = ""), paste("remaining=", eos$remaining, 
+            sep = ""), paste("averageFillPrice=", eos$averageFillPrice, 
+            sep = ""), "\n")
+    eos
 }
 
 
-`e_open_order` <- function(msg, contents, ...) {
-  eoo <- list(
-         # need to add contractId to twsContract...
-              contract   = twsContract(
-                             conId   = contents[3],
-                             symbol  = contents[4],
-                             sectype = contents[5],
-                             expiry  = contents[6],
-                             strike  = contents[7],
-                             right   = contents[8],
-                             exch    = contents[9],
-                             currency= contents[10],
-                             local   = contents[11],
-                             combo_legs_desc = contents[66],
-                             # the following are required to correctly specify a contract
-                             primary = NULL,
-                             include_expired = NULL,
-                             comboleg = NULL,
-                             multiplier = NULL
-                           ),
 
-              order      = twsOrder(
-                             orderId = contents[2],
-                             action  = contents[12],                           
-                             totalQuantity = contents[13],
-                             orderType     = contents[14],
-                             lmtPrice      = contents[15],
-                             auxPrice      = contents[16],
-                             tif           = contents[17],
-                             ocaGroup      = contents[18],
-                             account       = contents[19],
-                             openClose     = contents[20],
-                             origin        = contents[21],
-                             orderRef      = contents[22],
-                             clientId      = contents[23],
-                             permId        = contents[24],
-                             outsideRTH    = contents[25],
-                             hidden        = contents[26],
-                             discretionaryAmt = contents[27],
-                             goodAfterTime = contents[28],
-                             # skip deprecated amount contents[29]
-                             faGroup       = contents[30],
-                             faMethod      = contents[31],
-                             faPercentage  = contents[32],
-                             faProfile     = contents[33],
-                             goodTillDate  = contents[34],
-                             rule80A       = contents[35],
-                             percentOffset = contents[36],
-                             settlingFirm  = contents[37],
-                             shortSaleSlot = contents[38],
-                             designatedLocation = contents[39],
-                             auctionStrategy = contents[40],
-                             startingPrice = contents[41],
-                             stockRefPrice = contents[42],
-                             delta         = contents[43],
-                             stockRangeLower = contents[44],
-                             stockRangeUpper = contents[45],
-                             displaySize   = contents[46],
-                             blockOrder    = contents[47],
-                             sweepToFill   = contents[48],
-                             allOrNone     = contents[49],
-                             minQty        = contents[50],
-                             ocaType       = contents[51],
-                             eTradeOnly    = contents[52],
-                             firmQuoteOnly = contents[53],
-                             nbboPriceCap  = contents[54],
-                             parentId      = contents[55],
-                             triggerMethod = contents[56],
-                             volatility    = contents[57],
-                             volatilityType = contents[58],
-                             deltaNeutralOrderType = contents[59],
-                             deltaNeutralAuxPrice  = contents[60],
-                             continuousUpdate = contents[61],
-                             referencePriceType = contents[62],
-                             trailStopPrice     = contents[63],
-                             basisPoints        = contents[64],
-                             basisPointsType    = contents[65],
-                             # part of contract #66
-                             scaleInitLevelSize = contents[67],
-                             scaleSubsLevelSize = contents[68],
-                             scalePriceIncrement = contents[69],
-                             clearingAccount = contents[70],
-                             clearingIntent  = contents[71],
-                             notHeld         = contents[72],
-                             # this contingent on UnderComp Not Yet Available in IBrokers [74+]
-                             # algoStrategy [75+]
-                             whatIf          = contents[75]
-                           ),
+e_open_order <- function (curMsg, contents, ...)   
+{
+	tmp <- NULL
+	shift <- 0
+	version <- as.integer(contents[1])
+	if (version<32) stop('e_open_order: only version>=32 supported at this time')
+	if (contents[62]=='') stop('e_open_order: Expecting "None" or another non-empty value for for deltaNeutralOrderType')
+	if (contents[79]!='0') stop('e_open_order: Expecting comboLegsCount==0. NO comboLegs supoprted at the moment')
+	if (contents[80]!='0') stop('e_open_order: Expecting orderComboLegsCount==0. NO orderComboLegs supoprted at the moment')
+	if (contents[81]!='0') stop('e_open_order: Expecting smartComboRoutingParamsCount==0. NO smartComboRoutingParams supoprted at the moment')
+	if (contents[84]!='') stop('e_open_order: Expecting scalePriceIncrement=="". NO scalePriceIncrement supoprted at the moment')
+	if (contents[85]=='') {  #hedgeType=''
+		if (contents[90]!='0')  stop('e_open_order: Expecting underCompPresent=="0". NO underCompPresent supoprted at the moment')
+		if (contents[91]!='')  stop('e_open_order: Expecting algoStrategy=="". NO algoStrategy supoprted at the moment')
+	} else {  				#hedgeType='P', etc.... inserts a shift by one for the fields that follow.
+		shift <- 1
+		if (contents[91]!='0')  stop('e_open_order: Expecting underCompPresent=="0". NO underCompPresent supoprted at the moment')
+		if (contents[92]!='')  stop('e_open_order: Expecting algoStrategy=="". NO algoStrategy supoprted at the moment')
+	}   
+	
+    eoo <- list(
+		contract = twsContract(
+			conId = contents[3], 
+			symbol = contents[4], 
+			sectype = contents[5], 
+			expiry = contents[6], 
+			strike = contents[7], 
+			right = contents[8], 
+			multiplier = contents[9],
+			exch = contents[10], 
+			currency = contents[11], 
+			local = contents[12], 
+			tradingClass = contents[13] ,
+			combo_legs_desc = contents[78], # value dfined in order, further below...
+			primary = NULL, 
+			include_expired = NULL, 
+			comboleg = NULL			
+		), 
+        
+        order = twsOrder(
+			orderId = contents[2], 
+			action = contents[14], # 14
+			totalQuantity = contents[15], 
+			orderType = contents[16], 
+			lmtPrice = contents[17], 
+			auxPrice = contents[18], 
+			tif = contents[19], 
+			ocaGroup = contents[20], 
+			account = contents[21], 
+			openClose = contents[22],  
+			origin = contents[23], 
+			orderRef = contents[24], 
+			clientId = contents[25], 
+			permId = contents[26],  
+			outsideRTH = contents[27], 
+			hidden = contents[28], 
+			discretionaryAmt = contents[29], 
+			goodAfterTime = contents[30],   
+			#31 is deprecated
+			faGroup = contents[32],  
+			faMethod = contents[33], 
+			faPercentage = contents[34], 
+			faProfile = contents[35],  
+			goodTillDate = contents[36], 
+			rule80A = contents[37], 
+			percentOffset = contents[38], 
+			settlingFirm = contents[39], 
+			shortSaleSlot = contents[40], 
+			designatedLocation = contents[41], 
+			exemptCode = contents[42], 
+			auctionStrategy = contents[43], 
+			startingPrice = contents[44], 
+			stockRefPrice = contents[45], 
+			delta = contents[46], 
+			stockRangeLower = contents[47], 
+			stockRangeUpper = contents[48], 
+			displaySize = contents[49], 
+			blockOrder = contents[50], 
+			sweepToFill = contents[51], 
+			allOrNone = contents[52], 
+			minQty = contents[53], 
+			ocaType = contents[54], 
+			eTradeOnly = contents[55], 
+			firmQuoteOnly = contents[56], 
+			nbboPriceCap = contents[57], 
+			parentId = contents[58], 
+			triggerMethod = contents[59], 
+			volatility = contents[60], 
+			volatilityType = contents[61], 
+			deltaNeutralOrderType = contents[62], 
+			deltaNeutralAuxPrice = contents[63],  # 
+			
+			deltaNeutralConId = contents[64], 
+			deltaNeutralSettlingFirm = contents[65], 		
+			deltaNeutralClearingAccount = contents[66], 			
+			deltaNeutralClearingIntent = contents[67], 		
 
-              orderstate = twsOrderState(
-                             status      = contents[76],
-                             initMargin  = contents[77],
-                             maintMargin = contents[78],
-                             equityWithLoan = contents[79],
-                             commission  = contents[80],
-                             minCommission = contents[81],
-                             maxCommission = contents[82],
-                             commissionCurrency = contents[83],
-                             warningText = contents[84]
-                           )
-         )
-  eoo <- structure(eoo, class='eventOpenOrder')
-  cat("TWS OpenOrder:",
-      paste("orderId=",eoo$order$orderId,sep=""),
-      paste("conId=",eoo$contract$conId,sep=""),
-      paste("symbol=",eoo$contract$symbol,sep=""),
-      paste("status=",eoo$orderstate$status,sep=""),"\n")
-  eoo
+			deltaNeutralOpenClose = contents[68], 
+			deltaNeutralShortSale = contents[69], 		
+			deltaNeutralShortSaleSlot = contents[70], 		
+			deltaNeutralDesignatedLocation = contents[71], 		
+						
+			continuousUpdate = contents[72],  
+			referencePriceType = contents[73], 
+			trailStopPrice = contents[74], 
+			
+			trailingPercent = contents[75], 
+			
+			basisPoints = contents[76], 
+			basisPointsType = contents[77], 
+			#comboLegsDescrip = contents[78], # 78  # see above in Contract...combo_legs_desc
+
+			comboLegsCount = contents[79], # 79
+			comboLegs = NULL,
+#~ 			comboLegs = if (version >= 29 & !is.null(tmp)) {
+#~ 							if (as.integer(tmp)>0) {
+#~ 								shift <- shift + 1   #does not work. shift is only modified locally !?
+#~ 								ll <- list()
+#~ 								ll[1:(8L*as.integer(tmp))] <- contents[shift+66 +1:(8L*as.integer(tmp))]
+#~ 								shift <- shift + 8L*as.integer(tmp) -1
+#~ 								ll #not entirely correct since this should be a list of lists of length 8...
+#~ 							} else NULL
+#~ 						}  else NULL,
+
+			orderComboLegsCount = contents[80], # 80
+			orderComboLegs = NULL,
+#~ 			orderComboLegs = if (version >= 29 & !is.null(tmp)) {
+#~ 								if (as.integer(tmp)>0) {
+#~ 									shift <- shift + 1 #does not work. shift is only modified locally !?
+#~ 									ll <- list()
+#~ 									ll[1:(1L*as.integer(tmp))] <- contents[shift+66 +1:(1L*as.integer(tmp))]
+#~ 									shift <- shift + 1L*as.integer(tmp) -1
+#~ 									ll #not entirely correct since this should be a list of lists of length 1...
+#~ 								} else NULL
+#~ 							}  else NULL,
+			
+			smartComboRoutingParamsCount = contents[81], # 81		
+			smartComboRoutingParams = NULL,
+#~ 			smartComboRoutingParams = if (version >= 26 & !is.null(tmp)) {
+#~ 								if (as.integer(tmp)>0) {
+#~ 									shift <- shift + 1 #does not work. shift is only modified locally !?
+#~ 									ll <- list()
+#~ 									ll[1:(2L*as.integer(tmp))] <- contents[shift+66 +1:(2L*as.integer(tmp))]
+#~ 									shift <- shift + 2L*as.integer(tmp) -1
+#~ 									ll #not entirely correct since this should be a list of lists of length 2...
+#~ 								} else NULL
+#~ 							}  else NULL,
+						
+			scaleInitLevelSize = contents[82], 
+			scaleSubsLevelSize = contents[83], 
+			scalePriceIncrement = contents[84], 
+			
+			scalePriceAdjustValue = NULL,
+			scalePriceAdjustInterval = NULL,
+			scaleProfitOffset =  NULL,
+			scaleAutoReset =  NULL,
+			scaleInitPosition =  NULL,
+			scaleInitFillQty =  NULL,
+			scaleRandomPercent =  NULL,
+				
+			hedgeType = contents[85]->tmp, 
+			hedgeParam	= if (tmp!='') contents[86] else NULL,
+			
+			optOutSmartRouting  =  contents[shift+86],
+			
+			clearingAccount = contents[shift+87], 
+			
+			#clearingIntent = {cat('clearingIntent',contents[shift+88],' shift:',shift,'\n');contents[shift+88]}, 						
+			clearingIntent = contents[shift+88], 			
+			
+			#notHeld = {cat('notHeld',contents[shift+89],'\n');contents[shift+89]}, 
+			notHeld = contents[shift+89], 
+			
+			#underCompPresent = contents[shift+90], 			
+			#underCompConId = NULL,
+#~ 			underCompConId = if (!is.null(tmp)) {
+#~ 					if (!is.na(tmp2<-as.integer(tmp))) {
+#~ 						if (tmp2>0) {shift<-shift+1;contents[shift+72]} else NULL  #does not work. shift is only modified locally !?
+#~ 					} else NULL
+#~ 				} else NULL,
+			#underCompDelta = NULL,
+#~ 			underCompDelta = if (!is.null(tmp)) {
+#~ 					if (!is.na(tmp2<-as.integer(tmp))) {
+#~ 						if (tmp2>0) {shift<-shift+1;contents[shift+72]} else NULL #does not work. shift is only modified locally !?
+#~ 					} else NULL
+#~ 				} else NULL,
+			#underCompPrice =NULL,
+#~ 			underCompPrice = if (!is.null(tmp)) {
+#~ 					if (!is.na(tmp2<-as.integer(tmp))) {
+#~ 						if (tmp2>0) {shift<-shift+1;contents[shift+72]} else NULL  #does not work. shift is only modified locally !?
+#~ 					} else NULL
+#~ 				} else NULL,				
+
+			#algoStrategy = {cat('algoStrategy',contents[shift+91],'\n');contents[shift+91]},
+			algoStrategy = contents[shift+91],
+			
+			#algoParamsCount = (if (!is.null(tmp)) {if (tmp!='') {shift<-shift+1;contents[shift+72]} else NULL} else NULL)->tmp2,
+#~ 			algoParams = if (!is.null(tmp2)) {
+#~ 								if (as.integer(tmp2)>0) {
+#~ 									shift <- shift + 1  #does not work. shift is only modified locally !?
+#~ 									ll <- list()
+#~ 									ll[1:(2L*as.integer(tmp2))] <- contents[shift+72 +1:(2L*as.integer(tmp2))]
+#~ 									shift <- shift + 2L*as.integer(tmp2) -1
+#~ 									ll #not entirely correct since this should be a list of lists of length 2...
+#~ 								} else NULL
+#~ 							}  else NULL,			
+										
+			#whatIf = {cat('whatIf',contents[shift+92],'\n');contents[shift+92]}
+			whatIf = contents[shift+92]
+		), 
+        
+        orderstate = twsOrderState(
+			status = contents[shift+93], #Submitted, etc...!!!
+			initMargin = contents[shift+94], 
+			maintMargin = contents[shift+95], 
+			equityWithLoan = contents[shift+96], 
+			commission = contents[shift+97], 
+			minCommission = contents[shift+98], 
+			maxCommission = contents[shift+99], 
+			commissionCurrency = contents[shift+100], 
+			warningText = contents[shift+101]
+		)
+	)
+                
+    eoo <- structure(eoo, class = "eventOpenOrder")
+    cat("TWS OpenOrder:", paste("orderId=", eoo$order$orderId, 
+        sep = ""), paste("conId=", eoo$contract$conId, sep = ""), 
+        paste("symbol=", eoo$contract$symbol, sep = ""), paste("status=", 
+            eoo$orderstate$status, sep = ""), "\n")
+    eoo
 }
+
+
 
 #####  EXECUTION_DATA ##### {{{
-e_execDetails <- e_execution_data <- function(curMsg, msg, file, ...) {
-       version = msg[1]
-       reqId   = msg[2]
-       orderId   = msg[3]
-       eed <- list(
-              contract   = twsContract(
-                             conId   = msg[4],
-                             symbol  = msg[5],
-                             sectype = msg[6],
-                             expiry  = msg[7],
-                             strike  = msg[8],
-                             right   = msg[9],
-                             exch    = msg[10],
-                             currency= msg[11],
-                             local   = msg[12],
-                             # the following are required to correctly specify a contract
-                             combo_legs_desc = NULL,
-                             primary = NULL,
-                             include_expired = NULL,
-                             comboleg = NULL,
-                             multiplier = NULL
-                           ),
-              execution  = twsExecution(orderId = orderId,
-                                        execId  = msg[13],
-                                        time    = msg[14],
-                                        acctNumber = msg[15],
-                                        exchange   = msg[16],
-                                        side       = msg[17],
-                                        shares     = msg[18],
-                                        price      = msg[19],
-                                        permId     = msg[20],
-                                        clientId   = msg[21],
-                                        liquidation= msg[22],
-                                        cumQty     = msg[23],
-                                        avgPrice   = msg[24]
-                                       )
-              )
-  eed <- structure(eed, class="eventExecutionData")
-  cat("TWS Execution:", 
-      paste("orderId=",eed$execution$orderId,sep=""),
-      paste("time=",strptime(eed$execution$time,"%Y%m%d  %H:%M:%S"),sep=""),
-      paste("side=",eed$execution$side,sep=""),
-      paste("shares=",eed$execution$shares,sep=""),
-      paste("symbol=",eed$contract$symbol,sep=""),
-      paste("conId=",eed$contract$conId,sep=""),
-      paste("price=",eed$execution$price,sep=""),"\n")
-  eed
+e_execution_data <- e_execDetails <- function (curMsg, msg, file, ...) 
+{
+    version = msg[1]
+    reqId = msg[2]
+    orderId = msg[3]
+    eed <- list(
+		contract = twsContract(conId = msg[4], symbol = msg[5], 
+			sectype = msg[6], expiry = msg[7], strike = msg[8], right = msg[9], 
+			multiplier = msg[10], #NEW
+			exch = msg[1+10], currency = msg[1+11], local = msg[1+12], 
+			tradingClass = msg[1+13],
+			combo_legs_desc = NULL, primary = NULL, include_expired = NULL, 
+			comboleg = NULL), 
+        
+        execution = twsExecution(orderId = orderId, 
+			execId = msg[2+13], 
+			time = msg[2+14], 
+			acctNumber = msg[2+15], 
+			exchange = msg[2+16], 
+			side = msg[2+17], 
+			shares = msg[2+18], 
+			price = msg[2+19], 
+			permId = msg[2+20], 
+			clientId = msg[2+21], 
+			liquidation = msg[2+22], 
+			cumQty = msg[2+23], 
+			avgPrice = msg[2+24],
+			orderRef = msg[27], 
+			evRule = msg[28], 
+			evMultiplier = msg[29]
+			)
+        )
+    eed <- structure(eed, class = "eventExecutionData")
+    cat("TWS Execution:", paste("orderId=", eed$execution$orderId, 
+        sep = ""), paste("time=", strptime(eed$execution$time, 
+        "%Y%m%d  %H:%M:%S"), sep = ""), paste("side=", eed$execution$side, 
+        sep = ""), paste("shares=", eed$execution$shares, sep = ""), 
+        paste("symbol=", eed$contract$symbol, sep = ""), paste("conId=", 
+            eed$contract$conId, sep = ""), paste("price=", eed$execution$price, 
+            sep = ""), "\n")
+    eed
 }
 #####  END EXECUTION_DATA ##### }}}
+
+## NEW: commissionReport
+e_commissionReport <- function (curMsg, msg, file, ...) 
+{
+#~ 				DECODE_FIELD( version);
+#~ 				DECODE_FIELD( commissionReport.execId);
+#~ 				DECODE_FIELD( commissionReport.commission);
+#~ 				DECODE_FIELD( commissionReport.currency);
+#~ 				DECODE_FIELD( commissionReport.realizedPNL);
+#~ 				DECODE_FIELD( commissionReport.yield);
+#~ 				DECODE_FIELD( commissionReport.yieldRedemptionDate);
+    version = msg[1]
+    execId = msg[2]
+    ecr <- list(
+		commission = msg[3],
+		currency = msg[4],
+		realizedPNL = msg[5],
+		yield = msg[6],
+		yieldRedemptionDate = msg[7]
+        )
+    ecr <- structure(ecr, class = "eventCommissionReport")
+    cat("TWS Commission:", 
+		paste("commission=", ecr$commission, sep = ""), 
+		paste("currency=", ecr$currency, sep = ""), 
+    "\n")
+    ecr
+}
+## END commissionReport
+
+
+
 
 ##### ACCOUNT_VALUE #### {{{
 `e_account_value` <-

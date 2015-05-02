@@ -1,5 +1,7 @@
 `.lastRequest` <- 10
 
+`.IBAPI.VERSION` <- 'clientV63'   #client Version 63
+
 `.twsOutgoingMSG` <-
 structure(list(REQ_MKT_DATA = "1", CANCEL_MKT_DATA = "2", PLACE_ORDER = "3", 
     CANCEL_ORDER = "4", REQ_OPEN_ORDERS = "5", REQ_ACCOUNT_DATA = "6", 
@@ -48,6 +50,18 @@ structure(list(TICK_PRICE = "1", TICK_SIZE = "2",
 "FUNDAMENTAL_DATA","CONTRACT_DATA_END", "OPEN_ORDER_END", "ACCT_DOWNLOAD_END",
 "EXECUTION_DATA_END","DELTA_NEUTRAL_VALIDATION","TICK_SNAPSHOT_END"
 ))
+
+.twsIncomingMSG$MARKET_DATA_TYPE          = '58'
+.twsIncomingMSG$COMMISSION_REPORT         = '59'
+.twsIncomingMSG$POSITION_DATA             = '61'
+.twsIncomingMSG$POSITION_END              = '62'
+.twsIncomingMSG$ACCOUNT_SUMMARY           = '63'
+.twsIncomingMSG$ACCOUNT_SUMMARY_END       = '64'
+.twsIncomingMSG$VERIFY_MESSAGE_API        = '65'
+.twsIncomingMSG$VERIFY_COMPLETED          = '66'
+.twsIncomingMSG$DISPLAY_GROUP_LIST        = '67'
+.twsIncomingMSG$DISPLAY_GROUP_UPDATED     = '68'
+
 
 `.twsERR` <-
 structure(c("Max rate of messages per second has been exceeded.", 

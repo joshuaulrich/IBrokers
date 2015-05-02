@@ -17,3 +17,18 @@ reqExecutions <- function(twsconn, reqId="0", ExecutionFilter) {
                 ExecutionFilter$side)
   writeBin(outgoing, con)
 }
+
+
+# New utility function. call immediately after a reqExecutions() call.
+readExecutions <- function (twsconn) 
+{
+	#.reqOpenOrders(twsconn)
+	con <- twsconn[[1]]
+	eW <- eWrapper()
+	while (TRUE) {
+	socketSelect(list(con), FALSE, NULL)
+	curMsg <- readBin(con, character(), 1L)			
+	processMsg(curMsg, con, eW)
+	if (curMsg == .twsIncomingMSG$EXECUTION_DATA_END) break
+	}
+}

@@ -2,7 +2,7 @@
 import(zoo, xts)
 
 export(twsConnect,
-       twsConnect2,             # experimental connection object
+       #twsConnect2,             # experimental connection object # removed (SW)
        ibgConnect,
        twsDisconnect,
 
@@ -14,7 +14,7 @@ export(twsConnect,
        setServerLogLevel,
        reqCurrentTime,
 
-      .reqIds,                  # send only
+      #.reqIds,                  # send only # removed (SW)
        reqIds,
 
        reqContractDetails,
