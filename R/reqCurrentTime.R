@@ -29,7 +29,7 @@ function(twsconn) {
     if(curMsg == .twsIncomingMSG$CURRENT_TIME)
       break
   }
-  structure(as.numeric(currentTime), class=c("POSIXt", "POSIXct")) 
+  structure(as.numeric(currentTime), class=c("POSIXlt", "POSIXct")) 
 #  tz <- Sys.getenv("TZ")
 #  on.exit(Sys.setenv(TZ=tz))
 #  Sys.setenv(TZ='GMT')
