@@ -1,72 +1,112 @@
-\name{.placeOrder}
-\alias{.placeOrder}
+\name{placeOrder}
 \alias{placeOrder}
-\alias{cancelOrder}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-TWS Orders
+%%  ~~function to do ... ~~
 }
 \description{
-Place or cancel an order to the TWS.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
 placeOrder(twsconn, Contract, Order)
-
-cancelOrder(twsconn, orderId)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{twsconn}{
-A twsConnection object.
+%%     ~~Describe \code{twsconn} here~~
 }
   \item{Contract}{
-A twsContract object.
+%%     ~~Describe \code{Contract} here~~
 }
   \item{Order}{
-A twsOrder object.
-}
-  \item{orderId}{
-A valid order id.
+%%     ~~Describe \code{Order} here~~
 }
 }
 \details{
-As described by the official Interactive Brokers (tm) documentation.  Caveat Emptor!!
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-Called for its side effect of placing or cancelling an order on the TWS. This also
-returns the orderId used for placeOrder.  An additional side-effect is that
-a variable .Last.orderId will be created or updated in the GlobalEnv as well.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
 \references{
-Official Place Order API:
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/placeorder.htm}
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
 }
 \note{
-Orders via the API are quite complicated, or at least can be.  It is strongly advised to
-only proceed with trading real money after one understands not only all the R
-code in this package, but the official API as well.  If you are more comfortable
-clicking shiny buttons in a GUI, it is probably better that you keep clicking
-the buttons and not pretend to program.
-
-Not for the faint of heart. All profits and losses related are yours and
-yours alone.  If you don't like it, write it yourself.
+%%  ~~further notes~~
 }
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-\code{\link{twsContract}}
-\code{\link{twsOrder}}
-\code{\link{reqIds}}
 }
 \examples{
-\dontrun{
-tws <- twsConnect()
-id <- reqIds(tws)
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
 
-placeOrder(tws, twsSTK("AAPL"), twsOrder(id))
-cancelOrder(id)
+## The function is currently defined as
+function (twsconn, Contract, Order) 
+{
+    if (!is.twsConnection(twsconn)) 
+        stop("requires twsConnection object")
+    if (!is.twsContract(Contract)) 
+        stop("requires twsContract object for Contract arg")
+    if (!inherits(Order, "twsOrder")) 
+        stop("requires twsOrder object for Order arg")
+    con <- twsconn[[1]]
+    VERSION <- "42"
+    if (is.null(Order$hedgeType) | is.null(Order$hedgeParam)) 
+        stop(" NEW twsOrder has to be used")
+    if (Order$orderId == "") 
+        Order$orderId <- reqIds(twsconn)
+    order <- c(.twsOutgoingMSG$PLACE_ORDER, VERSION, as.character(Order$orderId), 
+        as.character(Contract$conId), Contract$symbol, Contract$sectype, 
+        Contract$expiry, Contract$strike, Contract$right, Contract$multiplier, 
+        Contract$exch, Contract$primary, Contract$currency, Contract$local, 
+        {
+            if (is.null(Contract$tradingClass)) "" else Contract$tradingClass
+        }, Contract$secIdType, Contract$secId, Order$action, 
+        Order$totalQuantity, Order$orderType, Order$lmtPrice, 
+        Order$auxPrice, Order$tif, Order$ocaGroup, Order$account, 
+        Order$openClose, Order$origin, Order$orderRef, Order$transmit, 
+        Order$parentId, Order$blockOrder, Order$sweepToFill, 
+        Order$displaySize, Order$triggerMethod, Order$outsideRTH, 
+        Order$hidden)
+    order <- c(order, "", Order$discretionaryAmt, Order$goodAfterTime, 
+        Order$goodTillDate, Order$faGroup, Order$faMethod, Order$faPercentage, 
+        Order$faProfile, Order$shortSaleSlot, Order$designatedLocation, 
+        Order$exemptCode, Order$ocaType, Order$rule80A, Order$settlingFirm, 
+        Order$allOrNone, Order$minQty, Order$percentOffset, Order$eTradeOnly, 
+        Order$firmQuoteOnly, Order$nbboPriceCap, Order$auctionStrategy, 
+        Order$startingPrice, Order$stockRefPrice, Order$delta, 
+        Order$stockRangeLower, Order$stockRangeUpper, Order$overridePercentageConstraints, 
+        Order$volatility, Order$volatilityType, Order$deltaNeutralOrderType, 
+        Order$deltaNeutralAuxPrice, Order$continuousUpdate, Order$referencePriceType, 
+        Order$trailStopPrice, Order$trailingPercent, Order$scaleInitLevelSize, 
+        Order$scaleSubsLevelSize, Order$scalePriceIncrement, 
+        Order$scaleTable, Order$activeStartTime, Order$activeStopTime)
+    if (Order$hedgeType != "") 
+        order <- c(order, Order$hedgeType, Order$hedgeParam)
+    else order <- c(order, Order$hedgeType)
+    order <- c(order, Order$optOutSmartRouting, Order$clearingAccount, 
+        Order$clearingIntent, Order$notHeld, "0", Order$algoStrategy, 
+        Order$whatIf, "")
+    cat("placeOrder VERSION", VERSION, "\n")
+    cat(order, "\n", sep = "*")
+    writeBin(order, con)
+    assign(".Last.orderId", as.integer(Order$orderId), .GlobalEnv)
+    invisible(as.integer(Order$orderId))
+  }
 }
-}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

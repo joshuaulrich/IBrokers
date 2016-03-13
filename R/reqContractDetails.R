@@ -1,26 +1,5 @@
-
-.reqContractDetails <- function (conn, Contract, reqId = "1")
-{
-    if (!is.twsConnection(conn))
-        stop("requires twsConnection object")
-    if (!inherits(Contract, "twsContract"))
-        stop("requires twsContract object")
-    con <- conn[[1]]
-    #VERSION <- "5"
-    #VERSION <- "6"
-    VERSION <- "7"
-    request <- c(.twsOutgoingMSG$REQ_CONTRACT_DATA, VERSION,
-        reqId, Contract$conId, Contract$symbol, Contract$sectype,
-        Contract$expiry, Contract$strike, Contract$right, Contract$multiplier,
-        Contract$exch, Contract$currency, Contract$local,
-		"", #Contract$tradingClass,  #not using it
-        Contract$include_expired,
-        Contract$secIdType, Contract$secId)
-    writeBin(as.character(request), con)
-}
-
-
-reqContractDetails <- function (conn, Contract, reqId = "1", verbose = FALSE, eventWrapper = eWrapper(), 
+reqContractDetails <-
+function (conn, Contract, reqId = "1", verbose = FALSE, eventWrapper = eWrapper(), 
     CALLBACK = twsCALLBACK, ...) 
 {
     .reqContractDetails(conn, Contract, reqId)
@@ -69,4 +48,3 @@ reqContractDetails <- function (conn, Contract, reqId = "1", verbose = FALSE, ev
     }
     return(contracts)
 }
-

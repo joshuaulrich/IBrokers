@@ -1,98 +1,138 @@
 \name{reqRealTimeBars}
 \alias{reqRealTimeBars}
-\alias{cancelRealTimeBars}
-\title{ Request Real Time Bars from TWS }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-Allows for streaming real-time bars to be handled in \R
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-reqRealTimeBars(conn,
-                Contract,
-                whatToShow = "TRADES", 
-                barSize = "5",
-                useRTH = TRUE,
-                playback = 1,
-                tickerId = "1",
-                file = "",
-                verbose = TRUE,
-                eventWrapper=eWrapper(),
-                CALLBACK=twsCALLBACK,
-                ...) 
-
-cancelRealTimeBars(conn, tickerId)
+reqRealTimeBars(conn, Contract, whatToShow = "TRADES", barSize = "5", useRTH = TRUE, playback = 1, tickerId = "1", file = "", verbose = TRUE, eventWrapper = eWrapper(), CALLBACK = twsCALLBACK, ...)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{ a valid \code{twsConnection} or \code{twsPlayback} object }
-  \item{Contract}{ \code{twsContract} object(s) requested }
-  \item{tickerId}{ the ticker id to associate with the returned bars }
-  \item{whatToShow}{ what to show }
-  \item{barSize}{ bar size - currently on 5 secs is TWS supported }
-  \item{playback}{ playback speed adjustment }
-  \item{useRTH}{ regular trading hours (logical) }
-  \item{file}{ passed to internal \code{cat} calls. See associated help. }
-  \item{verbose}{ print diagnostics }
-  \item{eventWrapper}{ eventWrapper object }
-  \item{CALLBACK}{ main reciever callback }
-  \item{\dots}{ additional args to callback }
+  \item{conn}{
+%%     ~~Describe \code{conn} here~~
+}
+  \item{Contract}{
+%%     ~~Describe \code{Contract} here~~
+}
+  \item{whatToShow}{
+%%     ~~Describe \code{whatToShow} here~~
+}
+  \item{barSize}{
+%%     ~~Describe \code{barSize} here~~
+}
+  \item{useRTH}{
+%%     ~~Describe \code{useRTH} here~~
+}
+  \item{playback}{
+%%     ~~Describe \code{playback} here~~
+}
+  \item{tickerId}{
+%%     ~~Describe \code{tickerId} here~~
+}
+  \item{file}{
+%%     ~~Describe \code{file} here~~
+}
+  \item{verbose}{
+%%     ~~Describe \code{verbose} here~~
+}
+  \item{eventWrapper}{
+%%     ~~Describe \code{eventWrapper} here~~
+}
+  \item{CALLBACK}{
+%%     ~~Describe \code{CALLBACK} here~~
+}
+  \item{\dots}{
+%%     ~~Describe \code{\dots} here~~
+}
 }
 \details{
-This function provides R level access to real time (5 second) bars
-returned by the TWS API.  The Interactive Brokers documentation
-should be reference for the exact meaning of the returned data.
-
-If the \code{conn} is a connection of data to be played
-back all other arguments are ignores, except for \code{playback},
-which is a multiplier of the bar size in seconds.  To force
-all data to be read without pause set this to 0.
-
-Callbacks, via eventRealTimeBars and CALLBACK are
-designed to allow for R level processing of the real-time data
-stream.
-
-eventWrapper allows for direct manipulation of the actual
-signal recieved.
-These may be user-defined functions taking the
-appropriate arguments.  Each message recieved (each new bar)
-will invoke one of this callback.
-By default when nothing is specified, the code will
-call the default method for printing the results to the screen via
-'cat'.
-
-Note that the use of the argument 'file' will be passed to these
-'cat' calls, and therefore it will be possible to use the
-functionality of 'cat' directly - e.g. piping output or writing to
-a connection.  The simplest use of file would be to specify the
-name of a file, or open connection to append the output of the stream to.
-
-The 'CALLBACK' argument is used for more control of the incoming
-results.  This requires user-level error checking as well as TWS
-API interaction.  It is here for advanced use and until documented
-should be left alone.
-
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-The real-time bar data requested.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
-\references{ Interactive Brokers TWS API
-\url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm}
+\references{
+%% ~put references to the literature/web site here ~
 }
-\author{ Jeffrey A. Ryan }
+\author{
+%%  ~~who you are~~
+}
 \note{
-As R is single threaded - this request will run until interupted
-by an error or by user action. Both will clean up after themselves
-when appropriate.
+%%  ~~further notes~~
 }
-\seealso{ \code{\link{twsConnect}},\code{\link{twsContract}},\code{\link{eWrapper}}}
-\examples{
-\dontrun{
-tws <- twsConnect()
-contract <- twsEquity("QQQQ","SMART","ISLAND")
-reqRealTimeBars(tws, contract)
 
-# write to an open file connection
-fh <- file('out.dat',open='a')
-reqRealTimeBars(tws, contract, file=fh)
-close(fh)
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (conn, Contract, whatToShow = "TRADES", barSize = "5", 
+    useRTH = TRUE, playback = 1, tickerId = "1", file = "", verbose = TRUE, 
+    eventWrapper = eWrapper(), CALLBACK = twsCALLBACK, ...) 
+{
+    if (!is.twsPlayback(conn)) {
+        tickerId <- .reqRealTimeBars(conn, Contract, whatToShow, 
+            barSize, useRTH, tickerId)
+    }
+    if (is.twsContract(Contract)) 
+        Contract <- list(Contract)
+    con <- conn[[1]]
+    cancelRealTimeBars <- function(con, tickerId) {
+        if (inherits(con, "sockconn")) {
+            for (i in 1:length(tickerId)) {
+                writeBin(.twsOutgoingMSG$CANCEL_REAL_TIME_BARS, 
+                  con)
+                writeBin("1", con)
+                writeBin(tickerId[i], con)
+            }
+        }
+        else {
+            seek(con, 0)
+        }
+    }
+    if (is.null(CALLBACK)) 
+        CALLBACK <- twsDEBUG
+    if (!missing(CALLBACK) && is.na(list(CALLBACK))) {
+        if (is.twsPlayback(conn)) {
+            seek(conn[[1]], 0)
+            stop("CALLBACK=NA is not available for playback")
+        }
+        return(tickerId)
+    }
+    on.exit(cancelRealTimeBars(con, tickerId))
+    symbol.or.local <- function(x) {
+        symbol <- x$symbol
+        local <- x$local
+        if (local == "") {
+            return(symbol)
+        }
+        else return(local)
+    }
+    eventWrapper$assign.Data("symbols", sapply(Contract, symbol.or.local))
+    timeStamp <- NULL
+    if (!is.list(file)) 
+        file <- list(file)
+    if (length(file) != length(Contract)) 
+        file <- rep(file, length(Contract))
+    CALLBACK(conn, eWrapper = eventWrapper, timestamp = timeStamp, 
+        file = file, playback = playback, ...)
+  }
 }
-\keyword{ utilities }
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

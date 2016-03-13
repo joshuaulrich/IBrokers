@@ -1,299 +1,416 @@
 \name{twsOrder}
 \alias{twsOrder}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Create twsOrder Object
+%%  ~~function to do ... ~~
 }
 \description{
-Create twsOrder object for \code{placeOrder} API call.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-twsOrder(orderId,
-         action = "BUY", 
-         totalQuantity = "10", 
-         orderType = "LMT",
-         lmtPrice = "0.0", 
-         auxPrice = "0.0",
-         tif = "",
-         outsideRTH = "0",
-         openClose = "O",
-         origin = .twsOrderID$CUSTOMER,
-         ocaGroup = "",
-         account = "",
-         orderRef = "",
-         transmit = TRUE,
-         parentId = "0",
-         blockOrder = "0",
-         sweepToFill = "0",
-         displaySize = "0",
-         triggerMethod = "0",
-         hidden = "0",
-         discretionaryAmt = "0.0",
-         goodAfterTime = "",
-         goodTillDate = "",
-         faGroup = "", 
-         faMethod = "",
-         faPercentage = "",
-         faProfile = "",
-         shortSaleSlot = "0",
-         designatedLocation = .twsOrderID$EMPTY_STR,
-         ocaType = "0",
-         rule80A = "",
-         settlingFirm = "",
-         clearingAccount = "",
-         clearingIntent = "",
-         allOrNone = "0",
-         minQty = "",
-         percentOffset = "",
-         eTradeOnly = "0",
-         firmQuoteOnly = "0",
-         nbboPriceCap = "",
-         auctionStrategy = "0",
-         startingPrice = "",
-         stockRefPrice = "",
-         delta = "",
-         stockRangeLower = "",
-         stockRangeUpper = "",
-         overridePercentageConstraints = "0",
-         volatility = "",
-         volatilityType = "",
-         deltaNeutralOrderType = "",
-         deltaNeutralAuxPrice = "",
-         continuousUpdate = "0",
-         referencePriceType = "",
-         trailStopPrice = "",
-         basisPoints = "",
-         basisPointsType = "",
-         scaleInitLevelSize = "",
-         scaleSubsLevelSize = "",
-         scalePriceIncrement = "",
-         notHeld = FALSE,
-         algoStrategy = "",
-         algoParams = NULL,
-         whatIf = FALSE,
-         clientId = "",
-         permId = "")
+twsOrder(orderId, action = "BUY", totalQuantity = "0", orderType = "LMT", lmtPrice = "0.0", auxPrice = "", tif = "", outsideRTH = "0", openClose = "O", origin = .twsOrderID$CUSTOMER, ocaGroup = "", account = "", orderRef = "", transmit = TRUE, parentId = "0", blockOrder = "0", sweepToFill = "0", displaySize = "0", triggerMethod = "0", hidden = "0", discretionaryAmt = "0", goodAfterTime = "", goodTillDate = "", faGroup = "", faMethod = "", faPercentage = "", faProfile = "", shortSaleSlot = "0", designatedLocation = .twsOrderID$EMPTY_STR, ocaType = "0", rule80A = "", settlingFirm = "", clearingAccount = "", clearingIntent = "", allOrNone = "0", minQty = "", percentOffset = "", eTradeOnly = "1", firmQuoteOnly = "1", nbboPriceCap = "", auctionStrategy = "0", startingPrice = "", stockRefPrice = "", delta = "", stockRangeLower = "", stockRangeUpper = "", overridePercentageConstraints = "0", volatility = "", volatilityType = "", deltaNeutralOrderType = "", deltaNeutralAuxPrice = "", continuousUpdate = "0", referencePriceType = "", trailStopPrice = "", basisPoints = "", basisPointsType = "", scaleInitLevelSize = "", scaleSubsLevelSize = "", scalePriceIncrement = "", notHeld = FALSE, algoStrategy = "", algoParams = NULL, whatIf = FALSE, clientId = "", permId = "", exemptCode = "-1", hedgeType = "", hedgeParam = "", optOutSmartRouting = FALSE, scaleTable = "", activeStartTime = "", activeStopTime = "", trailingPercent = "", deltaNeutralConId = "0", deltaNeutralSettlingFirm = "", deltaNeutralClearingAccount = "", deltaNeutralClearingIntent = "", deltaNeutralOpenClose = "", deltaNeutralShortSale = "0", deltaNeutralShortSaleSlot = "0", deltaNeutralDesignatedLocation = "", scalePriceAdjustValue = "0", scalePriceAdjustInterval = "0", scaleProfitOffset = "0", scaleAutoReset = "0", scaleInitPosition = "0", scaleInitFillQty = "0", scaleRandomPercent = "0", smartComboRoutingParams = NULL, smartComboRoutingParamsCount = "0", orderComboLegs = NULL, orderComboLegsCount = "0", comboLegs = NULL, comboLegsCount = "0", orderMiscOptions = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{orderId}{
-The id for the order. Use \code{reqIds}.
+%%     ~~Describe \code{orderId} here~~
 }
   \item{action}{
-Identifies the side.  ( BUY, SELL, SSHORT )
+%%     ~~Describe \code{action} here~~
 }
   \item{totalQuantity}{
-Order quantity.
+%%     ~~Describe \code{totalQuantity} here~~
 }
   \item{orderType}{
-Order type. ( MKT, MKTCLS, LMT, LMTCLS, PEGMKT, SCALE, STP, STPLMT, TRAIL, REL, VWAP, TRAILLIMIT )
+%%     ~~Describe \code{orderType} here~~
 }
   \item{lmtPrice}{
-The \emph{LIMIT} price for LMT, STPLMT and REL \code{orderType}
+%%     ~~Describe \code{lmtPrice} here~~
 }
   \item{auxPrice}{
-The \emph{STOP} price for STPLMT (stop-limit) orders, and the offset for REL (relative) orders
+%%     ~~Describe \code{auxPrice} here~~
 }
   \item{tif}{
-Time in force. (DAY, GTC, IOC, GTD)
+%%     ~~Describe \code{tif} here~~
 }
   \item{outsideRTH}{
-Allow orders to trigger outside of regular trading hours.
+%%     ~~Describe \code{outsideRTH} here~~
 }
   \item{openClose}{
-Specify whether order is open or close only. (Institutional Accounts Only)
+%%     ~~Describe \code{openClose} here~~
 }
   \item{origin}{
-The order origin. 0=customer, 1=firm (Institutional Accounts Only)
+%%     ~~Describe \code{origin} here~~
 }
   \item{ocaGroup}{
-Identifies OCA group.
+%%     ~~Describe \code{ocaGroup} here~~
 }
   \item{account}{
-The account (Institutional Accounts Only)
+%%     ~~Describe \code{account} here~~
 }
   \item{orderRef}{
-The order reference (Institutional Accounts Only)
+%%     ~~Describe \code{orderRef} here~~
 }
   \item{transmit}{
-Specify whether the order is transmitted to the TWS.  If FALSE, order is created but not
-sent. (not implemented)
+%%     ~~Describe \code{transmit} here~~
 }
   \item{parentId}{
-The orderId of the parent order, used for bracket and auto trailing stop orders.
+%%     ~~Describe \code{parentId} here~~
 }
   \item{blockOrder}{
-ISE block order?
+%%     ~~Describe \code{blockOrder} here~~
 }
   \item{sweepToFill}{
-Sweep to fill order?
+%%     ~~Describe \code{sweepToFill} here~~
 }
   \item{displaySize}{
-Publicly disclosed order size for Iceberg orders.
+%%     ~~Describe \code{displaySize} here~~
 }
   \item{triggerMethod}{
-How should \emph{simulated} orders be triggered. Valid values are 0-8.
-See the official API for details.
+%%     ~~Describe \code{triggerMethod} here~~
 }
   \item{hidden}{
-Hide order on ISLAND?
+%%     ~~Describe \code{hidden} here~~
 }
   \item{discretionaryAmt}{
-Amount off limit for discretionary orders.
+%%     ~~Describe \code{discretionaryAmt} here~~
 }
   \item{goodAfterTime}{
-Trades Good After Time: YYYYMMDD hh:mm:ss or ""
+%%     ~~Describe \code{goodAfterTime} here~~
 }
   \item{goodTillDate}{
-Trades Good Till Date: YYYYMMDD hh:mm:ss or ""
+%%     ~~Describe \code{goodTillDate} here~~
 }
   \item{faGroup}{
-NA
+%%     ~~Describe \code{faGroup} here~~
 }
   \item{faMethod}{
-NA
+%%     ~~Describe \code{faMethod} here~~
 }
   \item{faPercentage}{
-NA
+%%     ~~Describe \code{faPercentage} here~~
 }
   \item{faProfile}{
-NA
+%%     ~~Describe \code{faProfile} here~~
 }
   \item{shortSaleSlot}{
-1 or 2
+%%     ~~Describe \code{shortSaleSlot} here~~
 }
   \item{designatedLocation}{
-Only when \code{shortSaleSlot=2}
+%%     ~~Describe \code{designatedLocation} here~~
 }
   \item{ocaType}{
-Cancel on Fill with Block = 1
-Reduce on Fill with Block = 2
-Reduce on Fill without Block = 3
+%%     ~~Describe \code{ocaType} here~~
 }
   \item{rule80A}{
-Valid values: I, A, W, J, U, M, K, Y, N.  See API.
+%%     ~~Describe \code{rule80A} here~~
 }
   \item{settlingFirm}{
-(Institutional Only)
+%%     ~~Describe \code{settlingFirm} here~~
 }
   \item{clearingAccount}{
-IBExecution customers only.
+%%     ~~Describe \code{clearingAccount} here~~
 }
   \item{clearingIntent}{
-IBExecution customers only.
+%%     ~~Describe \code{clearingIntent} here~~
 }
   \item{allOrNone}{
-yes=1, no=0
+%%     ~~Describe \code{allOrNone} here~~
 }
   \item{minQty}{
-Minimum quantity order type.
+%%     ~~Describe \code{minQty} here~~
 }
   \item{percentOffset}{
-Percent offset for REL (relative) orders.
+%%     ~~Describe \code{percentOffset} here~~
 }
   \item{eTradeOnly}{
-Trade with electronic quotes. yes=1, no=0.
+%%     ~~Describe \code{eTradeOnly} here~~
 }
   \item{firmQuoteOnly}{
-Trade with firm quotes. yes=1, no=0.
+%%     ~~Describe \code{firmQuoteOnly} here~~
 }
   \item{nbboPriceCap}{
-The maximum Smart order distance from the NBBO.
+%%     ~~Describe \code{nbboPriceCap} here~~
 }
   \item{auctionStrategy}{
-BOX only.  See API.
+%%     ~~Describe \code{auctionStrategy} here~~
 }
   \item{startingPrice}{
-BOX only.  See API.
+%%     ~~Describe \code{startingPrice} here~~
 }
   \item{stockRefPrice}{
-The stock reference price.  VOL orders. See API.
+%%     ~~Describe \code{stockRefPrice} here~~
 }
   \item{delta}{
-BOX only.  See API.
+%%     ~~Describe \code{delta} here~~
 }
   \item{stockRangeLower}{
-See API.
+%%     ~~Describe \code{stockRangeLower} here~~
 }
   \item{stockRangeUpper}{
-See API.
+%%     ~~Describe \code{stockRangeUpper} here~~
 }
   \item{overridePercentageConstraints}{
-See API.
+%%     ~~Describe \code{overridePercentageConstraints} here~~
 }
   \item{volatility}{
-See API.
+%%     ~~Describe \code{volatility} here~~
 }
   \item{volatilityType}{
-See API.
+%%     ~~Describe \code{volatilityType} here~~
 }
   \item{deltaNeutralOrderType}{
-See API.
+%%     ~~Describe \code{deltaNeutralOrderType} here~~
 }
   \item{deltaNeutralAuxPrice}{
-See API.
+%%     ~~Describe \code{deltaNeutralAuxPrice} here~~
 }
   \item{continuousUpdate}{
-See API.
+%%     ~~Describe \code{continuousUpdate} here~~
 }
   \item{referencePriceType}{
-See API.
+%%     ~~Describe \code{referencePriceType} here~~
 }
   \item{trailStopPrice}{
-For TRAILLIMIT orders only.
+%%     ~~Describe \code{trailStopPrice} here~~
 }
   \item{basisPoints}{
-EFP orders only.
+%%     ~~Describe \code{basisPoints} here~~
 }
   \item{basisPointsType}{
-EFP orders only.
+%%     ~~Describe \code{basisPointsType} here~~
 }
   \item{scaleInitLevelSize}{
-For Scale orders.  See API.
+%%     ~~Describe \code{scaleInitLevelSize} here~~
 }
   \item{scaleSubsLevelSize}{
-For Scale orders.  See API.
+%%     ~~Describe \code{scaleSubsLevelSize} here~~
 }
   \item{scalePriceIncrement}{
-For Scale orders.  See API.
+%%     ~~Describe \code{scalePriceIncrement} here~~
 }
   \item{notHeld}{
-See API and guess.
+%%     ~~Describe \code{notHeld} here~~
 }
   \item{algoStrategy}{
-See API and guess.
+%%     ~~Describe \code{algoStrategy} here~~
 }
   \item{algoParams}{
-See API and guess.
+%%     ~~Describe \code{algoParams} here~~
 }
   \item{whatIf}{
-Use to request pre-trade commissions and margin information. TRUE/FALSE
+%%     ~~Describe \code{whatIf} here~~
 }
   \item{clientId}{
-Id of the client that placed the order.
+%%     ~~Describe \code{clientId} here~~
 }
   \item{permId}{
-TWS id used to identify orders. Constant over a session.
+%%     ~~Describe \code{permId} here~~
+}
+  \item{exemptCode}{
+%%     ~~Describe \code{exemptCode} here~~
+}
+  \item{hedgeType}{
+%%     ~~Describe \code{hedgeType} here~~
+}
+  \item{hedgeParam}{
+%%     ~~Describe \code{hedgeParam} here~~
+}
+  \item{optOutSmartRouting}{
+%%     ~~Describe \code{optOutSmartRouting} here~~
+}
+  \item{scaleTable}{
+%%     ~~Describe \code{scaleTable} here~~
+}
+  \item{activeStartTime}{
+%%     ~~Describe \code{activeStartTime} here~~
+}
+  \item{activeStopTime}{
+%%     ~~Describe \code{activeStopTime} here~~
+}
+  \item{trailingPercent}{
+%%     ~~Describe \code{trailingPercent} here~~
+}
+  \item{deltaNeutralConId}{
+%%     ~~Describe \code{deltaNeutralConId} here~~
+}
+  \item{deltaNeutralSettlingFirm}{
+%%     ~~Describe \code{deltaNeutralSettlingFirm} here~~
+}
+  \item{deltaNeutralClearingAccount}{
+%%     ~~Describe \code{deltaNeutralClearingAccount} here~~
+}
+  \item{deltaNeutralClearingIntent}{
+%%     ~~Describe \code{deltaNeutralClearingIntent} here~~
+}
+  \item{deltaNeutralOpenClose}{
+%%     ~~Describe \code{deltaNeutralOpenClose} here~~
+}
+  \item{deltaNeutralShortSale}{
+%%     ~~Describe \code{deltaNeutralShortSale} here~~
+}
+  \item{deltaNeutralShortSaleSlot}{
+%%     ~~Describe \code{deltaNeutralShortSaleSlot} here~~
+}
+  \item{deltaNeutralDesignatedLocation}{
+%%     ~~Describe \code{deltaNeutralDesignatedLocation} here~~
+}
+  \item{scalePriceAdjustValue}{
+%%     ~~Describe \code{scalePriceAdjustValue} here~~
+}
+  \item{scalePriceAdjustInterval}{
+%%     ~~Describe \code{scalePriceAdjustInterval} here~~
+}
+  \item{scaleProfitOffset}{
+%%     ~~Describe \code{scaleProfitOffset} here~~
+}
+  \item{scaleAutoReset}{
+%%     ~~Describe \code{scaleAutoReset} here~~
+}
+  \item{scaleInitPosition}{
+%%     ~~Describe \code{scaleInitPosition} here~~
+}
+  \item{scaleInitFillQty}{
+%%     ~~Describe \code{scaleInitFillQty} here~~
+}
+  \item{scaleRandomPercent}{
+%%     ~~Describe \code{scaleRandomPercent} here~~
+}
+  \item{smartComboRoutingParams}{
+%%     ~~Describe \code{smartComboRoutingParams} here~~
+}
+  \item{smartComboRoutingParamsCount}{
+%%     ~~Describe \code{smartComboRoutingParamsCount} here~~
+}
+  \item{orderComboLegs}{
+%%     ~~Describe \code{orderComboLegs} here~~
+}
+  \item{orderComboLegsCount}{
+%%     ~~Describe \code{orderComboLegsCount} here~~
+}
+  \item{comboLegs}{
+%%     ~~Describe \code{comboLegs} here~~
+}
+  \item{comboLegsCount}{
+%%     ~~Describe \code{comboLegsCount} here~~
+}
+  \item{orderMiscOptions}{
+%%     ~~Describe \code{orderMiscOptions} here~~
 }
 }
 \details{
-Read the API documentation, code, and experiment with the paper accounts. And good luck!
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-Called for its side-effects.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
 \references{
-Order API:
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/order.htm}
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
 }
 \note{
-Documentation is far from complete on this topic. Experiment and share your experiences.
+%%  ~~further notes~~
 }
 
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 \seealso{
-\code{\link{placeOrder}}
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (orderId, action = "BUY", totalQuantity = "0", orderType = "LMT", 
+    lmtPrice = "0.0", auxPrice = "", tif = "", outsideRTH = "0", 
+    openClose = "O", origin = .twsOrderID$CUSTOMER, ocaGroup = "", 
+    account = "", orderRef = "", transmit = TRUE, parentId = "0", 
+    blockOrder = "0", sweepToFill = "0", displaySize = "0", triggerMethod = "0", 
+    hidden = "0", discretionaryAmt = "0", goodAfterTime = "", 
+    goodTillDate = "", faGroup = "", faMethod = "", faPercentage = "", 
+    faProfile = "", shortSaleSlot = "0", designatedLocation = .twsOrderID$EMPTY_STR, 
+    ocaType = "0", rule80A = "", settlingFirm = "", clearingAccount = "", 
+    clearingIntent = "", allOrNone = "0", minQty = "", percentOffset = "", 
+    eTradeOnly = "1", firmQuoteOnly = "1", nbboPriceCap = "", 
+    auctionStrategy = "0", startingPrice = "", stockRefPrice = "", 
+    delta = "", stockRangeLower = "", stockRangeUpper = "", overridePercentageConstraints = "0", 
+    volatility = "", volatilityType = "", deltaNeutralOrderType = "", 
+    deltaNeutralAuxPrice = "", continuousUpdate = "0", referencePriceType = "", 
+    trailStopPrice = "", basisPoints = "", basisPointsType = "", 
+    scaleInitLevelSize = "", scaleSubsLevelSize = "", scalePriceIncrement = "", 
+    notHeld = FALSE, algoStrategy = "", algoParams = NULL, whatIf = FALSE, 
+    clientId = "", permId = "", exemptCode = "-1", hedgeType = "", 
+    hedgeParam = "", optOutSmartRouting = FALSE, scaleTable = "", 
+    activeStartTime = "", activeStopTime = "", trailingPercent = "", 
+    deltaNeutralConId = "0", deltaNeutralSettlingFirm = "", deltaNeutralClearingAccount = "", 
+    deltaNeutralClearingIntent = "", deltaNeutralOpenClose = "", 
+    deltaNeutralShortSale = "0", deltaNeutralShortSaleSlot = "0", 
+    deltaNeutralDesignatedLocation = "", scalePriceAdjustValue = "0", 
+    scalePriceAdjustInterval = "0", scaleProfitOffset = "0", 
+    scaleAutoReset = "0", scaleInitPosition = "0", scaleInitFillQty = "0", 
+    scaleRandomPercent = "0", smartComboRoutingParams = NULL, 
+    smartComboRoutingParamsCount = "0", orderComboLegs = NULL, 
+    orderComboLegsCount = "0", comboLegs = NULL, comboLegsCount = "0", 
+    orderMiscOptions = NULL) 
+{
+    if (missing(orderId)) 
+        orderId <- ""
+    structure(list(orderId = orderId, clientId = clientId, permId = permId, 
+        action = action, totalQuantity = as.character(as.numeric(totalQuantity)), 
+        orderType = orderType, lmtPrice = as.character(lmtPrice), 
+        auxPrice = as.character(auxPrice), tif = tif, ocaGroup = ocaGroup, 
+        ocaType = ocaType, orderRef = orderRef, transmit = as.character(as.integer(transmit)), 
+        parentId = parentId, blockOrder = blockOrder, sweepToFill = sweepToFill, 
+        displaySize = displaySize, triggerMethod = triggerMethod, 
+        outsideRTH = outsideRTH, hidden = hidden, goodAfterTime = goodAfterTime, 
+        goodTillDate = goodTillDate, overridePercentageConstraints = overridePercentageConstraints, 
+        rule80A = rule80A, allOrNone = allOrNone, minQty = minQty, 
+        percentOffset = percentOffset, trailStopPrice = trailStopPrice, 
+        faGroup = faGroup, faProfile = faProfile, faMethod = faMethod, 
+        faPercentage = faPercentage, openClose = openClose, origin = origin, 
+        shortSaleSlot = shortSaleSlot, designatedLocation = designatedLocation, 
+        discretionaryAmt = discretionaryAmt, eTradeOnly = eTradeOnly, 
+        firmQuoteOnly = firmQuoteOnly, nbboPriceCap = nbboPriceCap, 
+        auctionStrategy = auctionStrategy, startingPrice = startingPrice, 
+        stockRefPrice = stockRefPrice, delta = delta, stockRangeLower = stockRangeLower, 
+        stockRangeUpper = stockRangeUpper, volatility = volatility, 
+        volatilityType = volatilityType, continuousUpdate = continuousUpdate, 
+        referencePriceType = referencePriceType, deltaNeutralOrderType = deltaNeutralOrderType, 
+        deltaNeutralAuxPrice = deltaNeutralAuxPrice, basisPoints = basisPoints, 
+        basisPointsType = basisPointsType, scaleInitLevelSize = scaleInitLevelSize, 
+        scaleSubsLevelSize = scaleSubsLevelSize, scalePriceIncrement = scalePriceIncrement, 
+        account = account, settlingFirm = settlingFirm, clearingAccount = clearingAccount, 
+        clearingIntent = clearingIntent, algoStrategy = algoStrategy, 
+        algoParams = algoParams, whatIf = as.character(as.integer(whatIf)), 
+        notHeld = as.character(as.integer(notHeld)), exemptCode = as.character(as.integer(exemptCode)), 
+        hedgeType = hedgeType, hedgeParam = hedgeParam, optOutSmartRouting = as.character(as.integer(optOutSmartRouting)), 
+        scaleTable = scaleTable, activeStartTime = activeStartTime, 
+        activeStopTime = activeStopTime, trailingPercent = trailingPercent, 
+        deltaNeutralConId = deltaNeutralConId, deltaNeutralSettlingFirm = deltaNeutralSettlingFirm, 
+        deltaNeutralClearingAccount = deltaNeutralClearingAccount, 
+        deltaNeutralClearingIntent = deltaNeutralClearingIntent, 
+        deltaNeutralOpenClose = deltaNeutralOpenClose, deltaNeutralShortSale = deltaNeutralShortSale, 
+        deltaNeutralShortSaleSlot = deltaNeutralShortSaleSlot, 
+        deltaNeutralDesignatedLocation = deltaNeutralDesignatedLocation, 
+        scalePriceAdjustValue = scalePriceAdjustValue, scalePriceAdjustInterval = scalePriceAdjustInterval, 
+        scaleProfitOffset = scaleProfitOffset, scaleAutoReset = scaleAutoReset, 
+        scaleInitPosition = scaleInitPosition, scaleInitFillQty = scaleInitFillQty, 
+        scaleRandomPercent = scaleRandomPercent, smartComboRoutingParams = smartComboRoutingParams, 
+        smartComboRoutingParamsCount = smartComboRoutingParamsCount, 
+        orderComboLegs = orderComboLegs, orderComboLegsCount = orderComboLegsCount, 
+        comboLegs = comboLegs, comboLegsCount = comboLegsCount, 
+        orderMiscOptions = orderMiscOptions), class = "twsOrder")
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

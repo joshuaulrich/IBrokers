@@ -1,135 +1,135 @@
 \name{twsScannerSubscription}
 \alias{twsScannerSubscription}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Create ScannerSubscription
+%%  ~~function to do ... ~~
 }
 \description{
-Create an object for use with \code{reqScannerSubscription} and
-\code{.reqScannerSubscription}.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-twsScannerSubscription(numberOfRows = -1, 
-                       instrument = "", 
-                       locationCode = "", 
-                       scanCode = "", 
-                       abovePrice = "", 
-                       belowPrice = "", 
-                       aboveVolume = "",
-                       averageOptionVolumeAbove = "",
-                       marketCapAbove = "", 
-                       marketCapBelow = "", 
-                       moodyRatingAbove = "", 
-                       moodyRatingBelow = "", 
-                       spRatingAbove = "", 
-                       spRatingBelow = "", 
-                       maturityDateAbove = "", 
-                       maturityDateBelow = "", 
-                       couponRateAbove = "", 
-                       couponRateBelow = "", 
-                       excludeConvertible = "", 
-                       scannerSettingPairs = "", 
-                       stockTypeFilter = "")
+twsScannerSubscription(numberOfRows = -1, instrument = "", locationCode = "", scanCode = "", abovePrice = "", belowPrice = "", aboveVolume = "", averageOptionVolumeAbove = "", marketCapAbove = "", marketCapBelow = "", moodyRatingAbove = "", moodyRatingBelow = "", spRatingAbove = "", spRatingBelow = "", maturityDateAbove = "", maturityDateBelow = "", couponRateAbove = "", couponRateBelow = "", excludeConvertible = "", scannerSettingPairs = "", stockTypeFilter = "")
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{numberOfRows}{
-Number of rows of scanner results returned
+%%     ~~Describe \code{numberOfRows} here~~
 }
   \item{instrument}{
-A character string of STK, ...
+%%     ~~Describe \code{instrument} here~~
 }
   \item{locationCode}{
-A character string of STK.NA, STK.US, STK.US.MAJOR, ...
+%%     ~~Describe \code{locationCode} here~~
 }
   \item{scanCode}{
-One of the available scans. See details
+%%     ~~Describe \code{scanCode} here~~
 }
   \item{abovePrice}{
-Price to filter above
+%%     ~~Describe \code{abovePrice} here~~
 }
   \item{belowPrice}{
-Price to filter below
+%%     ~~Describe \code{belowPrice} here~~
 }
   \item{aboveVolume}{
-Volume to filter above
+%%     ~~Describe \code{aboveVolume} here~~
 }
   \item{averageOptionVolumeAbove}{
-Average option volume above this
+%%     ~~Describe \code{averageOptionVolumeAbove} here~~
 }
   \item{marketCapAbove}{
-Market cap to filter above
+%%     ~~Describe \code{marketCapAbove} here~~
 }
   \item{marketCapBelow}{
-Market cap to filter below
+%%     ~~Describe \code{marketCapBelow} here~~
 }
   \item{moodyRatingAbove}{
-Moody rating to filter above
+%%     ~~Describe \code{moodyRatingAbove} here~~
 }
   \item{moodyRatingBelow}{
-Moody rating to filter below
+%%     ~~Describe \code{moodyRatingBelow} here~~
 }
   \item{spRatingAbove}{
-S&P rating to filter above
+%%     ~~Describe \code{spRatingAbove} here~~
 }
   \item{spRatingBelow}{
-S&P rating to filter below
+%%     ~~Describe \code{spRatingBelow} here~~
 }
   \item{maturityDateAbove}{
-Maturity date to filter above
+%%     ~~Describe \code{maturityDateAbove} here~~
 }
   \item{maturityDateBelow}{
-Maturity date to filter below
+%%     ~~Describe \code{maturityDateBelow} here~~
 }
   \item{couponRateAbove}{
-Coupon rate to filter above
+%%     ~~Describe \code{couponRateAbove} here~~
 }
   \item{couponRateBelow}{
-Coupon rate to filter below
+%%     ~~Describe \code{couponRateBelow} here~~
 }
   \item{excludeConvertible}{
-?
+%%     ~~Describe \code{excludeConvertible} here~~
 }
   \item{scannerSettingPairs}{
-?
+%%     ~~Describe \code{scannerSettingPairs} here~~
 }
   \item{stockTypeFilter}{
-"ALL"?
+%%     ~~Describe \code{stockTypeFilter} here~~
 }
 }
 \details{
-By necessity, design, or otherwise - scanner data is difficult
-to correctly use at the API level.  The valid values and some
-small examples are returned by the API using the related
-\code{reqScannerParameters} function. The XML returned by that
-call isn`t very clear in its value or purpose though.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A (potentially) valid twsScannerSubscription object for
-\code{reqScannerSubscription} calls.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
 \references{
-\url{http://www.interactivebrokers.com/en/software/tws/usersguidebook/technicalanalytics/market_scanner_types.htm}
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
 }
 \note{
-Further documentation will be forthcoming. Users are encouraged to email use cases
-to make for better documentation.
+%%  ~~further notes~~
 }
 
+%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-  \code{\link{reqScannerSubscription}},
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-scnr <- twsScannerSubscription(numberOfRows=10,
-                               instrument="STK",
-                               locationCode="STK.US.MAJOR",
-                               scanCode="TOP_PERC_GAIN",
-                               aboveVolume=0,
-                               marketCapAbove=1e8,
-                               scannerSettingPairs="Annual,true",
-                               stockTypeFilter="ALL")
-scnr
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (numberOfRows = -1, instrument = "", locationCode = "", 
+    scanCode = "", abovePrice = "", belowPrice = "", aboveVolume = "", 
+    averageOptionVolumeAbove = "", marketCapAbove = "", marketCapBelow = "", 
+    moodyRatingAbove = "", moodyRatingBelow = "", spRatingAbove = "", 
+    spRatingBelow = "", maturityDateAbove = "", maturityDateBelow = "", 
+    couponRateAbove = "", couponRateBelow = "", excludeConvertible = "", 
+    scannerSettingPairs = "", stockTypeFilter = "") 
+{
+    if (missing(scanCode)) 
+        warning("'scanCode' needs to be specified")
+    structure(list(numberOfRows = numberOfRows, instrument = instrument, 
+        locationCode = locationCode, scanCode = scanCode, abovePrice = abovePrice, 
+        belowPrice = belowPrice, aboveVolume = aboveVolume, averageOptionVolumeAbove = averageOptionVolumeAbove, 
+        marketCapAbove = marketCapAbove, marketCapBelow = marketCapBelow, 
+        moodyRatingAbove = moodyRatingAbove, moodyRatingBelow = moodyRatingBelow, 
+        spRatingAbove = spRatingAbove, spRatingBelow = spRatingBelow, 
+        maturityDateAbove = maturityDateAbove, maturityDateBelow = maturityDateBelow, 
+        couponRateAbove = couponRateAbove, couponRateBelow = couponRateBelow, 
+        excludeConvertible = excludeConvertible, scannerSettingPairs = scannerSettingPairs, 
+        stockTypeFilter = stockTypeFilter), class = "twsScannerSubscription")
+  }
 }
-\keyword{ class }
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

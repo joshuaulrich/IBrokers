@@ -1,72 +1,92 @@
 \name{twsOption}
 \alias{twsOption}
-\alias{twsOPT}
-\title{ Create a twsContract for Options }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-Create a twsContract for use in API calls.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-twsOption(local,
-          expiry="",
-          strike="",
-          right="",
-          exch="SMART",
-          primary="",
-          currency='USD',
-          symbol='',
-          multiplier="100",
-          include_expired='0',
-          conId=0)
+twsOption(local, expiry = "", strike = "", right = "", exch = "SMART", primary = "", currency = "USD", symbol = "", multiplier = "100", include_expired = "0", conId = 0)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{local}{ the IB symbol requested }
-  \item{expiry}{ option expiration CCYYMM [optional]}
-  \item{strike}{ the strike price [optional] }
-  \item{right}{ the requested right - \sQuote{C},\sQuote{CALL},
-                \sQuote{P}, or \sQuote{PUT} [optional]}
-  \item{exch}{ the requested exchange [optional, defaults to SMART]}
-  \item{primary}{ the primary exchange of the security [optional]}
-  \item{currency}{ the requested currency [defaults to USD]}
-  \item{symbol}{ the security name [optional]}
-  \item{multiplier}{ the contract multiplier }
-  \item{include_expired}{ should expired contracts be included [defaults to \dQuote{0} (false)] }
-  \item{conId}{ contract ID }
+  \item{local}{
+%%     ~~Describe \code{local} here~~
+}
+  \item{expiry}{
+%%     ~~Describe \code{expiry} here~~
+}
+  \item{strike}{
+%%     ~~Describe \code{strike} here~~
+}
+  \item{right}{
+%%     ~~Describe \code{right} here~~
+}
+  \item{exch}{
+%%     ~~Describe \code{exch} here~~
+}
+  \item{primary}{
+%%     ~~Describe \code{primary} here~~
+}
+  \item{currency}{
+%%     ~~Describe \code{currency} here~~
+}
+  \item{symbol}{
+%%     ~~Describe \code{symbol} here~~
+}
+  \item{multiplier}{
+%%     ~~Describe \code{multiplier} here~~
+}
+  \item{include_expired}{
+%%     ~~Describe \code{include_expired} here~~
+}
+  \item{conId}{
+%%     ~~Describe \code{conId} here~~
+}
 }
 \details{
-A wrapper to \code{twsContract} to make \sQuote{option}
-contracts easier to specify.
-
-Some of the optionable parameters are contingent on the
-request being made.  Refer to the \emph{TWS} documentation
-for details.
-
-\code{twsOPT} is an alias.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A \code{twsContract} object.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
+}
+\references{
+%% ~put references to the literature/web site here ~
+}
+\author{
+%%  ~~who you are~~
 }
 \note{
-Option contracts on the TWS have certain rules which are different than
-standard data requests.  
-
-The \code{local} symbol is required. This can be found on the main TWS
-screen under contract details, or via the web at \url{www.interactivebrokers.com}
-
-Since the local symbol is required, all other values are redundant.  It is best to simply
-specify the local name and let the TWS manage the lookup.
-
-The \code{expiry} needs to be either of class \code{Date} to be coerced to
-a string of format \sQuote{CCYYMM}, or provided in that format.
-
-Historical requests cannot be for a barSize=\sQuote{1 D}
-or less frequent.  
-
-\code{barSize} must be "1 min" per Interactive Brokers API.
+%%  ~~further notes~~
 }
-\references{ Interactive Brokers: \url{www.interactivebrokers.com}}
-\author{ Jeffrey A. Ryan }
-\seealso{ \code{\link{reqMktData}}, \code{\link{twsContract}} }
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
 \examples{
-opt <- twsOption("QQQAS",expiry="200901", strike="45.0", right="C")
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (local, expiry = "", strike = "", right = "", exch = "SMART", 
+    primary = "", currency = "USD", symbol = "", multiplier = "100", 
+    include_expired = "0", conId = 0) 
+{
+    twsContract(conId, symbol, "OPT", exch, primary, expiry, 
+        strike, currency, right, local, multiplier, NULL, NULL, 
+        include_expired)
+  }
 }
-\keyword{ utilities }
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

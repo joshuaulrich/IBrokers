@@ -1,40 +1,66 @@
 \name{reqNewsBulletins}
 \alias{reqNewsBulletins}
-\alias{cancelNewsBulletins}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Subscribe or Unsubscribe To News Bulletins
+%%  ~~function to do ... ~~
 }
 \description{
-Subscription start and end methods for the API.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-reqNewsBulletins(twsconn, allMsgs=TRUE)
-
-cancelNewsBulletins(twsconn)
+reqNewsBulletins(twsconn, allMsgs = TRUE)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{twsconn}{
-A twsConnection object
+%%     ~~Describe \code{twsconn} here~~
 }
   \item{allMsgs}{
-Should all existing bulletins be returned (TRUE), or just new ones?
+%%     ~~Describe \code{allMsgs} here~~
 }
 }
 \details{
-Calling reqNewsBulletins will start a subscription via the API. This will
-continue and incoming messages will be handled by eWrapper \sQuote{updateNewBulletin}
-method. Bulletins are cancelled by calling the cancel version.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-Called for its side-effects.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
 \references{
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/reqnewsbulletins.htm}
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
 }
 \note{
-This is not \dQuote{news} per se, it is a subscription to the API bulletins.
+%%  ~~further notes~~
 }
-\keyword{ misc }
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (twsconn, allMsgs = TRUE) 
+{
+    if (!is.twsConnection(twsconn)) 
+        stop("requires twsConnection object")
+    allMsgs <- as.character(as.integer(allMsgs))
+    VERSION <- "1"
+    writeBin(c(.twsOutgoingMSG$REQ_NEWS_BULLETINS, VERSION, allMsgs), 
+        twsconn[[1]])
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

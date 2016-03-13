@@ -1,40 +1,66 @@
 \name{setServerLogLevel}
 \alias{setServerLogLevel}
-\title{ Enable API Logging Via TWS }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-Set level of API logging to be done by TWS.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
 setServerLogLevel(conn, logLevel = 2)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{ a valid \code{twsConnection} }
-  \item{logLevel}{ an integer from 1 to 5 }
+  \item{conn}{
+%%     ~~Describe \code{conn} here~~
+}
+  \item{logLevel}{
+%%     ~~Describe \code{logLevel} here~~
+}
 }
 \details{
-Calling this function will set the logging
-level for the current connection according
-to the following table:
-
-\enumerate{
-  \item{1:}{SYSTEM (least detail)}
-  \item{2:}{ERROR (default)}
-  \item{3:}{WARNING}
-  \item{4:}{INFORMATION}
-  \item{5:}{DETAIL (most detail)}
+%%  ~~ If necessary, more details than the description above ~~
 }
-
-See TWS documentation for further details.
-}
-
 \value{
-This function is called for its side-effects.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
-\references{ TWS API Logging
-             \url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/api/api_logging.htm#XREF_63640_API_Logging} }
-\author{ Jeffrey A. Ryan }
-\note{ 
-The online documentation warns of performance overhead
-when setting \code{logLevel=5}.
+\references{
+%% ~put references to the literature/web site here ~
 }
-\keyword{ utilities }
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (conn, logLevel = 2) 
+{
+    if (!is.twsConnection(conn)) 
+        stop("twsConnection object required")
+    VERSION <- "1"
+    con <- conn[[1]]
+    writeBin(c(.twsOutgoingMSG$SET_SERVER_LOGLEVEL, VERSION, 
+        as.character(logLevel)), con)
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

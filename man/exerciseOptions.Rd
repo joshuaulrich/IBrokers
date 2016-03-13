@@ -1,57 +1,91 @@
 \name{exerciseOptions}
 \alias{exerciseOptions}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Exercise Options Contracts
+%%  ~~function to do ... ~~
 }
 \description{
-Send message to exercise option contracts.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-exerciseOptions(twsconn, 
-                contract, 
-                exerciseAction = 1, 
-                exerciseQuantity = 1, 
-                account = "", 
-                override = 0, 
-                tickerId = 1)
+exerciseOptions(twsconn, contract, exerciseAction = 1, exerciseQuantity = 1, account = "", override = 0, tickerId = 1)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{twsconn}{
-A twsConnection object
+%%     ~~Describe \code{twsconn} here~~
 }
   \item{contract}{
-A twsContract object
+%%     ~~Describe \code{contract} here~~
 }
   \item{exerciseAction}{
-exercise=1 or lapse=2
+%%     ~~Describe \code{exerciseAction} here~~
 }
   \item{exerciseQuantity}{
-number of contracts to exercise
+%%     ~~Describe \code{exerciseQuantity} here~~
 }
   \item{account}{
-IB account [institutional orders]
+%%     ~~Describe \code{account} here~~
 }
   \item{override}{
-override system's natural action. 0 for do not override, 1 for override
+%%     ~~Describe \code{override} here~~
 }
   \item{tickerId}{
-id for request
+%%     ~~Describe \code{tickerId} here~~
 }
 }
 \details{
-Exercise option contract.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-Called for its side-effect.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
 \references{
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/exerciseoptions.htm}
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
 }
 \note{
-exch=\sQuote{SMART} is not valid in \code{exerciseOptions} calls. See
-the official API for further details.
+%%  ~~further notes~~
 }
-\keyword{ misc }
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (twsconn, contract, exerciseAction = 1, exerciseQuantity = 1, 
+    account = "", override = 0, tickerId = 1) 
+{
+    if (!is.twsConnection(twsconn)) 
+        stop("invalid twsconn")
+    if (!is.twsContract(contract)) 
+        stop("invalid twsContract")
+    if (!as.numeric(exerciseAction) \%in\% 1:2) 
+        stop("valid exerciseAction is 1 or 2")
+    if (!as.numeric(override) \%in\% 0:1) 
+        stop("valid overrride is 0 or 1")
+    VERSION <- "1"
+    msg <- c(.twsOutgoingMSG$EXERCISE_OPTION, VERSION, tickerId, 
+        contract$symbol, contract$sectype, contract$expiry, contract$strike, 
+        contract$multiplier, contract$exch, contract$currency, 
+        contract$local, exerciseAction, exerciseQuantity, account, 
+        override)
+    writeBin(as.character(msg), twsconn[[1]])
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
