@@ -1,130 +1,265 @@
 \name{eWrapper}
 \alias{eWrapper}
-\alias{eWrapper.MktData.CSV}
-\alias{eWrapper.RealTimeBars}
-\alias{eWrapper.RealTimeBars.CSV}
-\alias{eWrapper.data}
-\alias{eWrapper.MktDepth.CSV}
-\title{ eWrapper Closure For Message Processing }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-Create an eWrapper closure to allow for custom
-incoming message management.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-eWrapper(debug = FALSE, errfile=stderr())
-
-eWrapper.data(n)
-
-eWrapper.MktData.CSV(n=1)
-eWrapper.RealTimeBars.CSV(n=1)
+eWrapper(debug = FALSE, errfile = stderr())
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{debug}{ should debugging be enabled }
-  \item{errfile}{ where error messages are directed (stderr) }
-  \item{n}{ number of contracts being watched }
+  \item{debug}{
+%%     ~~Describe \code{debug} here~~
+}
+  \item{errfile}{
+%%     ~~Describe \code{errfile} here~~
+}
 }
 \details{
-\pkg{IBrokers} implements an eWrapper scheme similar
-to that provided by the official Java API.
-
-The general idea is that each real-time data
-capture function must manage all incoming signals
-correctly, while allowing for the end user to
-create custom handlers for each specific event.
-
-Internal to the \code{reqRealTimeBars}, 
-\code{reqMktData}, and \code{reqMktDepth}
-functions is a single call to the CALLBACK routine
-passed to it.  By default this is \code{twsCALLBACK} (see also).
-A standard argument to this callback is an
-eventWrapper --- which is an instance of eWrapper.
-
-eWrapper is an \R closure that contains a list
-of functions to manage all incoming message type, as
-found in \code{.twsIncomingMSG}.  Each message has a corresponding
-function in the eWrapper designed
-to handle the particular details of each incoming message type.
-
-There is also an embedded environment in which data
-can be saved and retrieved via a handful of accessor functions mimicking
-the standard \R tools.
-
-The data environment is \code{.Data}, with accessor
-methods \code{get.Data}, \code{assign.Data}, and \code{remove.Data}.
-
-These methods can be called from the closure object \code{eWrapper$get.Data},
-\code{eWrapper$assign.Data}, etc.
-
-The basic eWrapper call simply produces a visually informative
-display of the incoming stream.  E.g. bidSize data would be represented
-with a \emph{bidSize} label, instead of the internal TWS code(s) returned
-by the TWS.
-
-By creating an instance of an eWrapper, accomplished by calling
-it as a function call, one can then modify any or all the particular
-methods embedded in the object.
-
-This allows for rapid customization, as well as a built in assurance
-that all incoming messages will be handled appropriately without
-additional programmer time and resources.
-
-An example of this ability to modify the object is given in
-the \code{eWrapper.MktData.CSV} code. This object produces
-output deisgned to be space efficient, as well as easily read back into
-any R session as a standard CSV file.
-
-Setting \code{debug=NULL} will cause empty function objects
-to be created within the eWrapper object returned.  This object
-can be treated as a template to implement only the methods
-that are needed.  By default, all functions silently return
-the entire message they would normally parse.  This includes
-\emph{empty} functions created by setting debug to NULL.
-
-\code{eWrapper.data()} allows for data states to be maintained
-from call to call, as an xts history of updates/messages is stored
-within the object.  This is designed to minimize calling overhead by
-removing unneeded function calls from each message parsed.
-
-Additional, but creating methods that update the internal environment
-of the eWrapper object, it is possible to maintain a snapshot of
-last k values for any field of interest.  This is directly applicable to
-implementing an automated strategy from within a custom \code{twsCALLBACK}
-method.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A list of functions [and optionally data] to be used for the \code{eventWrapper} argument
-to \code{reqMktData} and \code{reqMktDepth}
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
-\author{ Jeffrey A. Ryan }
-\note{ 
-It is possible to also attach data to the closure object, allowing for
-a single in-memory object to contain current top of book data. This is
-exemplified in the \code{eWrapper.MktData.CSV} code, and can be extended
-in the user's own direction.
+\references{
+%% ~put references to the literature/web site here ~
 }
-\seealso{ \code{\link{twsCALLBACK}}, \code{\link{processMsg}}  }
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
 \examples{
-myWrapper <- eWrapper()
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
 
-str(myWrapper)
-
-# remove tickPrice action
-myWrapper$tickPrice <- function(msg, timestamp, file, ...) {}
-
-# add new tickPrice action
-myWrapper$tickPrice <- function(msg, timestamp, file, ...) { cat("tickPrice",msg) }
-
-# add new data into the object, and retrieve
-myWrapper$assign.Data("myData", 1010)
-myWrapper$get.Data("myData")
-
-\dontrun{
-tws <- twsConnect()
-reqMktData(tws, twsSTK("SBUX"))
-reqMktData(tws, twsSTK("SBUX"), eventWrapper=myWrapper)
-twsDisconnect(tws)
-}
+## The function is currently defined as
+function (debug = FALSE, errfile = stderr()) 
+{
+    .Data <- new.env()
+    get.Data <- function(x) get(x, .Data)
+    assign.Data <- function(x, value) assign(x, value, .Data)
+    remove.Data <- function(x) remove(x, .Data)
+    if (is.null(debug)) {
+        errorMessage <- function(curMsg, msg, timestamp, file, 
+            twsconn, ...) {
+            cat(msg, "\n", file = errfile)
+        }
+        tickPrice <- tickSize <- tickOptionComputation <- tickGeneric <- tickString <- tickEFP <- orderStatus <- openOrder <- openOrderEnd <- updateAccountValue <- updateAccountTime <- updatePortfolio <- accountDownloadEnd <- nextValidId <- contractDetails <- bondContractDetails <- contractDetailsEnd <- execDetails <- execDetailsEnd <- updateMktDepth <- updateMktDepthL2 <- updateNewsBulletin <- managedAccounts <- receiveFA <- historicalData <- scannerParameters <- scannerData <- scannerDataEnd <- realtimeBars <- currentTime <- fundamentalData <- deltaNeutralValidation <- tickSnapshotEnd <- function(curMsg, 
+            msg, timestamp, file, ...) {
+            c(curMsg, msg)
+        }
+    }
+    else if (!debug) {
+        tickPrice <- function(curMsg, msg, timestamp, file, ...) {
+            symbols <- get.Data("symbols")
+            e_tick_price(NULL, msg, timestamp, file, symbols, 
+                ...)
+        }
+        tickSize <- function(curMsg, msg, timestamp, file, ...) {
+            symbols <- get.Data("symbols")
+            e_tick_size(NULL, msg, timestamp, file, symbols, 
+                ...)
+        }
+        tickOptionComputation <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            symbols <- get.Data("symbols")
+            e_tick_option(NULL, msg, timestamp, file, symbols, 
+                ...)
+        }
+        tickGeneric <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            symbols <- get.Data("symbols")
+            e_tick_generic(NULL, msg, timestamp, file, symbols, 
+                ...)
+        }
+        tickString <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            symbols <- get.Data("symbols")
+            e_tick_string(NULL, msg, timestamp, file, symbols, 
+                ...)
+        }
+        tickEFP <- function(curMsg, msg, timestamp, file, ...) {
+            symbols <- get.Data("symbols")
+            e_tick_EFP(NULL, msg, timestamp, file, symbols, ...)
+        }
+        orderStatus <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            e_order_status(curMsg, msg)
+            c(curMsg, msg)
+        }
+        errorMessage <- function(curMsg, msg, timestamp, file, 
+            twsconn, ...) {
+            if (msg[3] == "1100") 
+                twsconn$connected <- FALSE
+            if (msg[3] \%in\% c("1101", "1102")) 
+                twsconn$connected <- TRUE
+            cat("TWS Message:", msg, "\n")
+        }
+        openOrder <- function(curMsg, msg, timestamp, file, ...) {
+            c(curMsg, msg)
+        }
+        openOrderEnd <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        updateAccountValue <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            c(curMsg, msg)
+        }
+        updatePortfolio <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            e_portfolio_value(curMsg, msg)
+            c(curMsg, msg)
+        }
+        updateAccountTime <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            c(curMsg, msg)
+        }
+        accountDownloadEnd <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            c(curMsg, msg)
+        }
+        nextValidId <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        contractDetails <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        bondContractDetails <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            c(curMsg, msg)
+        }
+        contractDetailsEnd <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            c(curMsg, msg)
+        }
+        execDetails <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            e_execDetails(curMsg, msg, file, ...)
+        }
+        execDetailsEnd <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        updateMktDepth <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            symbols <- get.Data("symbols")
+            e_update_mkt_depth(NULL, msg, timestamp, file, symbols, 
+                ...)
+        }
+        updateMktDepthL2 <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            symbols <- get.Data("symbols")
+            e_update_mkt_depthL2(NULL, msg, timestamp, file, 
+                symbols, ...)
+        }
+        updateNewsBulletin <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            cat("newsMsgId: ", msg[2], "newsMsgType: ", msg[3], 
+                "newsMessage: ", msg[4], "origExch:", msg[5], 
+                "\n")
+            c(curMsg, msg)
+        }
+        managedAccounts <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        receiveFA <- function(curMsg, msg, timestamp, file, ...) {
+            c(curMsg, msg)
+        }
+        historicalData <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        scannerParameters <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            cat(msg <- rawToChar(msg[-which(msg == as.raw(0))]))
+            c(curMsg, msg)
+        }
+        scannerData <- function(curMsg, reqId, rank, contract, 
+            distance, benchmark, projection, legsStr) {
+            e_scannerData(curMsg, reqId, rank, contract, distance, 
+                benchmark, projection, legsStr)
+        }
+        scannerDataEnd <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        realtimeBars <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            symbols <- get.Data("symbols")
+            e_real_time_bars(curMsg, msg, symbols, file, ...)
+        }
+        currentTime <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+        fundamentalData <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            e_fundamentalData(curMsg, msg)
+        }
+        deltaNeutralValidation <- function(curMsg, msg, timestamp, 
+            file, ...) {
+            c(curMsg, msg)
+        }
+        tickSnapshotEnd <- function(curMsg, msg, timestamp, file, 
+            ...) {
+            c(curMsg, msg)
+        }
+    }
+    else {
+        tickPrice <- tickSize <- tickOptionComputation <- tickGeneric <- tickString <- tickEFP <- orderStatus <- openOrder <- openOrderEnd <- updateAccountValue <- updateAccountTime <- updatePortfolio <- accountDownloadEnd <- nextValidId <- contractDetails <- bondContractDetails <- contractDetailsEnd <- execDetails <- execDetailsEnd <- updateMktDepth <- updateMktDepthL2 <- updateNewsBulletin <- managedAccounts <- receiveFA <- historicalData <- scannerParameters <- scannerData <- scannerDataEnd <- realtimeBars <- currentTime <- fundamentalData <- deltaNeutralValidation <- tickSnapshotEnd <- function(curMsg, 
+            msg, timestamp, file, ...) {
+            cat(as.character(timestamp), curMsg, msg, "\n", file = file[[1]], 
+                append = TRUE, ...)
+        }
+        errorMessage <- function(curMsg, msg, timestamp, file, 
+            twsconn, ...) {
+            cat(as.character(timestamp), curMsg, msg, "\n", file = file[[1]], 
+                append = TRUE, ...)
+        }
+    }
+    eW <- list(.Data = .Data, get.Data = get.Data, assign.Data = assign.Data, 
+        remove.Data = remove.Data, tickPrice = tickPrice, tickSize = tickSize, 
+        tickOptionComputation = tickOptionComputation, tickGeneric = tickGeneric, 
+        tickString = tickString, tickEFP = tickEFP, orderStatus = orderStatus, 
+        errorMessage = errorMessage, openOrder = openOrder, openOrderEnd = openOrderEnd, 
+        updateAccountValue = updateAccountValue, updatePortfolio = updatePortfolio, 
+        updateAccountTime = updateAccountTime, accountDownloadEnd = accountDownloadEnd, 
+        nextValidId = nextValidId, contractDetails = contractDetails, 
+        bondContractDetails = bondContractDetails, contractDetailsEnd = contractDetailsEnd, 
+        execDetails = execDetails, execDetailsEnd = execDetailsEnd, 
+        updateMktDepth = updateMktDepth, updateMktDepthL2 = updateMktDepthL2, 
+        updateNewsBulletin = updateNewsBulletin, managedAccounts = managedAccounts, 
+        receiveFA = receiveFA, historicalData = historicalData, 
+        scannerParameters = scannerParameters, scannerData = scannerData, 
+        scannerDataEnd = scannerDataEnd, realtimeBars = realtimeBars, 
+        currentTime = currentTime, fundamentalData = fundamentalData, 
+        deltaNeutralValidation = deltaNeutralValidation, tickSnapshotEnd = tickSnapshotEnd)
+    class(eW) <- "eWrapper"
+    invisible(eW)
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ utilities }
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

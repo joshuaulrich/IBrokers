@@ -1,52 +1,120 @@
 \name{twsCALLBACK}
 \alias{twsCALLBACK}
-\title{ Internal Data Callback Routine }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-twsCALLBACK is the primary function that is called
-after a request for data is sent.  Within this
-call messages are recieved from the TWS, processed, and
-further actions can be handled.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
 twsCALLBACK(twsCon, eWrapper, timestamp, file, playback = 1, ...)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{twsCon}{ a \code{twsConnection} object } 
-  \item{eWrapper}{ a closure created by \code{eWrapper()} }
-  \item{timestamp}{ a logical indicating if timestamps should be created }
-  \item{file}{ the file or connection to write to }
-  \item{playback}{ is this a live or playback connection }
-  \item{\dots}{ additional arguments to internal calls }
+  \item{twsCon}{
+%%     ~~Describe \code{twsCon} here~~
+}
+  \item{eWrapper}{
+%%     ~~Describe \code{eWrapper} here~~
+}
+  \item{timestamp}{
+%%     ~~Describe \code{timestamp} here~~
+}
+  \item{file}{
+%%     ~~Describe \code{file} here~~
+}
+  \item{playback}{
+%%     ~~Describe \code{playback} here~~
+}
+  \item{\dots}{
+%%     ~~Describe \code{\dots} here~~
+}
 }
 \details{
-This function is used as the primary management tool
-within all data calls built into \pkg{IBrokers}.
-
-It works as is, or can be modified to manage unique
-data and trading requirements.
-
-The general logic of the function is to
-recieve the header to each incoming message from the TWS.
-This then gets passed to the \code{processMsg} function, along with
-the eWrapper object.
-
-The eWrapper object can maintain state data (prices), and
-has functions for managing all incoming message types from the TWS.
-
-Once the processMsg call returns, another cycle of the infinite loop
-occurs.
-
-If the eWrapper object is used to maintain state information, it is
-possible to access this information from outside of the processMsg
-call, and thus be able to apply trade logic based upon the data
-acquired from the TWS.
-
-An example will soon be available in the vignettes included in the package.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-No value is returned.  This function is called for its side effects.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
-\author{ Jeffrey A. Ryan }
-\seealso{ \code{\link{eWrapper}} }
-\keyword{ misc }% __ONLY ONE__ keyword per line
-\keyword{ utilities }% __ONLY ONE__ keyword per line
+\references{
+%% ~put references to the literature/web site here ~
+}
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (twsCon, eWrapper, timestamp, file, playback = 1, ...) 
+{
+    if (missing(eWrapper)) 
+        eWrapper <- eWrapper()
+    con <- twsCon[[1]]
+    if (inherits(twsCon, "twsPlayback")) {
+        sys.time <- NULL
+        while (TRUE) {
+            if (!is.null(timestamp)) {
+                last.time <- sys.time
+                sys.time <- as.POSIXct(strptime(paste(readBin(con, 
+                  character(), 2), collapse = " "), timestamp))
+                if (!is.null(last.time)) {
+                  Sys.sleep((sys.time - last.time) * playback)
+                }
+                curMsg <- readBin(con, character(), 1)
+                if (length(curMsg) < 1) 
+                  next
+                processMsg(curMsg, con, eWrapper, format(sys.time, 
+                  timestamp), file, ...)
+            }
+            else {
+                curMsg <- readBin(con, character(), 1)
+                if (length(curMsg) < 1) 
+                  next
+                processMsg(curMsg, con, eWrapper, timestamp, 
+                  file, ...)
+                if (curMsg == .twsIncomingMSG$REAL_TIME_BARS) 
+                  Sys.sleep(5 * playback)
+            }
+        }
+    }
+    else {
+        tryCatch(while (isConnected(twsCon)) {
+            if (!socketSelect(list(con), FALSE, 0.25)) 
+                next
+            curMsg <- readBin(con, "character", 1L)
+            if (!is.null(timestamp)) {
+                processMsg(curMsg, con, eWrapper, format(Sys.time(), 
+                  timestamp), file, twsCon, ...)
+            }
+            else {
+                processMsg(curMsg, con, eWrapper, timestamp, 
+                  file, twsCon, ...)
+            }
+        }, error = function(e) {
+            close(twsCon)
+            stop("IB connection error. Connection closed", call. = FALSE)
+        })
+    }
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

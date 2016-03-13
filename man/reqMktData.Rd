@@ -1,102 +1,199 @@
 \name{reqMktData}
 \alias{reqMktData}
-\alias{cancelMktData}
-\title{ Request Market Data Feed from TWS }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-Allows for streaming market data 
-to be handled in \R.  
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-reqMktData(conn, 
-           Contract,
-           tickGenerics = "100,101,104,106,165,221,225,236",
-           snapshot = FALSE,
-           tickerId = "1",
-           timeStamp = "\%Y\%m\%d \%H:\%M:\%OS",
-           playback = 1,
-           file = "",
-           verbose = TRUE,
-           eventWrapper = eWrapper(),
-           CALLBACK = twsCALLBACK, ...)
-
-cancelMktData(conn,tickerId)
+reqMktData(conn, Contract, tickGenerics = "100,101,104,106,165,221,225,236", snapshot = FALSE, tickerId = "1", timeStamp = "\%Y\%m\%d \%H:\%M:\%OS", playback = 1, file = "", verbose = TRUE, eventWrapper = eWrapper(), CALLBACK = twsCALLBACK, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{conn}{ a valid \code{twsConnection} or \code{twsPlayback} connection }
-  \item{Contract}{ \code{twsContract} object(s) requested data for }
-  \item{tickGenerics}{ a comman delimited string of generic tick types }
-  \item{snapshot}{ should snapshot data be returned }
-  \item{tickerId}{ the ticker id to associate with the returned data }
-  \item{timeStamp}{ include R time stamps }
-  \item{playback}{ playback speed adjustment }
-  \item{file}{ passed to internal \code{cat} calls. See associated help }
-  \item{verbose}{ print diagnostics? }
-  \item{eventWrapper}{ eWrapper object }
-  \item{CALLBACK}{ main reciever callback}
-  \item{\dots}{ additional args }
+  \item{conn}{
+%%     ~~Describe \code{conn} here~~
+}
+  \item{Contract}{
+%%     ~~Describe \code{Contract} here~~
+}
+  \item{tickGenerics}{
+%%     ~~Describe \code{tickGenerics} here~~
+}
+  \item{snapshot}{
+%%     ~~Describe \code{snapshot} here~~
+}
+  \item{tickerId}{
+%%     ~~Describe \code{tickerId} here~~
+}
+  \item{timeStamp}{
+%%     ~~Describe \code{timeStamp} here~~
+}
+  \item{playback}{
+%%     ~~Describe \code{playback} here~~
+}
+  \item{file}{
+%%     ~~Describe \code{file} here~~
+}
+  \item{verbose}{
+%%     ~~Describe \code{verbose} here~~
+}
+  \item{eventWrapper}{
+%%     ~~Describe \code{eventWrapper} here~~
+}
+  \item{CALLBACK}{
+%%     ~~Describe \code{CALLBACK} here~~
+}
+  \item{\dots}{
+%%     ~~Describe \code{\dots} here~~
+}
 }
 \details{
-This function provides \R level access to market data streams
-as returned by the TWS API.  The Interactive Brokers documentation
-should be reference for the exact meaning of the returned data.
-
-\code{timeStamps} is unique to the R API in that each
-incoming signal will be marked with a (potentially) unique
-timestamp.  Alternatively it is possible to
-pass a formatting string for use in
-\code{format(Sys.time())}. To suppress the time stamp
-set the argument to NULL.  This is \emph{not} sent by
-the TWS - merely prepended to the output by \R.
-
-Callbacks, via CALLBACK and eventWrapper
-are designed to allow for \R level processing
-of the real-time data stream.
-
-Each message recieved (each
-update to the market data) will invoke one
-the appropriately names eWrapper callback,
-depending on the message type.  By default when nothing is
-specified, the code will call the default method for
-printing the results to the screen via \code{cat}.
-
-Note that the use of the argument \code{file} will
-be passed to these \code{cat} calls, and therefore
-it will be possible to use the functionality of \code{cat}
-directly - e.g. piping output or writing to a connection.  The
-simplest use of file would be to specify the name of a file
-to append the output of the stream to.
-
-The \code{CALLBACK} argument is used for more control of the
-incoming results.  This requires user-level error checking
-as well as TWS API interaction.  It is here for advanced use
-and until documented should be left alone.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-The real-time market data from the TWS.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
-\references{ Interactive Brokers API:
-              \url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm} }
-\author{ Jeffrey A. Ryan }
-\note{ 
-As \R is single threaded - this request will run until
-interupted by an error or by user action. Both will
-clean up after themselves when appropriate.
+\references{
+%% ~put references to the literature/web site here ~
 }
-\seealso{ \code{\link{twsCALLBACK}},
-          \code{\link{eWrapper}},
-          \code{\link{twsConnect}},
-          \code{\link{twsContract}} }
-\examples{
-\dontrun{
-tws <- twsConnect()
-contract <- twsEquity("QQQQ","SMART","ISLAND")
-reqMktData(tws, contract)
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
 
-# write to an open file connection
-fh <- file('out.dat',open='a')
-reqMktData(tws, contract, file=fh)
-close(fh)
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (conn, Contract, tickGenerics = "100,101,104,106,165,221,225,236", 
+    snapshot = FALSE, tickerId = "1", timeStamp = "\%Y\%m\%d \%H:\%M:\%OS", 
+    playback = 1, file = "", verbose = TRUE, eventWrapper = eWrapper(), 
+    CALLBACK = twsCALLBACK, ...) 
+{
+    if (!is.twsConnection(conn)) 
+        stop("tws connection object required")
+    if (!is.twsPlayback(conn)) {
+        Contract <- as.twsContract(Contract)
+        if (is.twsContract(Contract)) 
+            Contract <- list(Contract)
+        for (n in 1:length(Contract)) {
+            if (!is.twsContract(Contract[[n]])) 
+                stop("twsContract required")
+        }
+    }
+    con <- conn[[1]]
+    if (!isOpen(con)) 
+        stop("connection to TWS has been closed")
+    cancelMktData <- function(con, tickerId) {
+        if (inherits(con, "sockconn")) {
+            for (i in 1:length(tickerId)) {
+                writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA, con)
+                writeBin("1", con)
+                writeBin(tickerId[i], con)
+            }
+        }
+        else {
+            seek(con, 0)
+        }
+    }
+    if (is.null(CALLBACK)) 
+        CALLBACK <- twsDEBUG
+    snapshot <- ifelse(snapshot, "1", "0")
+    if (snapshot == "1" && missing(tickGenerics)) 
+        tickGenerics <- ""
+    VERSION <- "9"
+    fullSnapshot <- data.frame()
+    symbols. <- NULL
+    ticker_id <- as.character(tickerId)
+    symbol.or.local <- function(x) {
+        symbol <- x$symbol
+        local <- x$local
+        if (local == "") {
+            return(symbol)
+        }
+        else return(local)
+    }
+    if (inherits(con, "sockconn")) {
+        for (n in 1:length(Contract)) {
+            if (Contract[[n]]$sectype == "BAG") {
+                bag <- length(Contract[[n]]$comboleg)
+                for (leg in 1:bag) {
+                  bag <- c(bag, Contract[[n]]$comboleg[[leg]]$conId, 
+                    Contract[[n]]$comboleg[[leg]]$ratio, Contract[[n]]$comboleg[[leg]]$action, 
+                    Contract[[n]]$comboleg[[leg]]$exchange)
+                }
+            }
+            else bag <- "0"
+            signals <- c(.twsOutgoingMSG$REQ_MKT_DATA, VERSION, 
+                ticker_id, Contract[[n]]$conId, Contract[[n]]$symbol, 
+                Contract[[n]]$sectype, Contract[[n]]$expiry, 
+                Contract[[n]]$strike, Contract[[n]]$right, Contract[[n]]$multiplier, 
+                Contract[[n]]$exch, Contract[[n]]$primary, Contract[[n]]$currency, 
+                Contract[[n]]$local, bag, tickGenerics, snapshot)
+            writeBin(signals, con)
+            if (snapshot == "1") {
+                eventWrapper <- eWrapper.snapshot()
+                while (1) {
+                  socketSelect(list(con), FALSE, NULL)
+                  curMsg <- readBin(con, character(), 1)
+                  processMsg(curMsg, con, eventWrapper, NULL, 
+                    file, ...)
+                  if (curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) {
+                    fullSnapshot <- rbind(fullSnapshot, data.frame(lastTimeStamp = eventWrapper$get.Data("lastTimeStamp"), 
+                      symbol = symbol.or.local(Contract[[n]]), 
+                      bidSize = eventWrapper$get.Data("bidSize"), 
+                      bidPrice = eventWrapper$get.Data("bidPrice"), 
+                      askPrice = eventWrapper$get.Data("askPrice"), 
+                      askSize = eventWrapper$get.Data("askSize"), 
+                      lastPrice = eventWrapper$get.Data("lastPrice"), 
+                      Volume = eventWrapper$get.Data("Volume"), 
+                      Open = eventWrapper$get.Data("Open"), High = eventWrapper$get.Data("High"), 
+                      Low = eventWrapper$get.Data("Low"), Close = eventWrapper$get.Data("Close")))
+                    break
+                  }
+                }
+                if (n == length(Contract)) 
+                  return(fullSnapshot)
+            }
+            ticker_id <- as.character(as.numeric(tickerId) + 
+                n)
+            symbols. <- c(symbols., symbol.or.local(Contract[[n]]))
+        }
+    }
+    eventWrapper$assign.Data("symbols", symbols.)
+    if (!missing(CALLBACK) && is.na(list(CALLBACK))) {
+        if (is.twsPlayback(conn)) {
+            seek(conn[[1]], 0)
+            stop("CALLBACK=NA is not available for playback")
+        }
+        return(as.character(as.numeric(tickerId):length(Contract)))
+    }
+    if (snapshot == "0") 
+        on.exit(if (isOpen(con[[1]])) cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
+    if (!is.list(file)) 
+        file <- list(file)
+    if (length(file) != length(Contract)) 
+        file <- rep(file, length(Contract))
+    CALLBACK(conn, eWrapper = eventWrapper, timestamp = timeStamp, 
+        file = file, playback = playback, timeout = NULL, ...)
+  }
 }
-\keyword{ utilities }
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

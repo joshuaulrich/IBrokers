@@ -1,61 +1,84 @@
 \name{calculateImpliedVolatility}
 \alias{calculateImpliedVolatility}
-\alias{calculateOptionPrice}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculate Option Values
+%%  ~~function to do ... ~~
 }
 \description{
-Using the IB API, calculates the implied volatility or option
-price given parameters.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-calculateImpliedVolatility(twsconn, 
-                           Contract, 
-                           optionPrice, 
-                           underPrice, 
-                           reqId = 1)
-
-calculateOptionPrice(twsconn, 
-                     Contract, 
-                     volatility, 
-                     underPrice, 
-                     reqId = 1)
+calculateImpliedVolatility(twsconn, Contract, optionPrice, underPrice, reqId = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{twsconn}{
-A twsConnection object
+%%     ~~Describe \code{twsconn} here~~
 }
   \item{Contract}{
-A twsContract object
+%%     ~~Describe \code{Contract} here~~
 }
   \item{optionPrice}{
-The option price from which to calculate implied
-}
-  \item{volatility}{
-The volatility from which to calculate price
+%%     ~~Describe \code{optionPrice} here~~
 }
   \item{underPrice}{
-The underlying price
+%%     ~~Describe \code{underPrice} here~~
 }
   \item{reqId}{
-The request id
+%%     ~~Describe \code{reqId} here~~
 }
 }
 \details{
-Both calls will use the IB described method for calculation.
-See the official API for documentation.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A numeric value corresponding to the request
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
 \references{
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/calculateimpliedvolatility.htm}
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/calculateoptionprice.htm}
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
 }
 
+%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\keyword{ misc }
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (twsconn, Contract, optionPrice, underPrice, reqId = 1) 
+{
+    .calculateImpliedVolatility(twsconn, Contract, optionPrice, 
+        underPrice, reqId)
+    eW <- eWrapper(NULL)
+    eW$tickOptionComputation <- function(msg, string, ...) {
+        as.numeric(string[4])
+    }
+    con <- twsconn[[1]]
+    while (TRUE) {
+        socketSelect(list(con), FALSE, NULL)
+        curMsg <- readBin(con, "character", 1)
+        msg <- processMsg(curMsg, con, eW, NULL, "")
+        if (curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) {
+            return(msg)
+        }
+    }
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

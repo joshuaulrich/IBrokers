@@ -1,44 +1,81 @@
 \name{reqIds}
 \alias{reqIds}
-\alias{.reqIds}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Request Next Valid Id
+%%  ~~function to do ... ~~
 }
 \description{
-Get the next valid order ID for use with the TWS.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
 reqIds(conn, numIds = 1)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{conn}{
-  a valid twsConnection object of class \code{twsconn}.
+%%     ~~Describe \code{conn} here~~
 }
   \item{numIds}{
-  currently ignored by the TWS.
+%%     ~~Describe \code{numIds} here~~
 }
 }
 \details{
-\code{twsconn} objects maintain the next valid id inside of the object,
-returning the current id, and incrementing by 1 with each call
-to reqIds.
-
-For \code{twsconn} objects, \code{reqIds} and \code{.reqIds} results
-are identical.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A character representation of the next numeric ID.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
+}
+\references{
+%% ~put references to the literature/web site here ~
 }
 \author{
-Jeffrey A. Ryan
+%%  ~~who you are~~
 }
 \note{
-The TWS will keep track of order ids across connection ids
-and sessions. The values may be reset only as outlined by the
-official TWS documentation.  IBrokers simply records and
-manages the data as recieved from the TWS upon initial connection.
-Each connection id will have a different order id associated with it.
+%%  ~~further notes~~
 }
 
-\keyword{ utilities }
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (conn, numIds = 1) 
+{
+    if (inherits(conn, "twsconn")) {
+        id <- conn$nextValidId
+        conn$nextValidId <- as.character(as.numeric(id) + 1L)
+        return(id)
+    }
+    .reqIds(conn, numIds)
+    con <- conn[[1]]
+    e_next_id <- eWrapper()
+    e_next_id$nextValidId <- function(curMsg, msg, timestamp, 
+        file, ...) {
+        msg[2]
+    }
+    while (TRUE) {
+        socketSelect(list(con), FALSE, NULL)
+        curMsg <- readBin(con, character(), 1)
+        nextValidID <- processMsg(curMsg, con, eWrapper = e_next_id, 
+            timestamp = NULL, file = "")
+        if (curMsg == .twsIncomingMSG$NEXT_VALID_ID) 
+            break
+    }
+    return(nextValidID)
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -1,47 +1,89 @@
 \name{twsCurrency}
 \alias{twsCurrency}
-\alias{twsCASH}
-\title{ Create a twsCurrency }
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+%%  ~~function to do ... ~~
+}
 \description{
-Create a twsCurrency for use in API calls.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-twsCurrency(symbol,
-            currency='USD',
-            exch='IDEALPRO',
-            primary='',
-            strike='0.0',
-            right='',
-            local='',
-            multiplier='',
-            include_expired='0',
-            conId=0)
+twsCurrency(symbol, currency = "USD", exch = "IDEALPRO", primary = "", strike = "0.0", right = "", local = "", multiplier = "", include_expired = "0", conId = 0)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{symbol}{ the IB symbol requested }
-  \item{currency}{ the requested currency }
-  \item{exch}{ the requested exchange }
-  \item{primary}{ the primary exchange of the security }
-  \item{strike}{ the strike price }
-  \item{right}{ the requested right }
-  \item{local}{ the local security name }
-  \item{multiplier}{ the contract multiplier }
-  \item{include_expired}{ should expired contracts be included }
-  \item{conId}{ contract ID }
+  \item{symbol}{
+%%     ~~Describe \code{symbol} here~~
+}
+  \item{currency}{
+%%     ~~Describe \code{currency} here~~
+}
+  \item{exch}{
+%%     ~~Describe \code{exch} here~~
+}
+  \item{primary}{
+%%     ~~Describe \code{primary} here~~
+}
+  \item{strike}{
+%%     ~~Describe \code{strike} here~~
+}
+  \item{right}{
+%%     ~~Describe \code{right} here~~
+}
+  \item{local}{
+%%     ~~Describe \code{local} here~~
+}
+  \item{multiplier}{
+%%     ~~Describe \code{multiplier} here~~
+}
+  \item{include_expired}{
+%%     ~~Describe \code{include_expired} here~~
+}
+  \item{conId}{
+%%     ~~Describe \code{conId} here~~
+}
 }
 \details{
-A wrapper to \code{twsContract} to make \sQuote{currency/FX}
-contracts easier to specify.
-
-\code{twsCASH} is an alias.
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-A \code{twsContract} object.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
 }
-\references{ Interactive Brokers: \url{www.interactivebrokers.com}}
-\author{ Jeffrey A. Ryan }
-\seealso{ \code{\link{reqHistoricalData}}, \code{\link{twsContract}} }
+\references{
+%% ~put references to the literature/web site here ~
+}
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
 \examples{
-currency <- twsCurrency("EUR")
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (symbol, currency = "USD", exch = "IDEALPRO", primary = "", 
+    strike = "0.0", right = "", local = "", multiplier = "", 
+    include_expired = "0", conId = 0) 
+{
+    twsContract(conId, symbol, "CASH", exch, primary, expiry = "", 
+        strike, currency, right, local, multiplier, NULL, NULL, 
+        include_expired)
+  }
 }
-\keyword{ utilities }
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
