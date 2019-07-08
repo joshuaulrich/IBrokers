@@ -71,7 +71,38 @@ twsOrder(orderId,
          algoParams = NULL,
          whatIf = FALSE,
          clientId = "",
-         permId = "")
+         permId = "",
+         exemptCode = "-1",
+         hedgeType = "",
+         hedgeParam = "",
+         optOutSmartRouting = FALSE,
+         scaleTable = "",
+         activeStartTime = "",
+         activeStopTime = "",
+         trailingPercent = "",
+         deltaNeutralConId = "0",
+         deltaNeutralSettlingFirm = "",
+         deltaNeutralClearingAccount = "",
+         deltaNeutralClearingIntent = "",
+         deltaNeutralOpenClose = "",
+         deltaNeutralShortSale = "0",
+         deltaNeutralShortSaleSlot = "0",
+         deltaNeutralDesignatedLocation = "",
+         scalePriceAdjustValue = "0",
+         scalePriceAdjustInterval = "0",
+         scaleProfitOffset = "0",
+         scaleAutoReset = "0",
+         scaleInitPosition = "0",
+         scaleInitFillQty = "0",
+         scaleRandomPercent = "0",
+         smartComboRoutingParams = NULL,
+         smartComboRoutingParamsCount = "0",
+         orderComboLegs = NULL,
+         orderComboLegsCount = "0",
+         comboLegs = NULL,
+         comboLegsCount = "0",
+         orderMiscOptions = NULL
+         )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -273,6 +304,104 @@ Id of the client that placed the order.
 }
   \item{permId}{
 TWS id used to identify orders. Constant over a session.
+}
+  \item{exemptCode}{
+Mark order as exempt from short sale uptick rule.
+}
+  \item{hedgeType}{
+For hedge orders. Possible values include: D=delta, B=beta, F=FX, P=Pair
+}
+  \item{hedgeParam}{
+Beta = x for Beta hedge orders, ratio = y for Pair hedge order
+}
+  \item{optOutSmartRouting}{
+Use to opt out of default SmartRouting for orders routed directly to ASX.
+This attribute defaults to false unless explicitly set to true. When set to
+false, orders routed directly to ASX will NOT use SmartRouting. When set to
+true, orders routed directly to ASX orders WILL use SmartRouting.
+}
+  \item{scaleTable}{
+Used for scale orders
+}
+  \item{activeStartTime}{
+for GTC orders
+}
+  \item{activeStopTime}{
+for GTC orders
+}
+  \item{trailingPercent}{
+Specifies the trailing amount of a trailing stop order as a percentage. See
+the API docs for guidelines.
+}
+  \item{deltaNeutralConId}{
+See API docs
+}
+  \item{deltaNeutralSettlingFirm}{
+See API docs
+}
+  \item{deltaNeutralClearingAccount}{
+See API docs
+}
+  \item{deltaNeutralClearingIntent}{
+See API docs
+}
+  \item{deltaNeutralOpenClose}{
+Specifies whether the order is an Open or a Close order and is used when the
+hedge involves a CFD and and the order is clearing away.
+}
+  \item{deltaNeutralShortSale}{
+Used when the hedge involves a stock and indicates whether or not it is sold
+short.
+}
+  \item{deltaNeutralShortSaleSlot}{
+Has a value of 1 (the clearing broker holds shares) or 2 (delivered from a
+third party). If you use 2, then you must specify a deltaNeutralDesignatedLocation.
+}
+  \item{deltaNeutralDesignatedLocation}{
+Used only when deltaNeutralShortSaleSlot = 2.
+}
+  \item{scalePriceAdjustValue}{
+For extended Scale orders
+}
+  \item{scalePriceAdjustInterval}{
+For extended Scale orders
+}
+  \item{scaleProfitOffset}{
+For extended Scale orders
+}
+  \item{scaleAutoReset}{
+For extended Scale orders
+}
+  \item{scaleInitPosition}{
+For extended Scale order
+}
+  \item{scaleInitFillQty}{
+For extended Scale orders
+}
+  \item{scaleRandomPercent}{
+For extended Scale orders
+}
+  \item{smartComboRoutingParams}{
+Advanced parameters for Smart combo routing .
+}
+  \item{smartComboRoutingParamsCount}{
+Number of parameters
+}
+  \item{orderComboLegs}{
+List of Per-leg price following the same sequence combo legs are added. The
+combo price must be left unspecified when using per-leg prices.
+}
+  \item{orderComboLegsCount}{
+Number of parameters
+}
+  \item{comboLegs}{
+See API docs
+}
+  \item{comboLegsCount}{
+See API docs
+}
+  \item{orderMiscOptions}{
+See API docs
 }
 }
 \details{

@@ -1,7 +1,8 @@
 twsContract <-
 function(conId,symbol,sectype,exch,primary,expiry,strike,
          currency,right,local,multiplier,combo_legs_desc,
-         comboleg,include_expired,secIdType="",secId="")
+         comboleg,include_expired,secIdType="",secId="",
+         tradingClass="")
 {
   if(is.null(names(match.call()[-1])))
     return(do.call("twsContract", rep(list(""), 14)))
@@ -22,7 +23,8 @@ function(conId,symbol,sectype,exch,primary,expiry,strike,
                  comboleg=comboleg,
                  include_expired=include_expired,
                  secIdType=secIdType,
-                 secId=secId
+                 secId=secId,
+                 tradingClass=tradingClass
                 ),
             class='twsContract'
            )

@@ -25,7 +25,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
        close(s)
        stop(paste("couldn't connect to TWS on port",port))
      }
-     CLIENT_VERSION <- "47"
+     CLIENT_VERSION <- "63"
 
      writeBin(c(CLIENT_VERSION,as.character(clientId)), s)
 

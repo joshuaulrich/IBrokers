@@ -4,7 +4,8 @@ twsComboLeg <- function(conId=0,
                         exchange=NULL,
                         openClose=0,
                         shortSaleSlot=0,
-                        designatedLocation="")
+                        designatedLocation="",
+                        exemptCode=-1)
 {
   structure(list(conId=conId,
                  ratio=ratio,
@@ -13,6 +14,7 @@ twsComboLeg <- function(conId=0,
                  openClose=openClose,
                  shortSaleSlot=shortSaleSlot,
                  designatedLocation=designatedLocation,
+                 exemptCode=exemptCode,
                  SAME=0,OPEN=1,CLOSE=2,UNKNOWN=3),
             class="twsComboLeg") 
 }

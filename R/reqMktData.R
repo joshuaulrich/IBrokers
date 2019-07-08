@@ -90,7 +90,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
       if(inherits(con,'sockconn')) {
         for(i in 1:length(tickerId)) {
           writeBin(.twsOutgoingMSG$CANCEL_MKT_DATA,con)
-          writeBin('1',con)
+          writeBin('2',con)
           writeBin(tickerId[i],con)
         }
       } else {
@@ -106,7 +106,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
 
     if(snapshot == '1' && missing(tickGenerics)) tickGenerics <- ''
   
-    VERSION <- "9"
+    VERSION <- "11"
  
     fullSnapshot <- data.frame()
     symbols. <- NULL
@@ -125,6 +125,7 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
       # write to TWS connection
       for(n in 1:length(Contract)) {
         if(Contract[[n]]$sectype=="BAG") {
+          stop("BAG contract type not implemented for reqMktData")
           bag <- length(Contract[[n]]$comboleg)
           for(leg in 1:bag) {
           bag <- c(bag,Contract[[n]]$comboleg[[leg]]$conId,
@@ -147,12 +148,15 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
                      Contract[[n]]$primary, 
                      Contract[[n]]$currency,
                      Contract[[n]]$local,
-                     bag,
+                     if(is.null(Contract[[n]]$tradingClass)) "" else Contract[[n]]$tradingClass,
+                     "0",
                      tickGenerics,
-                     snapshot)
+                     snapshot,
+                     "")
     
         writeBin(signals, con) 
         if(snapshot == "1") {
+          stop("Snapshot not working (?)")
           eventWrapper <- eWrapper.snapshot()
           while(1) {
             socketSelect(list(con), FALSE, NULL)
@@ -197,8 +201,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
       }
       return(as.character(as.numeric(tickerId):length(Contract)))
     }
-    if(snapshot=="0")
+    if(snapshot=="0") {
+      #on.exit(cancelMktData(con,as.character(as.numeric(tickerId):length(Contract))))
       on.exit(if(isOpen(con[[1]])) cancelMktData(con, as.character(as.numeric(tickerId):length(Contract))))
+    }
 
     if(!is.list(file))
       file <- list(file)

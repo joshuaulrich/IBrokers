@@ -1,4 +1,6 @@
 #useDynLib(IBrokers)
+importFrom(utils,
+           str)
 import(zoo, xts)
 
 export(twsConnect,

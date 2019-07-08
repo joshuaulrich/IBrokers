@@ -32,6 +32,11 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
     scannerParameters <- scannerData <- scannerDataEnd <-
     realtimeBars <- currentTime <- fundamentalData <-
     deltaNeutralValidation  <- tickSnapshotEnd <- 
+    marketDataType <- commissionReport <-
+    positionData <- positionEnd <-
+    accountSummary <- accountSummaryEnd <-
+    verifyMessageAPI <- verifyCompleted <-
+    displayGroupList <- displayGroupUpdated <-
     function(curMsg, msg, timestamp, file,  ...) { c(curMsg,msg) }
   } else
   if(!debug) {
@@ -138,6 +143,15 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
     }
     deltaNeutralValidation  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     tickSnapshotEnd  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    commissionReport <- function(curMsg, msg, timestamp, file, ...)
+    {
+      e_commissionReport(curMsg, msg, file, ...)
+    }
+    marketDataType <- positionData <- positionEnd <-
+    accountSummary <- accountSummaryEnd <-
+    verifyMessageAPI <- verifyCompleted <-
+    displayGroupList <- displayGroupUpdated <-
+    function(curMsg, msg, timestamp, file, ...) { c(curMsg, msg) }
   } else {
     # DEBUG code [ twsDEBUG ]
     tickPrice <- tickSize <-
@@ -154,6 +168,11 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
     scannerParameters <- scannerData <- scannerDataEnd <-
     realtimeBars <- currentTime <- fundamentalData <-
     deltaNeutralValidation  <- tickSnapshotEnd <- 
+    marketDataType <- commissionReport <-
+    positionData <- positionEnd <-
+    accountSummary <- accountSummaryEnd <-
+    verifyMessageAPI <- verifyCompleted <-
+    displayGroupList <- displayGroupUpdated <-
       function(curMsg, msg, timestamp, file, ...) {
         cat(as.character(timestamp),curMsg, msg,"\n",file=file[[1]], append=TRUE,...) 
       }
@@ -197,7 +216,17 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
   currentTime  =  currentTime  ,
   fundamentalData  =  fundamentalData  ,
   deltaNeutralValidation  =  deltaNeutralValidation,
-  tickSnapshotEnd = tickSnapshotEnd)
+  tickSnapshotEnd = tickSnapshotEnd,
+  marketDataType = marketDataType,
+  commissionReport = commissionReport,
+  positionData = positionData,
+  positionEnd = positionEnd,
+  accountSummary = accountSummary,
+  accountSummaryEnd = accountSummaryEnd,
+  verifyMessageAPI = verifyMessageAPI,
+  verifyCompleted = verifyCompleted,
+  displayGroupList = displayGroupList,
+  displayGroupUpdated = displayGroupUpdated)
   class(eW) <- "eWrapper"
   invisible(eW)
 }

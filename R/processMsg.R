@@ -79,7 +79,98 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     eWrapper$errorMessage(curMsg, msg, timestamp, file, twsconn, ...)
   } else
   if(curMsg == .twsIncomingMSG$OPEN_ORDER) {
-    msg <- readBin(con, "character", 84)
+    msg <- readBin(con, "character", 1)
+    version <- as.integer(msg[1])
+    msg <- c(msg, readBin(con, "character", 7))
+    if(version >= 32) {
+      msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, readBin(con, "character", 3))
+    if(version >= 32) {
+      msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, tmp <- readBin(con, "character", 50))
+    order.deltaNeutralOrderType <- tmp[49]
+    if(order.deltaNeutralOrderType != "") {
+      if(version >= 27 & !is.na(order.deltaNeutralOrderType)) {
+        msg <- c(msg, readBin(con, "character", 4))
+      }
+      if(version >= 31 & !is.na(order.deltaNeutralOrderType)) {
+        msg <- c(msg, readBin(con, "character", 4))
+      }
+    }
+    msg <- c(msg, tmp <- readBin(con, "character", 3))
+    if(version >= 30) {
+      msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, tmp <- readBin(con, "character", 3))
+    if(version >= 29) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+      if(tmp[1] != "") {
+        comboLegsCount <- as.integer(tmp[1])
+        if(comboLegsCount > 0) {
+          msg <- c(msg, readBin(con, "character", comboLegsCount * 8))
+        }
+      }
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+      if(tmp[1] != "") {
+        orderComboLegsCount <- as.integer(tmp[1])
+        if(orderComboLegsCount > 0) {
+          msg <- c(msg, readBin(con, "character", orderComboLegsCount * 1L))
+        }
+      }
+    }
+    if(version >= 26) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+      if(tmp[1] != "") {
+        smartComboRoutingParamsCount <- as.integer(tmp[1])
+        if(smartComboRoutingParamsCount > 0) {
+          msg <- c(msg, readBin(con, "character", smartComboRoutingParamsCount * 2L))
+        }
+      }
+    }
+    msg <- c(msg, tmp <- readBin(con, "character", 3))
+    order.scalePriceIncrement <- as.integer(tmp[3])
+    if(!is.na(order.scalePriceIncrement)) {
+      if(version >= 28 & order.scalePriceIncrement > 0) {
+        msg <- c(msg, readBin(con, "character", 7))
+      }
+    }
+    if(version >= 24) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+      order.hedgeType <- tmp[1]
+      if(order.hedgeType != "") {
+        msg <- c(msg, tmp <- readBin(con, "character", 1))
+      }
+    }
+    if(version >= 25) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+    }
+    msg <- c(msg, tmp <- readBin(con, "character", 2))
+    if(version >= 22) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+    }
+    if(version >= 20) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+      underCompPresent <- as.integer(tmp[1])
+      if(!is.na(underCompPresent)) {
+        if(underCompPresent > 0) {
+          msg <- c(msg, tmp <- readBin(con, "character", 3))
+        }
+      }
+    }
+    if(version >= 21) {
+      msg <- c(msg, tmp <- readBin(con, "character", 1))
+      order.algoStrategy <- tmp[1]
+      if(order.algoStrategy != "") {
+        msg <- c(msg, tmp <- readBin(con, "character", 1))
+        algoParamsCount <- as.integer(tmp[1])
+        if(algoParamsCount > 0) {
+          msg <- c(msg, tmp <- readBin(con, "character", algoParamsCount * 2))
+        }
+      }
+    }
+    msg <- c(msg, tmp <- readBin(con, "character", 10))
     eWrapper$openOrder(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_VALUE) {
@@ -87,7 +178,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     eWrapper$updateAccountValue(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) {
-    msg <- readBin(con, "character", 18)
+    msg <- readBin(con, "character", 19)
     eWrapper$updatePortfolio(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$ACCT_UPDATE_TIME) {
@@ -101,13 +192,58 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     eWrapper$nextValidId(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$CONTRACT_DATA) {
-    #msg <- readBin(con, character(), 21)
-    msg <- readBin(con, "character", 28)
+    #msg <- readBin(con, character(), 28)
+    msg <- readBin(con, "character", 1)
+    version <- as.integer(msg[1])
+    if (version >= 3) {
+        msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, readBin(con, "character", 16))
+    if (version >= 4) {
+        msg <- c(msg, readBin(con, "character", 1))
+    }
+    if (version >= 5) {
+        msg <- c(msg, readBin(con, "character", 2))
+    }
+    if (version >= 6) {
+        msg <- c(msg, readBin(con, "character", 7))
+    }
+    if (version >= 8) {
+        msg <- c(msg, readBin(con, "character", 2))
+    }
+    if (version >= 7) {
+        msg <- c(msg, secIdListCount <- readBin(con, "character", 1))
+        if (as.integer(secIdListCount) > 0) {
+            msg <- c(msg, readBin(con, "character", as.integer(secIdListCount) * 2))
+        }
+    }
     eWrapper$contractDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$EXECUTION_DATA) {
     #msg <- readBin(con, character(), 24)
-    msg <- readBin(con, "character", 24)
+    msg <- readBin(con, "character", 1)
+    version <- as.integer(msg[1])
+    if (version >= 7) {
+        msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, readBin(con, "character", 7))
+    if (version >= 9) {
+        msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, readBin(con, "character", 3))
+    if (version >= 10) {
+        msg <- c(msg, readBin(con, "character", 1))
+    }
+    msg <- c(msg, readBin(con, "character", 10))
+    if (version >= 6) {
+        msg <- c(msg, readBin(con, "character", 2))
+    }
+    if (version >= 8) {
+        msg <- c(msg, readBin(con, "character", 1))
+    }
+    if (version >= 9) {
+        msg <- c(msg, readBin(con, "character", 2))
+    }
     eWrapper$execDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$MARKET_DEPTH) {
@@ -132,18 +268,18 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
   } else
   if(curMsg == .twsIncomingMSG$RECEIVE_FA) {
     #msg <- readBin(con, character(), 2) # 3 with xml string
-    msg <- readBin(con, "character", 2)
+    msg <- readBin(con, "character", 3)
     stop("xml data currently unsupported")
     eWrapper$receiveFA(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$HISTORICAL_DATA) {
     header <- readBin(con, character(), 5)
     nbin <- as.numeric(header[5]) * 9
-    msg <- readBin(con, character(), nbin)
+    msg <- readBin(con, character(), as.integer(nbin))
     eWrapper$historicalData(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$BOND_CONTRACT_DATA) {
-    warning("BOND_CONTRACT_DATA unimplemented as of yet")
+    stop("BOND_CONTRACT_DATA unimplemented as of yet")
     eWrapper$bondContractDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$SCANNER_PARAMETERS) {
@@ -230,9 +366,48 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     eWrapper$deltaNeutralValidation(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) {
-    #msg <- readBin(con, character(), 2)
     msg <- readBin(con, "character", 2)
     eWrapper$tickSnapshotEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$MARKET_DATA_TYPE) {
+    msg <- readBin(con, "character", 3)
+    eWrapper$marketDataType(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$COMMISSION_REPORT) {
+    msg <- readBin(con, "character", 7)
+    eWrapper$commissionReport(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$POSITION_DATA) {
+    msg <- readBin(con, "character", 15)
+    eWrapper$positionData(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$POSITION_END) {
+    msg <- readBin(con, "character", 1)
+    eWrapper$positionEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$ACCOUNT_SUMMARY) {
+    msg <- readBin(con, "character", 6)
+    eWrapper$accountSummary(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$ACCOUNT_SUMMARY_END) {
+    msg <- readBin(con, "character", 2)
+    eWrapper$accountSummaryEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$VERIFY_MESSAGE_API) {
+    msg <- readBin(con, "character", 2)
+    eWrapper$verifyMessageAPI(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$VERIFY_COMPLETED) {
+    msg <- readBin(con, "character", 3)
+    eWrapper$verifyCompleted(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$DISPLAY_GROUP_LIST) {
+    msg <- readBin(con, "character", 3)
+    eWrapper$displayGroupList(curMsg, msg, timestamp, file, ...)
+  } else
+  if(curMsg == .twsIncomingMSG$DISPLAY_GROUP_UPDATED) {
+    msg <- readBin(con, "character", 3)
+    eWrapper$displayGroupUpdated(curMsg, msg, timestamp, file, ...)
   } else {
     # default handler/error
     warning(paste("Unknown incoming message: ",curMsg,". Please reset connection",sep=""), call.=FALSE)

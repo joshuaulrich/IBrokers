@@ -13,8 +13,12 @@ function(twsconn,Contract,Order)
   con <- twsconn[[1]]
 
  #VERSION <- "28" # Version as of API 9.62
-  VERSION <- "29" # Version as of API 9.63
+ #VERSION <- "29" # Version as of API 9.63
  #VERSION <- "30" # Version as of API 9.64
+  VERSION <- "42"
+  if(is.null(Order$hedgeType) || is.null(Order$hedgeParam))
+    stop("NEW twsOrder has to be used")
+
   if(Order$orderId == "")
     Order$orderId <- reqIds(twsconn)
 
@@ -22,6 +26,7 @@ function(twsconn,Contract,Order)
   order <- c(.twsOutgoingMSG$PLACE_ORDER,
              VERSION,
              as.character(Order$orderId),
+             as.character(Contract$conId),
              Contract$symbol,
              Contract$sectype,
              Contract$expiry,
@@ -32,6 +37,7 @@ function(twsconn,Contract,Order)
              Contract$primary,
              Contract$currency,
              Contract$local,
+             if(is.null(Contract$tradingClass)) "" else Contract$tradingClass,
 
              # as of 9.63
              Contract$secIdType,
@@ -58,6 +64,7 @@ function(twsconn,Contract,Order)
              Order$hidden)
 
   if(Contract$sectype == "BAG") {
+    stop("BAG security type not supported")
     if(is.null(Contract$comboleg)) {
       order <- c(order, 0)
     } else {
@@ -88,6 +95,7 @@ function(twsconn,Contract,Order)
              Order$faProfile,
              Order$shortSaleSlot,
              Order$designatedLocation,
+             Order$exemptCode,
              Order$ocaType,
              Order$rule80A,
              Order$settlingFirm,
@@ -111,16 +119,29 @@ function(twsconn,Contract,Order)
              Order$continuousUpdate,
              Order$referencePriceType,
              Order$trailStopPrice,
+             Order$trailingPercent,
              Order$scaleInitLevelSize,
              Order$scaleSubsLevelSize,
              Order$scalePriceIncrement,
+             Order$scaleTable,
+             Order$activeStartTime,
+             Order$activeStopTime)
+
+  if(Order$hedgeType != "") {
+    order <- c(order, Order$hedgeType, Order$hedgeParam)
+  } else {
+    order <- c(order, Order$hedgeType)
+  }
+
+  order <- c(order,
+             Order$optOutSmartRouting,
              Order$clearingAccount,
              Order$clearingIntent,
              Order$notHeld,
              "0", # Order$underComp .. not yet supported by IBrokers
-             "",  # Order$algoStrategy .. not yet supported by IBrokers
-             Order$whatIf
-             )
+             Order$algoStrategy,
+             Order$whatIf,
+             "")
 # }}}
 
   writeBin(order, con)  

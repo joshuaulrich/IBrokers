@@ -24,7 +24,8 @@ twsContract(conId,
             comboleg,
             include_expired,
             secIdType = "",
-            secId = ""
+            secId = "",
+            tradingClass = ""
             )
 
 is.twsContract(x)
@@ -49,6 +50,9 @@ as.twsContract(x, ...)
   \item{include_expired}{ should expired contracts be included }
   \item{secIdType}{ unique identifier for secIdType }
   \item{secId}{ security identifier: ISIN, CUSIP, SEDOL, RIC }
+  \item{tradingClass}{ trading class name for this contract. Available in TWS
+    contract description window as well. For example, the trading class for
+    GBL Dec '13 future's is "FGBL". }
   \item{x}{ object to test or coerce }
   \item{\dots}{ additional arguments }
 }

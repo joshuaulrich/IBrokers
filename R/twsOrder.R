@@ -72,7 +72,24 @@ function(orderId,
          algoStrategy="",
          algoParams=NULL,
          whatIf=FALSE,
-         clientId="", permId=""
+         clientId="", permId="",
+         exemptCode = "-1", hedgeType = "",
+         hedgeParam = "",
+         optOutSmartRouting = FALSE,
+         scaleTable = "",
+         activeStartTime = "", activeStopTime = "",
+         trailingPercent = "",
+         deltaNeutralConId = "0", deltaNeutralSettlingFirm = "",
+         deltaNeutralClearingAccount = "", deltaNeutralClearingIntent = "",
+         deltaNeutralOpenClose = "", deltaNeutralShortSale = "0",
+         deltaNeutralShortSaleSlot = "0", deltaNeutralDesignatedLocation = "",
+         scalePriceAdjustValue = "0", scalePriceAdjustInterval = "0",
+         scaleProfitOffset = "0", scaleAutoReset = "0",
+         scaleInitPosition = "0", scaleInitFillQty = "0",
+         scaleRandomPercent = "0", smartComboRoutingParams = NULL,
+         smartComboRoutingParamsCount = "0", orderComboLegs = NULL,
+         orderComboLegsCount = "0", comboLegs = NULL, comboLegsCount = "0",
+         orderMiscOptions = NULL
         )
 {
   if(missing(orderId))
@@ -171,7 +188,43 @@ function(orderId,
                  whatIf=as.character(as.integer(whatIf)),
 
                  # Not Held
-                 notHeld=as.character(as.integer(notHeld))
+                 notHeld=as.character(as.integer(notHeld)),
+
+                 exemptCode = as.character(as.integer(exemptCode)),
+                 hedgeType = hedgeType,
+                 hedgeParam = hedgeParam,
+                 optOutSmartRouting = as.character(as.integer(optOutSmartRouting)),
+                 scaleTable = scaleTable,
+                 activeStartTime = activeStartTime,
+                 activeStopTime = activeStopTime,
+                 trailingPercent = trailingPercent,
+
+                 deltaNeutralConId = deltaNeutralConId,
+                 deltaNeutralSettlingFirm = deltaNeutralSettlingFirm,
+                 deltaNeutralClearingAccount = deltaNeutralClearingAccount,
+                 deltaNeutralClearingIntent = deltaNeutralClearingIntent,
+                 deltaNeutralOpenClose = deltaNeutralOpenClose,
+                 deltaNeutralShortSale = deltaNeutralShortSale,
+                 deltaNeutralShortSaleSlot = deltaNeutralShortSaleSlot,
+                 deltaNeutralDesignatedLocation = deltaNeutralDesignatedLocation,
+
+                 scalePriceAdjustValue = scalePriceAdjustValue,
+                 scalePriceAdjustInterval = scalePriceAdjustInterval,
+                 scaleProfitOffset = scaleProfitOffset,
+                 scaleAutoReset = scaleAutoReset,
+                 scaleInitPosition = scaleInitPosition,
+                 scaleInitFillQty = scaleInitFillQty,
+                 scaleRandomPercent = scaleRandomPercent,
+
+                 smartComboRoutingParams = smartComboRoutingParams,
+                 smartComboRoutingParamsCount = smartComboRoutingParamsCount,
+
+                 orderComboLegs = orderComboLegs,
+                 orderComboLegsCount = orderComboLegsCount,
+                 comboLegs = comboLegs,
+                 comboLegsCount = comboLegsCount,
+
+                 orderMiscOptions = orderMiscOptions
                 ),
             class='twsOrder'
            )
