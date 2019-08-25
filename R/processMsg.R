@@ -19,7 +19,7 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
     eWrapper <- eWrapper()
   con <- twsCon[[1]]
 
-  if(inherits(twsCon, 'twsPlayback')) {
+  if(is.twsPlayback(twsCon)) {
     sys.time <- NULL
     while(TRUE) {
       if(!is.null(timestamp)) {

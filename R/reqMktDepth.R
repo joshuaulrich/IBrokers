@@ -77,7 +77,7 @@ function (conn, Contract, tickerId = "1", numRows="20",
     } 
 
     if(!missing(CALLBACK) && is.na(list(CALLBACK))) {
-      if(inherits(conn, 'twsPlayback')) {
+      if(is.twsPlayback(conn)) {
         seek(conn[[1]], 0)
         stop("CALLBACK=NA is not available for playback")
       }
