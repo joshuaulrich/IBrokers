@@ -267,10 +267,12 @@ file <- file[[1]]  # FIXME
       paste("filled=",eos$filled,sep=""),
       paste("remaining=",eos$remaining,sep=""),
       paste("averageFillPrice=",eos$averageFillPrice,sep=""),"\n")
+  eos
 }
 
 
-`e_open_order` <- function(msg, contents, ...) {
+`e_open_order` <- function(msg) {
+  contents <- msg
   eoo <- list(
          # need to add contractId to twsContract...
               contract   = twsContract(
