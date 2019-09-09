@@ -6,6 +6,5 @@
   packageStartupMessage("See ?IBrokers for details.")
 }
 
-.onLoad <- function(libname,pkgname) {
+.onLoad <- function(libname, pkgname) {
 }
-
