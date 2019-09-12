@@ -17,38 +17,32 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback = 1, ...) {
     eWrapper <- eWrapper()
   }
   con <- twsCon[[1]]
+
   if (inherits(twsCon, "twsPlayback")) {
     stop("No playback support")
   }
   else {
-    tryCatch(while (isConnected(twsCon)) {
-      if (!socketSelect(list(con), FALSE, 0.25)) {
-        next
+    # dataCON <- get("DATACON", .GlobalEnv)[[1]]
+    tryCatch(
+      while (isConnected(twsCon)) {
+        if (!socketSelect(list(con), FALSE, 0.25)) {
+          next
+        }
+        curMsg <- readBin(con, "character", 1L)
+        if (!is.null(timestamp)) {
+          processMsg(curMsg, con, eWrapper, format(Sys.time(), timestamp), file, twsCon, ...)
+        } else {
+          processMsg(curMsg, con, eWrapper, timestamp, file, twsCon, ...)
+        }
+      },
+      error = function(e) {
+        close(twsCon)
+        print(e)
+        stop("IB connection error. Connection closed", call. = FALSE)
       }
-      curMsg <- readBin(con, "character", 1L)
-      if (!is.null(timestamp)) {
-        processMsg(curMsg, con, eWrapper, format(
-          Sys.time(),
-          timestamp
-        ), file, twsCon, ...)
-      }
-      else {
-        processMsg(
-          curMsg, con, eWrapper, timestamp,
-          file, twsCon, ...
-        )
-      }
-    }, error = function(e) {
-      close(twsCon)
-      print(e)
-      stop("IB connection error. Connection closed", call. = FALSE)
-    })
+    )
   }
 }
-
-
-
-
 
 processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...) {
   if (curMsg == .twsIncomingMSG$TICK_PRICE) { # v63 length OK.
@@ -57,32 +51,29 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...) {
       TRUE, FALSE
     ))
     eWrapper$tickPrice(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$TICK_SIZE) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$TICK_SIZE) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 4L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$tickSize(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$ORDER_STATUS) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$ORDER_STATUS) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 11L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$orderStatus(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$ERR_MSG) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$ERR_MSG) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 4L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$errorMessage(
-      curMsg, msg, timestamp, file, twsconn,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$OPEN_ORDER) { # v63 length ADAPTED.
+    eWrapper$errorMessage(curMsg, msg, timestamp, file, twsconn, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$OPEN_ORDER) { # v63 length ADAPTED.
     # msg <- .Internal(readBin(con, "character", 101L, NA_integer_, TRUE, FALSE))
     msg <- .Internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
     version <- as.integer(msg[1])
@@ -192,45 +183,36 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...) {
     # cat( paste(1:length(msg),msg,sep=':'), sep='\n')
 
     eWrapper$openOrder(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$ACCT_VALUE) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$ACCT_VALUE) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 5L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$updateAccountValue(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) { # v63 length ADAPTED.
+    eWrapper$updateAccountValue(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$PORTFOLIO_VALUE) { # v63 length ADAPTED.
     msg <- .Internal(readBin(
       con, "character", 19L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$updatePortfolio(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$ACCT_UPDATE_TIME) { # v63 length OK.
+    eWrapper$updatePortfolio(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$ACCT_UPDATE_TIME) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$updateAccountTime(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$NEXT_VALID_ID) { # v63 length OK.
+    eWrapper$updateAccountTime(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$NEXT_VALID_ID) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$nextValidId(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$CONTRACT_DATA) { # v63 length ADAPTED.
+  } else
+  if (curMsg == .twsIncomingMSG$CONTRACT_DATA) { # v63 length ADAPTED.
     msg <- .Internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
     version <- as.integer(msg[1])
     if (version >= 3) {
@@ -256,11 +238,9 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...) {
       }
     }
     eWrapper$contractDetails(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$EXECUTION_DATA) { # v63 length ADAPTED.
+      curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$EXECUTION_DATA) { # v63 length ADAPTED.
     msg <- .Internal(readBin(con, "character", 1L, NA_integer_, TRUE, FALSE))
     version <- as.integer(msg[1])
     if (version >= 7) {
@@ -285,83 +265,62 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...) {
       msg <- c(msg, .Internal(readBin(con, "character", 2L, NA_integer_, TRUE, FALSE)))
     }
     eWrapper$execDetails(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$MARKET_DEPTH) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$MARKET_DEPTH) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 7L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$updateMktDepth(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) { # v63 length OK.
+    eWrapper$updateMktDepth(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$MARKET_DEPTH_L2) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 8L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$updateMktDepthL2(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$NEWS_BULLETINS) { # v63 length OK.
+    eWrapper$updateMktDepthL2(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$NEWS_BULLETINS) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 5L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$newsBulletins(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$MANAGED_ACCTS) { # v63 length OK.
+    eWrapper$newsBulletins(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$MANAGED_ACCTS) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$managedAccounts(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$RECEIVE_FA) { # v63 length ADAPTED, but xml implementation pending
+    eWrapper$managedAccounts(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$RECEIVE_FA) { # v63 length ADAPTED, but xml implementation pending
     msg <- .Internal(readBin(
       con, "character", 3L, NA_integer_,
       TRUE, FALSE
     ))
     stop("xml data currently unsupported")
     eWrapper$receiveFA(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$HISTORICAL_DATA) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$HISTORICAL_DATA) { # v63 length OK.
     header <- readBin(con, character(), 5)
     nbin <- as.numeric(header[5]) * 9
     msg <- .Internal(readBin(
       con, "character", as.integer(nbin),
       NA_integer_, TRUE, FALSE
     ))
-    eWrapper$historicalData(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$BOND_CONTRACT_DATA) { # Implementation pending. not trading.
+    eWrapper$historicalData(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$BOND_CONTRACT_DATA) { # Implementation pending. not trading.
     stop("unimplemented as of yet")
-    eWrapper$bondContractDetails(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$SCANNER_PARAMETERS) { # v63 length OK.
+    eWrapper$bondContractDetails(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$SCANNER_PARAMETERS) { # v63 length OK.
     version <- readBin(con, character(), 1L)
-    msg <- readBin(con, raw(), 1000000L)
-    eWrapper$scannerParameters(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$SCANNER_DATA) { # v63 length OK.
+    msg <- readBin(con, raw(), 1e6L)
+    eWrapper$scannerParameters(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$SCANNER_DATA) { # v63 length OK.
     cD <- twsContractDetails()
     version <- readBin(con, character(), 1L)
     tickerId <- readBin(con, character(), 1L)
@@ -385,226 +344,174 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...) {
       projection <- msg[15]
       legsStr <- msg[16]
       eWrapper$scannerData(
-        curMsg, tickerId, rank, cD,
-        distance, benchmark, projection, legsStr
+        curMsg, tickerId, rank, cD, distance,
+        benchmark, projection, legsStr
       )
     }
-  }
-  else if (curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$TICK_OPTION_COMPUTATION) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 11L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$tickOptionComputation(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$TICK_GENERIC) { # v63 length OK.
+    eWrapper$tickOptionComputation(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$TICK_GENERIC) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 4L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$tickGeneric(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$TICK_STRING) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$TICK_STRING) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 4L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$tickString(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$TICK_EFP) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$TICK_EFP) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 10L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$tickEFP(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$CURRENT_TIME) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$CURRENT_TIME) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$currentTime(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$REAL_TIME_BARS) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$REAL_TIME_BARS) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 10L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$realtimeBars(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$FUNDAMENTAL_DATA) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$FUNDAMENTAL_DATA) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 3L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$fundamentalData(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$CONTRACT_DATA_END) { # v63 length OK.
+    eWrapper$fundamentalData(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$CONTRACT_DATA_END) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$contractDetailsEnd(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$OPEN_ORDER_END) { # v63 length OK.
+    eWrapper$contractDetailsEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$OPEN_ORDER_END) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 1L, NA_integer_,
       TRUE, FALSE
     ))
     eWrapper$openOrderEnd(curMsg, msg, timestamp, file, ...)
-  }
-  else if (curMsg == .twsIncomingMSG$ACCT_DOWNLOAD_END) { # v63 length OK.
+  } else
+  if (curMsg == .twsIncomingMSG$ACCT_DOWNLOAD_END) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$accountDownloadEnd(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$EXECUTION_DATA_END) { # v63 length OK.
+    eWrapper$accountDownloadEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$EXECUTION_DATA_END) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$execDetailsEnd(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$DELTA_NEUTRAL_VALIDATION) { # v63 length OK.
+    eWrapper$execDetailsEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$DELTA_NEUTRAL_VALIDATION) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 5L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$deltaNeutralValidation(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) { # v63 length OK.
+    eWrapper$deltaNeutralValidation(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$TICK_SNAPSHOT_END) { # v63 length OK.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$tickSnapshotEnd(
-      curMsg, msg, timestamp, file,
-      ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$MARKET_DATA_TYPE) { # v63 NEW.
+    eWrapper$tickSnapshotEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$MARKET_DATA_TYPE) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 3L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$marketDataType(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$COMMISSION_REPORT) { # v63 NEW.
+    eWrapper$marketDataType(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$COMMISSION_REPORT) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 7L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$commissionReport(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$POSITION_DATA) { # v63 NEW.
+    eWrapper$commissionReport(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$POSITION_DATA) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 15L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$positionData(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$POSITION_END) { # v63 NEW.
+    eWrapper$positionData(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$POSITION_END) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 1L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$positionEnd(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$ACCOUNT_SUMMARY) { # v63 NEW.
+    eWrapper$positionEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$ACCOUNT_SUMMARY) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 6L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$accountSummary(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$ACCOUNT_SUMMARY_END) { # v63 NEW.
+    eWrapper$accountSummary(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$ACCOUNT_SUMMARY_END) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$accountSummaryEnd(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$VERIFY_MESSAGE_API) { # v63 NEW.
+    eWrapper$accountSummaryEnd(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$VERIFY_MESSAGE_API) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 2L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$verifyMessageAPI(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$VERIFY_COMPLETED) { # v63 NEW.
+    eWrapper$verifyMessageAPI(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$VERIFY_COMPLETED) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 3L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$verifyCompleted(
-      curMsg, msg, timestamp,
-      file, ...
-    ) # ===> calls startApi() in the cpp implementation.
-  }
-  else if (curMsg == .twsIncomingMSG$DISPLAY_GROUP_LIST) { # v63 NEW.
+    eWrapper$verifyCompleted(curMsg, msg, timestamp, file, ...) # ===> calls startApi() in the cpp implementation.
+  } else
+  if (curMsg == .twsIncomingMSG$DISPLAY_GROUP_LIST) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 3L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$displayGroupList(
-      curMsg, msg, timestamp,
-      file, ...
-    )
-  }
-  else if (curMsg == .twsIncomingMSG$DISPLAY_GROUP_UPDATED) { # v63 NEW.
+    eWrapper$displayGroupList(curMsg, msg, timestamp, file, ...)
+  } else
+  if (curMsg == .twsIncomingMSG$DISPLAY_GROUP_UPDATED) { # v63 NEW.
     msg <- .Internal(readBin(
       con, "character", 3L, NA_integer_,
       TRUE, FALSE
     ))
-    eWrapper$displayGroupUpdated(
-      curMsg, msg, timestamp,
-      file, ...
-    )
+    eWrapper$displayGroupUpdated(curMsg, msg, timestamp, file, ...)
+  } else {
+    # default handler/error
+    warning(paste("Unknown incoming message: ", curMsg, ". Please reset connection", sep = ""), call. = FALSE)
   }
-  else {
-    warning(paste("Unknown incoming message: ", curMsg, ". Please reset connection",
-      sep = ""
-    ), call. = FALSE)
-  }
+  # end of messages
 }

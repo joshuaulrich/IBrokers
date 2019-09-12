@@ -21,7 +21,6 @@ reqExecutions <- function(twsconn, reqId = "0", ExecutionFilter) {
   writeBin(outgoing, con)
 }
 
-
 # New utility function. call immediately after a reqExecutions() call.
 readExecutions <- function(twsconn) {
   # .reqOpenOrders(twsconn)

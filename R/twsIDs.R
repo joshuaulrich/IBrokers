@@ -69,7 +69,6 @@
 .twsIncomingMSG$DISPLAY_GROUP_LIST <- "67"
 .twsIncomingMSG$DISPLAY_GROUP_UPDATED <- "68"
 
-
 `.twsERR` <-
   structure(c(
     "Max rate of messages per second has been exceeded.",

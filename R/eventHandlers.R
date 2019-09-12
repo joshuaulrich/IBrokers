@@ -298,31 +298,33 @@
 #
 ######################################################################
 
-e_order_status <- function(msg, contents, ...) {
+`e_order_status` <- function(msg, contents, ...) {
   eos <- list(
-    orderId = contents[2], status = contents[3],
-    filled = contents[4], remaining = contents[5], averageFillPrice = contents[6],
-    permId = contents[7], parentId = contents[8], lastFillPrice = contents[9],
-    clientId = contents[10], whyHeld = contents[11]
+    orderId = contents[2],
+    status = contents[3],
+    filled = contents[4],
+    remaining = contents[5],
+    averageFillPrice = contents[6],
+    permId = contents[7],
+    parentId = contents[8],
+    lastFillPrice = contents[9],
+    clientId = contents[10],
+    whyHeld = contents[11]
   )
   eos <- structure(eos, class = "eventOrderStatus")
   cat(
-    "TWS OrderStatus:", paste("orderId=", eos$orderId, sep = ""),
-    paste("status=", eos$status, sep = ""), paste("filled=",
-      eos$filled,
-      sep = ""
-    ), paste("remaining=", eos$remaining,
-      sep = ""
-    ), paste("averageFillPrice=", eos$averageFillPrice,
-      sep = ""
-    ), "\n"
+    "TWS OrderStatus:",
+    paste("orderId=", eos$orderId, sep = ""),
+    paste("status=", eos$status, sep = ""),
+    paste("filled=", eos$filled, sep = ""),
+    paste("remaining=", eos$remaining, sep = ""),
+    paste("averageFillPrice=", eos$averageFillPrice, sep = ""), "\n"
   )
   eos
 }
 
 
-
-e_open_order <- function(curMsg, contents, ...) {
+`e_open_order` <- function(curMsg, contents, ...) {
   tmp <- NULL
   shift <- 0
   version <- as.integer(contents[1])
@@ -342,6 +344,7 @@ e_open_order <- function(curMsg, contents, ...) {
   }
 
   eoo <- list(
+    # need to add contractId to twsContract...
     contract = twsContract(
       conId = contents[3],
       symbol = contents[4],
@@ -354,7 +357,7 @@ e_open_order <- function(curMsg, contents, ...) {
       currency = contents[11],
       local = contents[12],
       tradingClass = contents[13],
-      combo_legs_desc = contents[78], # value dfined in order, further below...
+      combo_legs_desc = contents[78], # value defined in order, further below...
       primary = NULL,
       include_expired = NULL,
       comboleg = NULL
@@ -544,35 +547,38 @@ e_open_order <- function(curMsg, contents, ...) {
       warningText = contents[shift + 101]
     )
   )
-
   eoo <- structure(eoo, class = "eventOpenOrder")
   cat(
-    "TWS OpenOrder:", paste("orderId=", eoo$order$orderId,
-      sep = ""
-    ), paste("conId=", eoo$contract$conId, sep = ""),
-    paste("symbol=", eoo$contract$symbol, sep = ""), paste("status=",
-      eoo$orderstate$status,
-      sep = ""
-    ), "\n"
+    "TWS OpenOrder:",
+    paste("orderId=", eoo$order$orderId, sep = ""),
+    paste("conId=", eoo$contract$conId, sep = ""),
+    paste("symbol=", eoo$contract$symbol, sep = ""),
+    paste("status=", eoo$orderstate$status, sep = ""), "\n"
   )
   eoo
 }
 
-
-
 #####  EXECUTION_DATA ##### {{{
-e_execution_data <- e_execDetails <- function(curMsg, msg, file, ...) {
+e_execDetails <- e_execution_data <- function(curMsg, msg, file, ...) {
   version <- msg[1]
   reqId <- msg[2]
   orderId <- msg[3]
   eed <- list(
     contract = twsContract(
-      conId = msg[4], symbol = msg[5],
-      sectype = msg[6], expiry = msg[7], strike = msg[8], right = msg[9],
+      conId = msg[4],
+      symbol = msg[5],
+      sectype = msg[6],
+      expiry = msg[7],
+      strike = msg[8],
+      right = msg[9],
       multiplier = msg[10], # NEW
-      exch = msg[1 + 10], currency = msg[1 + 11], local = msg[1 + 12],
+      exch = msg[1 + 10],
+      currency = msg[1 + 11],
+      local = msg[1 + 12],
       tradingClass = msg[1 + 13],
-      combo_legs_desc = NULL, primary = NULL, include_expired = NULL,
+      combo_legs_desc = NULL,
+      primary = NULL,
+      include_expired = NULL,
       comboleg = NULL
     ),
 
@@ -597,20 +603,14 @@ e_execution_data <- e_execDetails <- function(curMsg, msg, file, ...) {
   )
   eed <- structure(eed, class = "eventExecutionData")
   cat(
-    "TWS Execution:", paste("orderId=", eed$execution$orderId,
-      sep = ""
-    ), paste("time=", strptime(
-      eed$execution$time,
-      "%Y%m%d  %H:%M:%S"
-    ), sep = ""), paste("side=", eed$execution$side,
-      sep = ""
-    ), paste("shares=", eed$execution$shares, sep = ""),
-    paste("symbol=", eed$contract$symbol, sep = ""), paste("conId=",
-      eed$contract$conId,
-      sep = ""
-    ), paste("price=", eed$execution$price,
-      sep = ""
-    ), "\n"
+    "TWS Execution:",
+    paste("orderId=", eed$execution$orderId, sep = ""),
+    paste("time=", strptime(eed$execution$time, "%Y%m%d  %H:%M:%S"), sep = ""),
+    paste("side=", eed$execution$side, sep = ""),
+    paste("shares=", eed$execution$shares, sep = ""),
+    paste("symbol=", eed$contract$symbol, sep = ""),
+    paste("conId=", eed$contract$conId, sep = ""),
+    paste("price=", eed$execution$price, sep = ""), "\n"
   )
   eed
 }
@@ -644,8 +644,6 @@ e_commissionReport <- function(curMsg, msg, file, ...) {
   ecr
 }
 ## END commissionReport
-
-
 
 
 ##### ACCOUNT_VALUE #### {{{
