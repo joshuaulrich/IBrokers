@@ -1,7 +1,8 @@
 `twsConnectionTime` <-
-function(con) {
-  if(!is.twsConnection(con))
-    stop('con must be a twsConnection object')
+  function(con) {
+    if (!is.twsConnection(con)) {
+      stop("con must be a twsConnection object")
+    }
 
-  return(con$connected.at)
-}
+    return(con$connected.at)
+  }
