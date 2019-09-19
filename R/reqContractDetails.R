@@ -10,6 +10,7 @@
 
     VERSION <- "5"
     VERSION <- "6"
+    VERSION <- "7"
 
     request <- c(.twsOutgoingMSG$REQ_CONTRACT_DATA,
                  VERSION,
@@ -24,6 +25,7 @@
                  Contract$exch,
                  Contract$currency,
                  Contract$local,
+                 "",  # Contract$tradingClass,  # not using
                  Contract$include_expired,
                  Contract$secIdType,
                  Contract$secId)

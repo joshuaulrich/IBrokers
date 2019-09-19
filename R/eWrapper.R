@@ -82,7 +82,10 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
         twsconn$connected <- TRUE
       cat("TWS Message:",msg,"\n")
     }
-    openOrder  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
+    openOrder  <- function(curMsg, msg, timestamp, file,  ...) {
+      e_open_order(curMsg, msg)
+      c(curMsg, msg)
+    }
     openOrderEnd <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updateAccountValue  <- function(curMsg, msg, timestamp, file,  ...) { c(curMsg, msg) }
     updatePortfolio <- function(curMsg, msg, timestamp, file,  ...) { 
