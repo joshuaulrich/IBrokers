@@ -15,8 +15,7 @@ twsConnect <- twsConnect2 <- function(clientId=1, host="localhost",
      }
      con <- conn[[1]]
      VERSION <- "1"
-     START_API <- "71"
-     writeBin(START_API, con)
+     writeBin(.twsOutgoingMSG$START_API, con)
      writeBin(VERSION, con)
      writeBin(as.character(clientId), con)
    }
