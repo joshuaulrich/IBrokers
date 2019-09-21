@@ -65,6 +65,7 @@ export(twsConnect,
        reqHistory,              # convenience wrapper
 
        reqMktData,
+       reqMktDataType,
        cancelMktData,
       .calculateImpliedVolatility,
        calculateImpliedVolatility,

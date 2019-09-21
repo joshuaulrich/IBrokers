@@ -36,7 +36,9 @@
        REQ_CALC_IMPLIED_VOLAT = "54",
        REQ_CALC_OPTION_PRICE = "55",
        CANCEL_CALC_IMPLIED_VOLAT = "56",
-       CANCEL_CALC_OPTION_PRICE = "57")
+       CANCEL_CALC_OPTION_PRICE = "57",
+       REQ_GLOBAL_CANCEL = "58",
+       REQ_MARKET_DATA_TYPE = "59")
 
 `.twsIncomingMSG` <-
   list(TICK_PRICE = "1",
