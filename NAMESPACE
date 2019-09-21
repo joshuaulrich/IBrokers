@@ -1,6 +1,9 @@
 #useDynLib(IBrokers)
 importFrom(utils,
-           str)
+           flush.console,
+           str,
+           timestamp,
+           write.table)
 import(zoo, xts)
 
 export(twsConnect,
