@@ -3,13 +3,11 @@
 IBrokers is an [R](https://www.r-project.org) package that provides native R
 access to Interactive Brokers Trader Workstation API.
 
-### Professionally-supported IBrokers now available
+### IBrokers for enterprise
 
-Tidelift gives software development teams a single source for purchasing and
-maintaining their software, with professional-grade assurances from the
-experts who know it best, while seamlessly integrating with existing tools.
+Available as part of the Tidelift Subscription.
 
-[Get supported IBrokers with the Tidelift Subscription](https://tidelift.com/subscription/pkg/cran-ibrokers?utm_source=cran-ibrokers&utm_medium=referral&utm_campaign=readme)
+The maintainers of `IBrokers` and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/cran-ibrokers?utm_source=cran-ibrokers&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
 
 ### Supporting IBrokers
 
