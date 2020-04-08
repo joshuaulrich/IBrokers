@@ -3,7 +3,7 @@
 IBrokers is an [R](https://www.r-project.org) package that provides native R
 access to Interactive Brokers Trader Workstation API.
 
-## IBrokers for enterprise
+### IBrokers for enterprise
 
 Available as part of the Tidelift Subscription.
 
