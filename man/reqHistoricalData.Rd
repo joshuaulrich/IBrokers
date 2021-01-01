@@ -58,15 +58,17 @@ time as returned from the TWS server will be used. This
 is the preferred method for backfilling data. The \sQuote{TZ}
 portion of the string is optional.
 
-Legal \code{barSize} settings are technically
+Legal \code{barSize} values are
 \sQuote{1 secs},\sQuote{5 secs},\sQuote{15 secs},
 \sQuote{30 mins},\sQuote{1 min},\sQuote{2 mins},
 \sQuote{3 mins},\sQuote{5 mins},\sQuote{15 mins},
 \sQuote{30 mins},\sQuote{1 hour},\sQuote{1 day},
 \sQuote{1 week},\sQuote{1 month},\sQuote{3 months},
-and \sQuote{1 year}. They must be specified exactly
-and there is no guarantee from the API that all
-will work for all securities or durations. 
+and \sQuote{1 year}.
+
+Partial matching is attempted, but it is best to specify the \code{barSize}
+value exactly as they are given above. There is no guarantee from the API
+that all will work for all securities or durations.
 
 The duration string must be of the form \sQuote{n S}
 where the last character may be any one of

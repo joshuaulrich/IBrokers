@@ -55,8 +55,7 @@ function(conn, Contract,endDateTime,
                     '1 min', '2 mins','3 mins','5 mins','15 mins',
                     '30 mins','1 hour','1 day','1 week','1 month',
                     '3 months','1 year')
-  if(!barSize %in% validBarSize)
-    stop(paste('unknown barSize try: ',paste(validBarSize,sep=";")))
+  barSize <- match.arg(barSize, validBarSize)
 
 
   if(missing(endDateTime) || is.null(endDateTime)) 
