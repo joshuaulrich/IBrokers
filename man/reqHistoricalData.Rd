@@ -70,13 +70,14 @@ Partial matching is attempted, but it is best to specify the \code{barSize}
 value exactly as they are given above. There is no guarantee from the API
 that all will work for all securities or durations.
 
-The duration string must be of the form \sQuote{n S}
-where the last character may be any one of
+The duration string must be of the form \sQuote{n u}
+where \sQuote{n} is an integer and \sQuote{u} is one of:
 \sQuote{S} (seconds),
 \sQuote{D} (days),
 \sQuote{W} (weeks),
 \sQuote{M} (months),
-and \sQuote{Y} (year).
+or \sQuote{Y} (year).
+For example, \sQuote{1 W} would return one week of data.
 At present the limit for years is 1.
 
 \code{useRTH} takes either \sQuote{1} or \sQuote{0},

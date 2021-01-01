@@ -57,6 +57,10 @@ function(conn, Contract,endDateTime,
                     '3 months','1 year')
   barSize <- match.arg(barSize, validBarSize)
 
+  if(!isTRUE(grepl("[[:digit:]]+ [SDWMY]", duration))) {
+    stop("duration must be a number followed by a space and a valid unit ",
+         "(S, D, W, M, or Y): e.g. '1 W'")
+  }
 
   if(missing(endDateTime) || is.null(endDateTime)) 
     endDateTime <- strftime(
