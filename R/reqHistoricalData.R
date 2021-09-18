@@ -70,6 +70,10 @@ function(conn, Contract,endDateTime,
 
   VERSION <- "4"
 
+  if(isTRUE(whatToShow[1] == "ADJUSTED_LAST")) {
+    endDateTime <- ""
+  }
+
   signals <- c(.twsOutgoingMSG$REQ_HISTORICAL_DATA, # '20'
                VERSION,
                as.character(tickerId),
