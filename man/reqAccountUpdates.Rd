@@ -45,7 +45,7 @@ updates in a consistent manner.
 used fields from all positions held. There are currently methods
 for the the default returned object of \code{reqAccountUpdates}.
 }
-\references{ Interactive Brokers API: \url{http://www.interactivebrokers.com} }
+\references{ Interactive Brokers API: \url{https://www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
 
 \examples{

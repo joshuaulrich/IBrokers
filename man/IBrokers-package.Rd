@@ -89,7 +89,7 @@ Maintainer: Joshua M. Ulrich <josh.m.ulrich@gmail.com>
 
 }
 \references{
-Interactive Brokers: \url{www.interactivebrokers.com}
+Interactive Brokers: \url{https://www.interactivebrokers.com}
 }
 \keyword{ package }
 \examples{

@@ -116,7 +116,7 @@ Returns an \code{xts} object containing the requested data, along
 with additional information stored in the objects \code{xtsAttributes},
 unless \code{callback} or \code{file} is specified.
 }
-\references{ Interactive Brokers \url{www.interactivebrokers.com} }
+\references{ Interactive Brokers \url{https://www.interactivebrokers.com} }
 \author{ Jeffrey A. Ryan }
 \note{
 The rules for historical data requests are somewhat vague. Not all

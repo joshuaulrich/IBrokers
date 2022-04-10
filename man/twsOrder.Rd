@@ -412,7 +412,7 @@ Called for its side-effects.
 }
 \references{
 Order API:
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/order.htm}
+\url{https://interactivebrokers.github.io/tws-api/order_management.html}
 }
 \author{
 Jeffrey A. Ryan
@@ -424,5 +424,4 @@ Documentation is far from complete on this topic. Experiment and share your expe
 \seealso{
 \code{\link{placeOrder}}
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{utilities}

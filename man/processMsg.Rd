@@ -48,7 +48,7 @@ an efficient manner.
 \value{
 Called for its side-effects.
 }
-\references{ Interactive Brokers: \url{http://www.interactivebrokers.com} }
+\references{ Interactive Brokers: \url{https://www.interactivebrokers.com/} }
 \author{ Jeffrey A. Ryan }
 \note{ 
 The entire mechanism (twsCALLBACK -> processMsg -> eWrapper)

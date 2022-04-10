@@ -76,7 +76,7 @@ and until documented should be left alone.
 The real-time market data from the TWS.
 }
 \references{ Interactive Brokers API:
-              \url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm} }
+              \url{https://interactivebrokers.github.io/tws-api/index.html} }
 \author{ Jeffrey A. Ryan }
 \note{ 
 As \R is single threaded - this request will run until

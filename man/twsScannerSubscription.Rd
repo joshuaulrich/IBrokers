@@ -107,7 +107,7 @@ A (potentially) valid twsScannerSubscription object for
 \code{reqScannerSubscription} calls.
 }
 \references{
-\url{http://www.interactivebrokers.com/en/software/tws/usersguidebook/technicalanalytics/market_scanner_types.htm}
+\url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1ScannerSubscription.html}
 }
 \author{
 Jeffrey A. Ryan

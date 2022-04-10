@@ -34,7 +34,7 @@ TWS when \code{reqMktData} is called.
 \code{NULL} (invisibly)
 }
 \references{ Interactive Brokers API:
-              \url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm} }
+              \url{https://interactivebrokers.github.io/tws-api/index.html} }
 \author{ Joshua M. Ulrich }
 \seealso{ \code{\link{twsConnect}},
           \code{\link{reqMktData}} }

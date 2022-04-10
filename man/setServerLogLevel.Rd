@@ -31,7 +31,8 @@ See TWS documentation for further details.
 This function is called for its side-effects.
 }
 \references{ TWS API Logging
-             \url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/api/api_logging.htm#XREF_63640_API_Logging} }
+             \url{https://interactivebrokers.github.io/tws-api/support.html#tws_logs}
+             \url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1EClient.html#a62ed6f4f391c86743c566d44c29dae48} }
 \author{ Jeffrey A. Ryan }
 \note{ 
 The online documentation warns of performance overhead

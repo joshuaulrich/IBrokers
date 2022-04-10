@@ -40,7 +40,7 @@ contracts easier to specify.
 \value{
 A \code{twsContract} object.
 }
-\references{ Interactive Brokers: \url{www.interactivebrokers.com}}
+\references{ Interactive Brokers: \url{https://www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{reqHistoricalData}}, \code{\link{twsContract}} }
 \examples{

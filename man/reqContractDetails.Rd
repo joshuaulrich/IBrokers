@@ -31,7 +31,7 @@ API for specifics at this point.
 \value{
 A \code{twsContractDetails} object, or list of the same.
 }
-\references{ Interactive Brokers \url{http://www.interactivebrokers.com } }
+\references{ Interactive Brokers \url{https://www.interactivebrokers.com/} }
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{twsContract}} }
 \examples{

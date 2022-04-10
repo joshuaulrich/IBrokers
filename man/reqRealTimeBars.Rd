@@ -74,7 +74,7 @@ should be left alone.
 The real-time bar data requested.
 }
 \references{ Interactive Brokers TWS API
-\url{http://individuals.interactivebrokers.com/php/apiguide/apiguide.htm}
+\url{https://interactivebrokers.github.io/tws-api/index.html}
 }
 \author{ Jeffrey A. Ryan }
 \note{

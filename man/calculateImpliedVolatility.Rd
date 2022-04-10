@@ -50,8 +50,8 @@ See the official API for documentation.
 A numeric value corresponding to the request
 }
 \references{
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/calculateimpliedvolatility.htm}
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/calculateoptionprice.htm}
+\url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1EClient.html#a04c5d248c1036dd72435cc1edc7c58e2}
+\url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1EClient.html#a7afa53b655542e74ede683e1de2b2fc4}
 }
 \author{
 Jeffrey A. Ryan

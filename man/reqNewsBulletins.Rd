@@ -29,7 +29,7 @@ method. Bulletins are cancelled by calling the cancel version.
 Called for its side-effects.
 }
 \references{
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/reqnewsbulletins.htm}
+\url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1EClient.html#a286458a8be7d3b37f0d94fe61bf717fa}
 }
 \author{
 Jeffrey A. Ryan

@@ -45,7 +45,7 @@ Exercise option contract.
 Called for its side-effect.
 }
 \references{
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/exerciseoptions.htm}
+\url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1EClient.html#aad70a7b82ad3b5e7ae3e9f0b98dc2a5b}
 }
 \author{
 Jeffrey A. Ryan

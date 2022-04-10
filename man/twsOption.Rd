@@ -50,7 +50,7 @@ Option contracts on the TWS have certain rules which are different than
 standard data requests.  
 
 The \code{local} symbol is required. This can be found on the main TWS
-screen under contract details, or via the web at \url{www.interactivebrokers.com}
+screen under contract details, or via the web at \url{https://www.interactivebrokers.com}
 
 Since the local symbol is required, all other values are redundant.  It is best to simply
 specify the local name and let the TWS manage the lookup.
@@ -63,7 +63,7 @@ or less frequent.
 
 \code{barSize} must be "1 min" per Interactive Brokers API.
 }
-\references{ Interactive Brokers: \url{www.interactivebrokers.com}}
+\references{ Interactive Brokers: \url{https://www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{reqMktData}}, \code{\link{twsContract}} }
 \examples{

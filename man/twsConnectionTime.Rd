@@ -20,7 +20,7 @@ No API request is made.
 \value{
 The requested value.
 }
-\references{ Interactive Brokers LLC \url{http://www.interactivebrokers.com}}
+\references{ Interactive Brokers LLC \url{https://www.interactivebrokers.com/}}
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{twsConnect}} }
 \examples{

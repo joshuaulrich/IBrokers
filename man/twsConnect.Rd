@@ -58,7 +58,7 @@ those cases.
 \value{
 A \code{twsconn} object.
 }
-\references{ Interactive Brokers: \url{www.interactivebrokers.com}}
+\references{ Interactive Brokers: \url{https://www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }
 \note{
 While it is not strictly required to disconnect via \code{twsDisconnect}

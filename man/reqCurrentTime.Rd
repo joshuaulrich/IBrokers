@@ -15,7 +15,7 @@ reqCurrentTime(twsconn)
 \value{
 Seconds since 1970-01-01 GMT
 }
-\references{ Interactive Brokers \url{www.interactivebrokers.com}}
+\references{ Interactive Brokers \url{https://www.interactivebrokers.com}}
 \author{ Jeffrey A. Ryan }
 \examples{
 \dontrun{

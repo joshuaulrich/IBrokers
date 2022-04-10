@@ -38,7 +38,7 @@ a variable .Last.orderId will be created or updated in the GlobalEnv as well.
 }
 \references{
 Official Place Order API:
-\url{http://www.interactivebrokers.com/php/apiUsersGuide/apiguide/java/placeorder.htm}
+\url{https://interactivebrokers.github.io/tws-api/classIBApi_1_1EClient.html#aa6ff6f6455c551bef9d66c34d1c8586c}
 }
 \author{
 Jeffrey A. Ryan
@@ -68,5 +68,4 @@ placeOrder(tws, twsSTK("AAPL"), twsOrder(id))
 cancelOrder(id)
 }
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{utilities}
