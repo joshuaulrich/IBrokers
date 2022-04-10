@@ -10,10 +10,10 @@ function (conn, Contract, tickerId = "1", numRows="20",
 
     if(!is.twsPlayback(conn)) {
       # if playback from a file, don't test or require contract
-      if(class(Contract) == "twsContract") Contract <- list(Contract)
+      if(inherits(Contract, "twsContract")) Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
-        if (class(Contract[[n]]) != "twsContract") 
+        if (!inherits(Contract[[n]], "twsContract"))
             stop("twsContract required")
       }
     }

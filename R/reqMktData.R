@@ -241,10 +241,10 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
         stop("tws connection object required")
 
     if(!is.twsPlayback(conn)) {
-      if(class(Contract) == "twsContract") Contract <- list(Contract)
+      if(inherits(Contract, "twsContract")) Contract <- list(Contract)
   
       for(n in 1:length(Contract)) {
-        if (class(Contract[[n]]) != "twsContract") 
+        if (!inherits(Contract[[n]], "twsContract") )
             stop("twsContract required")
       }
     }
