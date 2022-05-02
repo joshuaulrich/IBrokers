@@ -43,18 +43,18 @@ function (conn,
   function (curMsg, msg, ...) {
     version <- as.numeric(msg[1])
     contract <- twsContract(conId = msg[2], symbol = msg[3], 
-      sectype = msg[4], exch = msg[9], primary = msg[9], expiry = msg[5], 
+      sectype = msg[4], exch = msg[9], primary = msg[12], expiry = msg[5],
       strike = msg[6], currency = msg[10], right = msg[7], 
       local = msg[11], multiplier = msg[8], combo_legs_desc = "", 
       comboleg = "", include_expired = "")
     portfolioValue <- list()
-    portfolioValue$position <- as.numeric(msg[12])
-    portfolioValue$marketPrice <- as.numeric(msg[13])
-    portfolioValue$marketValue <- as.numeric(msg[14])
-    portfolioValue$averageCost <- as.numeric(msg[15])
-    portfolioValue$unrealizedPNL <- as.numeric(msg[16])
-    portfolioValue$realizedPNL <- as.numeric(msg[17])
-    portfolioValue$accountName <- msg[18]
+    portfolioValue$position <- as.numeric(msg[13])
+    portfolioValue$marketPrice <- as.numeric(msg[14])
+    portfolioValue$marketValue <- as.numeric(msg[15])
+    portfolioValue$averageCost <- as.numeric(msg[16])
+    portfolioValue$unrealizedPNL <- as.numeric(msg[17])
+    portfolioValue$realizedPNL <- as.numeric(msg[18])
+    portfolioValue$accountName <- msg[19]
     p <- structure(list(contract = contract, portfolioValue = portfolioValue), 
          class = "eventPortfolioValue")
     p
