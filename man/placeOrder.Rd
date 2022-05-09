@@ -65,7 +65,7 @@ tws <- twsConnect()
 id <- reqIds(tws)
 
 placeOrder(tws, twsSTK("AAPL"), twsOrder(id))
-cancelOrder(id)
+cancelOrder(tws, id)
 }
 }
 \keyword{utilities}
