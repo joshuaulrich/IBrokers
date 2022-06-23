@@ -52,3 +52,7 @@ on [zoo](https://CRAN.R-project.org/package=zoo)
 
 Jeffrey Ryan, [Joshua Ulrich](https://about.me/joshuaulrich)
 
+### Alternative R Client Implementations
+
+  - [ibilli/rib](https://github.com/lbilli/rib/) - R-native implementation that strives to preserve official C++/Java client programming paradigm. It implements a full decoder but a simplified client functionality.
+  - [vspinu/rib](https://github.com/vspinu/rib) - Fully featured implementation that wraps the official C++ tws-api client. It provides an interceptor style message handling for easier message processing and bot creation.
