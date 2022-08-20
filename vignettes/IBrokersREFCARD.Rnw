@@ -23,30 +23,13 @@
 % Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 \usepackage{multicol}
+
 \usepackage{color}
-%\definecolor{eWrapper}{rgb}{0.3,0.3,0.3}
-%\definecolor{eWrapper}{rgb}{0.882,0.329,0.09}
 \definecolor{eWrapper}{rgb}{1,0.49,0.13}
 \definecolor{func}{rgb}{0,0,0.6}
 
-\setlength{\textheight}{7.5 in}
-\setlength{\textwidth}{10 in}
-\setlength{\hoffset}{-2 in}
-\setlength{\voffset}{-1 in}
-\setlength{\footskip}{12 pt}
-\setlength{\oddsidemargin}{1.5 in}
-\setlength{\evensidemargin}{1.5 in}
-\setlength{\topmargin}{.5 in}
-\setlength{\headheight}{12 pt}
-\setlength{\headsep}{0 in}
-
+\usepackage[landscape, margin=0.5in]{geometry}
 \setlength{\parindent}{0 in}
-
-\ifx \pdfpagewidth \undefined
-\else
- \pdfpagewidth=11in    % page width of PDF output
- \pdfpageheight=8.5in  % page height of PDF output
-\fi
 
 \begin{document}
 \thispagestyle{empty}
