@@ -46,7 +46,7 @@
 options(continue="  ")
 @
 {\Large IBrokers Reference Card}\\
-{\small IBrokers 0.9-0; TWS API 9.64}
+{\small IBrokers \Sexpr{packageVersion("IBrokers")}; TWS API 9.64}
 
 \vskip 15pt
 
