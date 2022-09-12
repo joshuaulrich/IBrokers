@@ -42,8 +42,8 @@ twsCALLBACK <- function(twsCon, eWrapper, timestamp, file, playback=1, ...)
         if(curMsg == .twsIncomingMSG$REAL_TIME_BARS) Sys.sleep(5 * playback)
       }
     }
-  } 
-  else { 
+  }
+  else {
     #dataCON <- get("DATACON", .GlobalEnv)[[1]]
     tryCatch(
     while(isConnected(twsCon)) {
@@ -283,7 +283,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
     eWrapper$bondContractDetails(curMsg, msg, timestamp, file, ...)
   } else
   if(curMsg == .twsIncomingMSG$SCANNER_PARAMETERS) {
-    version <- readBin(con, character(), 1L) 
+    version <- readBin(con, character(), 1L)
     msg <- readBin(con, raw(), 1e6L)
     eWrapper$scannerParameters(curMsg, msg, timestamp, file, ...)
   } else
@@ -408,7 +408,52 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
   if(curMsg == .twsIncomingMSG$DISPLAY_GROUP_UPDATED) {
     msg <- readBin(con, "character", 3)
     eWrapper$displayGroupUpdated(curMsg, msg, timestamp, file, ...)
-  } else {
+  } else
+  if(curMsg == .twsIncomingMSG$SYMBOL_SAMPLES) {
+    tickerId <- readBin(con, character(), 1)
+    numberOfElements <- as.integer( readBin(con, character(), 1) )
+    if(numberOfElements == 0)
+      return(data.frame(
+        contract.conId=character(),
+        contract.symbol=character(),
+        contract.secType=character(),
+        contract.primaryExchange = character(),
+        contract.currency = character(),
+        derivativeSecTypes=character()))
+
+    ContractDescriptionList <- list()
+    for (i in 1:numberOfElements) {
+      contract <- list()
+      msg <- readBin(con, character(), 6)
+
+      # read contract fields
+      contract$conId <- as.integer(msg[1])
+      contract$symbol <- msg[2]
+      contract$secType <- msg[3]
+      contract$primaryExchange <- msg[4]
+      contract$currency <- msg[5]
+
+      # read derivative sec Types list
+      nDerivativeSecTypes <- as.integer(msg[6])
+
+      derivativeSecTypes <- ""
+      if (nDerivativeSecTypes > 0) {
+         for (j in seq_len(nDerivativeSecTypes)) {
+           msg <- readBin(con, character(), 1L)
+           derivativeSecTypes <- paste(derivativeSecTypes, msg[1])
+         }
+         derivativeSecTypes <- glue::trim(derivativeSecTypes)
+      }
+
+      ContractDescriptionList[[i]] <- structure(list(
+        contract = contract,
+        derivativeSecTypes = derivativeSecTypes
+      ),class = "twsContractDescription")
+    }
+
+    # transform into data.frame
+    data.frame(t(sapply(ContractDescriptionList, unlist)), stringsAsFactors = FALSE)
+  }else {
     # default handler/error
     warning(paste("Unknown incoming message: ",curMsg,". Please reset connection",sep=""), call.=FALSE)
   }

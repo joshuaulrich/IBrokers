@@ -37,6 +37,7 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
     accountSummary <- accountSummaryEnd <-
     verifyMessageAPI <- verifyCompleted <-
     displayGroupList <- displayGroupUpdated <-
+    symbolSamples <-
     function(curMsg, msg, timestamp, file,  ...) { c(curMsg,msg) }
   } else
   if(!debug) {
@@ -154,6 +155,7 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
     accountSummary <- accountSummaryEnd <-
     verifyMessageAPI <- verifyCompleted <-
     displayGroupList <- displayGroupUpdated <-
+    symbolSamples <-
     function(curMsg, msg, timestamp, file, ...) { c(curMsg, msg) }
   } else {
     # DEBUG code [ twsDEBUG ]
@@ -176,6 +178,7 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
     accountSummary <- accountSummaryEnd <-
     verifyMessageAPI <- verifyCompleted <-
     displayGroupList <- displayGroupUpdated <-
+    symbolSamples <-
       function(curMsg, msg, timestamp, file, ...) {
         cat(as.character(timestamp),curMsg, msg,"\n",file=file[[1]], append=TRUE,...) 
       }
@@ -229,7 +232,8 @@ eWrapper <- function(debug=FALSE, errfile=stderr()) {
   verifyMessageAPI = verifyMessageAPI,
   verifyCompleted = verifyCompleted,
   displayGroupList = displayGroupList,
-  displayGroupUpdated = displayGroupUpdated)
+  displayGroupUpdated = displayGroupUpdated,
+  symbolSamples = symbolSamples)
   class(eW) <- "eWrapper"
   invisible(eW)
 }

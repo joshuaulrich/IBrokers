@@ -49,7 +49,8 @@
        SUBSCRIBE_TO_GROUP_EVENTS = "68",
        UPDATE_DISPLAY_GROUP = "69",
        UNSUBSCRIBE_FROM_GROUP_EVENTS = "70",
-       START_API = "71")
+       START_API = "71",
+       REQ_MATCHING_SYMBOLS = "81")
 
 `.twsIncomingMSG` <-
   list(TICK_PRICE = "1",
@@ -94,7 +95,8 @@
        VERIFY_MESSAGE_API = "65",
        VERIFY_COMPLETED = "66",
        DISPLAY_GROUP_LIST = "67",
-       DISPLAY_GROUP_UPDATED = "68")
+       DISPLAY_GROUP_UPDATED = "68",
+       SYMBOL_SAMPLES = "79")
 
 `.twsERR` <-
 structure(c("Max rate of messages per second has been exceeded.", 
