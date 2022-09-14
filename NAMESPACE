@@ -30,8 +30,10 @@ export(twsConnect,
 
        twsPortfolioValue,
 
-       # FA accounts only - untested as there is a missing EWrapper method here
+       # Both Family and individual tested, implemented the EWrapper to make it work
        reqManagedAccts,
+
+       # FA accounts only - untested as there is a missing EWrapper method here
        requestFA,
        replaceFA,
 
@@ -74,7 +76,7 @@ export(twsConnect,
        calculateImpliedVolatility,
       .calculateOptionPrice,
        calculateOptionPrice,
-     
+
 
        reqMktDepth,
        cancelMktDepth,
@@ -95,7 +97,7 @@ export(twsConnect,
 
        reqNewsBulletins,
        cancelNewsBulletins,
-    
+
        twsCALLBACK,
        twsDEBUG,
        processMsg,
