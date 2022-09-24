@@ -36,6 +36,8 @@ export(twsConnect,
        # FA accounts only - untested as there is a missing EWrapper method here
        requestFA,
        replaceFA,
+      
+       reqMatchingSymbols,
 
        twsExecutionFilter,
        reqExecutions,
