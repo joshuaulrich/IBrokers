@@ -8,7 +8,6 @@
 \alias{twsComboLeg}
 \alias{twsBAG}
 \alias{twsDEBUG}
-\alias{reqManagedAccts}
 \alias{requestFA}
 \alias{replaceFA}
 \alias{reqOpenOrders}
