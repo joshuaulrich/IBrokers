@@ -14,7 +14,7 @@ reqManagedAccts(twsconn)
 Individual account: a string containing a single account number. For a FamilyAccount  it returns a string with a ',' separated list of available accounts.
 }
 \references{ Interactive Brokers \url{https://www.interactivebrokers.com}}
-\author{ Jeffrey A. Ryan }
+\author{ J.W. de Roode }
 \examples{
 \dontrun{
 tws <- twsConnect()

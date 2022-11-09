@@ -15,7 +15,7 @@ reqMatchingSymbols(twsconn, pattern)
 dataframe: conId, symbol, secType, primaryExchange, currency, derivateSecTypes
 }
 \references{ Interactive Brokers \url{https://www.interactivebrokers.com}}
-\author{ Jeffrey A. Ryan }
+\author{ J.W. de Roode }
 \examples{
 \dontrun{
 tws <- twsConnect()
