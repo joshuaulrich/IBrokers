@@ -442,7 +442,7 @@ processMsg <- function(curMsg, con, eWrapper, timestamp, file, twsconn, ...)
            msg <- readBin(con, character(), 1L)
            derivativeSecTypes <- paste(derivativeSecTypes, msg[1])
          }
-         derivativeSecTypes <- glue::trim(derivativeSecTypes)
+         derivativeSecTypes <- trimws(derivativeSecTypes)
       }
 
       ContractDescriptionList[[i]] <- structure(list(
