@@ -12,3 +12,4 @@ LICENSE
 ^.*\.tar.gz$
 inst/doc/README.txt
 WISHLIST
+Makefile
