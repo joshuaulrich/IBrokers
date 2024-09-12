@@ -156,7 +156,6 @@ function (conn, Contract, tickGenerics='100,101,104,106,165,221,225,236',
     
         writeBin(signals, con) 
         if(snapshot == "1") {
-          stop("Snapshot not working (?)")
           eventWrapper <- eWrapper.snapshot()
           while(1) {
             socketSelect(list(con), FALSE, NULL)
