@@ -166,6 +166,7 @@ function(twsconn,Contract,Order)
              Order$notHeld,
              "0", # Order$underComp .. not yet supported by IBrokers
              Order$algoStrategy,
+             Order$algoParams,
              Order$whatIf,
              "")
 # }}}
